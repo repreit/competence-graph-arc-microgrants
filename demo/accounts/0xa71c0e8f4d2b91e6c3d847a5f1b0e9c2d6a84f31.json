@@ -40,7 +40,7 @@
                 },
                 "data": {
                     "title": "Testnet P2P listing",
-                    "link": "https://sepolia.etherscan.io/tx/0x3a8f1c0e7b92d64f5e1a0c8b9d2e4f7a6b1c3d5e8f0a2b4c6d8e0f1a3b5c7d9e",
+                    "link": "https://explorer.arc.io/tx/0x3a8f1c0e7b92d64f5e1a0c8b9d2e4f7a6b1c3d5e8f0a2b4c6d8e0f1a3b5c7d9e",
                     "img": "parts/history/img/deed-testnet-listing.jpg",
                     "alt": "Phone showing a peer-to-peer property listing with a lock-deposit action"
                 },
@@ -60,7 +60,7 @@
                 },
                 "data": {
                     "title": "Live P2P fulfillment",
-                    "link": "https://etherscan.io/tx/0x9e2d4b6a1c8f0e3d7b5a9c2f4e6d8b0a1c3e5f7a9b2d4c6e8f0a1b3c5d7e9f1a",
+                    "link": "https://explorer.arc.io/tx/0x9e2d4b6a1c8f0e3d7b5a9c2f4e6d8b0a1c3e5f7a9b2d4c6e8f0a1b3c5d7e9f1a",
                     "img": "parts/history/img/deed-live-fulfillment.jpg",
                     "alt": "Keys and a tablet showing fulfillment complete"
                 },

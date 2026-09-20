@@ -10,7 +10,7 @@
                 },
                 "data": {
                     "title": "Clerk at live closings",
-                    "link": "https://easscan.org/attestation/view/0x4c1e8a7b3d9f2e6c0b5a8d1f4e7c9a2b3d6e8f0a1c4b7d9e2f5a8c0b3d6e9f1",
+                    "link": "https://explorer.arc.io/tx/0x4c1e8a7b3d9f2e6c0b5a8d1f4e7c9a2b3d6e8f0a1c4b7d9e2f5a8c0b3d6e9f1",
                     "img": "parts/history/img/deed-closings-desk.jpg",
                     "alt": "A desk of closing folders, a stamp, and a house key"
                 },
@@ -25,7 +25,7 @@
                 },
                 "data": {
                     "title": "Live P2P fulfillment, on site",
-                    "link": "https://etherscan.io/tx/0x1b7c9e2a4d6f8b0c3e5a7d9f1b4c6e8a0d2f5b7c9e1a3d6f8b0c2e4a7d9f1b3",
+                    "link": "https://explorer.arc.io/tx/0x1b7c9e2a4d6f8b0c3e5a7d9f1b4c6e8a0d2f5b7c9e1a3d6f8b0c2e4a7d9f1b3",
                     "img": "parts/history/img/deed-live-operator.jpg",
                     "alt": "Keys handed over at a house door, tablet in hand"
                 },
@@ -43,7 +43,7 @@
                 },
                 "data": {
                     "title": "Second live fulfillment",
-                    "link": "https://etherscan.io/tx/0x8d0f2a4c6e9b1d3f5a7c0e2b4d6f8a1c3e5b7d9f0a2c4e6b8d1f3a5c7e9b0d2",
+                    "link": "https://explorer.arc.io/tx/0x8d0f2a4c6e9b1d3f5a7c0e2b4d6f8a1c3e5b7d9f0a2c4e6b8d1f3a5c7e9b0d2",
                     "img": "parts/history/img/deed-second-live.jpg",
                     "alt": "Keys handed over on a brick townhouse stoop"
                 },

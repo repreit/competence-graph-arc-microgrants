@@ -24,7 +24,7 @@ We will not hide behind buzzwords or packaging. We shape this with your feedback
 
 ## Who this is for
 
-**Builder** — participates, ships, and accumulates a history. They want professional competence — not a certificate. They work at home or wherever they learn. They need income and room for another dream. This attempt begins in Ethereum and web3.
+**Builder** — participates, ships, and accumulates a history. They want professional competence — not a certificate. They work at home or wherever they learn. They need income and room for another dream. This attempt begins in Arc and web3.
 
 **Requester** — opens that history in order to act: entrust or fund the next piece of work. A collaborator, a grant, or a DAO.
 
