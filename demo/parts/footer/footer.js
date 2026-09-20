@@ -22,7 +22,7 @@ export function bindFooter() {
     }
 
     fetch(
-        "https://api.github.com/repos/repreit/competence-graph/commits?per_page=1",
+        "https://api.github.com/repos/repreit/competence-graph-arc-microgrants/commits?per_page=1",
     )
         .then(function (response) {
             if (!response.ok) {
