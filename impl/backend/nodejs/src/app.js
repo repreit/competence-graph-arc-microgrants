@@ -2,7 +2,7 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 import auth from "./routes/auth.js";
 import bindings from "./routes/bindings.js";
-import config from "./routes/config.js";
+import publicConfig from "./routes/public-config.js";
 
 const app = new Hono();
 
@@ -15,7 +15,7 @@ app.use(
     }),
 );
 
-app.route("/config", config);
+app.route("/public-config", publicConfig);
 app.route("/auth", auth);
 app.route("/bindings", bindings);
 
