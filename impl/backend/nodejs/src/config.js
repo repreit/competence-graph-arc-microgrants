@@ -1,7 +1,5 @@
-export const chainId = Number(process.env.SIWE_CHAIN_ID ?? "5042");
-
 export const chain = {
-    id: chainId,
+    id: Number(process.env.SIWE_CHAIN_ID ?? "5042"),
     name: process.env.SIWE_CHAIN_NAME ?? "Arc",
     rpcUrl: process.env.SIWE_RPC_URL ?? "https://rpc.mainnet.arc.io",
     explorerUrl: process.env.SIWE_EXPLORER_URL ?? "https://explorer.arc.io",
