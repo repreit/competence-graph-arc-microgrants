@@ -1,9 +1,9 @@
 import { Hono } from "hono";
 import { chain } from "../config.js";
 
-const config = new Hono();
+const publicConfig = new Hono();
 
-config.get("/", (c) =>
+publicConfig.get("/", (c) =>
     c.json({
         chain: {
             id: chain.id,
@@ -15,4 +15,4 @@ config.get("/", (c) =>
     }),
 );
 
-export default config;
+export default publicConfig;
