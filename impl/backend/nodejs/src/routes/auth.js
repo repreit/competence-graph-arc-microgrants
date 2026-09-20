@@ -9,7 +9,6 @@ import {
     sessionExpiresAt,
 } from "../adapters/auth/siwe/session.js";
 import { verifySignedMessage } from "../adapters/auth/siwe/verify.js";
-import { chainId } from "../config.js";
 import { requireJson } from "../middleware/json.js";
 import {
     bearerToken,
@@ -22,7 +21,6 @@ const auth = new Hono();
 auth.get("/nonce", async (c) =>
     c.json({
         nonce: await issueNonce(),
-        chainId,
     }),
 );
 
