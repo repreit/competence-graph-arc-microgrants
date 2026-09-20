@@ -18,7 +18,12 @@ import {
 
 const auth = new Hono();
 
-auth.get("/nonce", async (c) => c.json({ nonce: await issueNonce() }));
+auth.get("/nonce", async (c) =>
+    c.json({
+        nonce: await issueNonce(),
+        chainId: Number(process.env.SIWE_CHAIN_ID ?? "1"),
+    }),
+);
 
 auth.post("/verify", requireJson, async (c) => {
     const body = c.get("body");
