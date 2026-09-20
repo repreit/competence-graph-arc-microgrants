@@ -1,6 +1,6 @@
 import { getAddress, recoverMessageAddress } from "viem";
 import { parseSiweMessage, validateSiweMessage } from "viem/siwe";
-import { chainId } from "../../../config.js";
+import { chain } from "../../../config.js";
 import { consumeNonce, nonceIsValid } from "./nonce.js";
 
 export async function verifySignedMessage({ message, signature }) {
@@ -30,7 +30,7 @@ export async function verifySignedMessage({ message, signature }) {
         message: parsed,
         nonce: parsed.nonce,
     });
-    if (!fieldsOk || Number(parsed.chainId) !== chainId) {
+    if (!fieldsOk || Number(parsed.chainId) !== chain.id) {
         return { ok: false, error: "invalid_message" };
     }
 
