@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { chain } from "../config.js";
+import { app, chain, reown } from "../config.js";
 
 const publicConfig = new Hono();
 
@@ -11,6 +11,15 @@ publicConfig.get("/", (c) =>
             rpcUrl: chain.rpcUrl,
             explorerUrl: chain.explorerUrl,
             nativeCurrency: chain.nativeCurrency,
+        },
+        app: {
+            name: app.name,
+            description: app.description,
+            iconPath: app.iconPath,
+        },
+        reown: {
+            projectId: reown.projectId,
+            analytics: reown.analytics,
         },
     }),
 );
