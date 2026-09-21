@@ -63,11 +63,11 @@ function waitForConnect(modal) {
                         }
                         // AppKit can set the address just after the modal closes.
                         setTimeout(function () {
-                            readAddress(modal).then(function (late) {
+                            readAddress(modal).then(function (lateAddress) {
                                 finishConnect(
                                     ctx,
-                                    late ? null : new Error("wallet"),
-                                    late,
+                                    lateAddress ? null : new Error("wallet"),
+                                    lateAddress,
                                 );
                             }, function () {
                                 finishConnect(ctx, new Error("wallet"));
