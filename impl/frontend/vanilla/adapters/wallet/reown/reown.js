@@ -45,10 +45,10 @@ async function loadPublicConfig() {
     const data = await response.json().catch(function () {
         return {};
     });
-    if (!response.ok || !data.chain || data.chain.id == null) {
+    if (!response.ok || data.chain?.id == null) {
         throw new Error("chain");
     }
-    if (!data.app || !data.app.name) {
+    if (!data.app?.name) {
         throw new Error("api");
     }
     return data;
