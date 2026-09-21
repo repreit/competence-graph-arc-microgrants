@@ -3,8 +3,8 @@ import {
     switchChain,
     signMessage,
     hostChainId,
-    isUserRejected,
 } from "../../adapters/wallet/reown/reown.js";
+import { isUserRejected } from "../../adapters/wallet/reown/provider.js";
 import { apiBase } from "../../common/js/api-base.js";
 
 const TOKEN_KEY = "competence-graph.session";
