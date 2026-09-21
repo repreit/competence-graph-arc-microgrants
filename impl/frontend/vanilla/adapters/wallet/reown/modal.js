@@ -1,7 +1,7 @@
 import { createAppKit } from "@reown/appkit";
 import { EthersAdapter } from "@reown/appkit-adapter-ethers";
 import { defineChain } from "@reown/appkit/networks";
-import { apiBase } from "../../../common/js/api-base.js";
+import { apiBase } from "../../../common/js/api.js";
 
 const WALLET_IDS = [
     "c57ca95b47569778a828d19178114f2db125b25b778adf5cba72bd778e231769",
