@@ -1,4 +1,4 @@
-import { api } from "./config.js";
+import { api } from "../../config.js";
 
 export function apiBase() {
     const query = new URLSearchParams(location.search).get("api");
