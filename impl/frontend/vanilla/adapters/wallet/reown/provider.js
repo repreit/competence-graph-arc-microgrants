@@ -24,11 +24,13 @@ async function addressFromProvider(provider) {
 
 /** AppKit getAddress, else eth_accounts via provider. */
 export async function readAddress(modal) {
-    let address = modal.getAddress && modal.getAddress();
-    if (!address) {
-        address = await addressFromProvider(walletProvider(modal));
+    if (typeof modal.getAddress === "function") {
+        const address = modal.getAddress();
+        if (address) {
+            return address;
+        }
     }
-    return address || "";
+    return addressFromProvider(walletProvider(modal));
 }
 
 export async function signMessage(modal, message, address) {
