@@ -1,12 +1,12 @@
 import { getProvider, isChainNotAdded, isUserRejected } from "./provider.js";
 
-function chainIdHex(network) {
+function chainIdFromNetwork(network) {
     return "0x" + Number(network.id).toString(16);
 }
 
-function addChainParams(network) {
+function chainParams(network) {
     return {
-        chainId: chainIdHex(network),
+        chainId: chainIdFromNetwork(network),
         chainName: network.name,
         nativeCurrency: network.nativeCurrency,
         rpcUrls: network.rpcUrls?.default?.http || [],
@@ -23,11 +23,11 @@ function chainError(err) {
 function requestSwitch(provider, network) {
     return provider.request({
         method: "wallet_switchEthereumChain",
-        params: [{ chainId: chainIdHex(network) }],
+        params: [{ chainId: chainIdFromNetwork(network) }],
     });
 }
 
-async function switchViaProvider(provider, network) {
+async function switchChainWithProvider(provider, network) {
     try {
         await requestSwitch(provider, network);
         return;
@@ -39,7 +39,7 @@ async function switchViaProvider(provider, network) {
     try {
         await provider.request({
             method: "wallet_addEthereumChain",
-            params: [addChainParams(network)],
+            params: [chainParams(network)],
         });
         // Add then switch
         await requestSwitch(provider, network);
@@ -67,5 +67,5 @@ export async function switchChain(modal, network) {
     if (!provider) {
         throw chainError(appKitError);
     }
-    await switchViaProvider(provider, network);
+    await switchChainWithProvider(provider, network);
 }
