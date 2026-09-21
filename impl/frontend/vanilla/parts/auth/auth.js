@@ -7,7 +7,7 @@ import {
 import { isUserRejected } from "../../adapters/wallet/reown/provider.js";
 import { shortAddress, apiBase, pageUri } from "../../common/js/a001.js";
 
-const TOKEN_KEY = "competence-graph.session";
+const TOKEN_KEY = "competence-graph.session-token";
 
 function token() {
     return localStorage.getItem(TOKEN_KEY);
