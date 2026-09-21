@@ -22,6 +22,32 @@ function finishConnect(ctx, err, address) {
     }
 }
 
+async function settleFromWallet(ctx, modal) {
+    try {
+        const address = await readAddress(modal);
+        finishConnect(ctx, address ? null : new Error("wallet"), address);
+    } catch (err) {
+        finishConnect(ctx, isUserRejected(err) ? err : new Error("wallet"));
+    }
+}
+
+async function handleModalClose(ctx, modal) {
+    try {
+        const address = await readAddress(modal);
+        if (address) {
+            finishConnect(ctx, null, address);
+            return;
+        }
+    } catch (err) {
+        finishConnect(ctx, isUserRejected(err) ? err : new Error("wallet"));
+        return;
+    }
+    // AppKit can set the address just after the modal closes.
+    setTimeout(function () {
+        settleFromWallet(ctx, modal);
+    }, MODAL_CLOSE_GRACE_MS);
+}
+
 function waitForConnect(modal) {
     return new Promise(function (resolve, reject) {
         const ctx = {
@@ -55,32 +81,7 @@ function waitForConnect(modal) {
                 if (!ctx.seenOpen) {
                     return;
                 }
-                readAddress(modal).then(
-                    function (address) {
-                        if (address) {
-                            finishConnect(ctx, null, address);
-                            return;
-                        }
-                        // AppKit can set the address just after the modal closes.
-                        setTimeout(function () {
-                            readAddress(modal).then(function (lateAddress) {
-                                finishConnect(
-                                    ctx,
-                                    lateAddress ? null : new Error("wallet"),
-                                    lateAddress,
-                                );
-                            }, function () {
-                                finishConnect(ctx, new Error("wallet"));
-                            });
-                        }, MODAL_CLOSE_GRACE_MS);
-                    },
-                    function (err) {
-                        finishConnect(
-                            ctx,
-                            isUserRejected(err) ? err : new Error("wallet"),
-                        );
-                    },
-                );
+                handleModalClose(ctx, modal);
             });
         }
 
