@@ -62,7 +62,7 @@ async function api(path, options) {
         return {};
     });
     if (!response.ok) {
-        const error = new Error(data.error || "api");
+        const error = new Error(data.error || "http");
         error.status = response.status;
         throw error;
     }
@@ -110,7 +110,7 @@ async function signOut() {
     try {
         await api("/auth/logout", { method: "POST" });
     } catch (err) {
-        if (!err.status || err.status !== 401) {
+        if (err.status !== 401) {
             throw err;
         }
     }
@@ -132,6 +132,9 @@ function errorText(err) {
     }
     if (err.message === "api") {
         return "No API host. Serve locally, or pass ?api=";
+    }
+    if (err.message === "http") {
+        return "Could not reach the API.";
     }
     if (isUserRejected(err)) {
         return "Request was rejected.";
