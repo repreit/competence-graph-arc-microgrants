@@ -9,11 +9,7 @@ export async function requestAccount() {
 
 export async function hostChainId() {
     await getModal();
-    const network = getHostNetwork();
-    if (!network) {
-        throw new Error("chain");
-    }
-    return Number(network.id);
+    return Number(getHostNetwork().id);
 }
 
 export async function switchChain() {
