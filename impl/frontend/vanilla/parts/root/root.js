@@ -1,9 +1,12 @@
+import { bindAuth } from "../auth/auth.js";
 import { bindDifference } from "../difference/difference.js";
 import { bindHistory } from "../history/history.js";
 import { bindFooter } from "../footer/footer.js";
 
 function addPartStyles() {
-    ["header", "difference", "history", "footer"].forEach(function (name) {
+    ["header", "auth", "difference", "history", "footer"].forEach(function (
+        name,
+    ) {
         const link = document.createElement("link");
         link.rel = "stylesheet";
         link.href = "parts/" + name + "/" + name + ".css";
@@ -36,7 +39,7 @@ function assemblePage() {
     addPartStyles();
     return loadPart("root").then(function (html) {
         document.body.insertAdjacentHTML("afterbegin", html.trim());
-        const names = ["header", "difference", "history", "footer"];
+        const names = ["header", "auth", "difference", "history", "footer"];
         return Promise.all(names.map(loadPart)).then(function (htmls) {
             names.forEach(function (name, i) {
                 putPart(name, htmls[i]);
@@ -46,6 +49,7 @@ function assemblePage() {
 }
 
 function bindPage() {
+    bindAuth();
     bindDifference();
     bindHistory();
     bindFooter();
