@@ -110,8 +110,6 @@ async function createModal() {
         allWallets: "HIDE",
         features: {
             analytics: Boolean(config.reown?.analytics),
-            email: false,
-            socials: false,
         },
     });
 }
