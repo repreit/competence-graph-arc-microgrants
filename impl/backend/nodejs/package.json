@@ -6,8 +6,8 @@
         "node": ">=24"
     },
     "scripts": {
-        "db:migrate": "node --env-file=../../../.env ./src/adapters/db/postgres/migrate.js",
-        "start": "node --env-file=../../../.env ./src/server.js",
+        "db:migrate": "node --env-file-if-exists=../../../.env ./src/adapters/db/postgres/migrate.js",
+        "start": "node --env-file-if-exists=../../../.env ./src/server.js",
         "deploy": "neon functions deploy api --src ./src/app.js"
     },
     "dependencies": {
