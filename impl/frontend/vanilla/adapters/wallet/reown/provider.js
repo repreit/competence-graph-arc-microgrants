@@ -4,7 +4,6 @@ function hasRequest(provider) {
     return Boolean(provider) && typeof provider.request === "function";
 }
 
-/** AppKit provider, else injected MetaMask. */
 export function getProvider(modal) {
     const fromAppKit =
         (typeof modal.getWalletProvider === "function" &&
