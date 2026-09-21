@@ -96,7 +96,7 @@ function getModal() {
 
 async function createModal() {
     const config = await fetchPublicConfig();
-    const projectId = (config.reown && config.reown.projectId) || "";
+    const projectId = config.reown?.projectId || "";
     if (!projectId) {
         throw new Error("reown");
     }
