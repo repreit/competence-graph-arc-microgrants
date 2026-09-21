@@ -14,7 +14,7 @@ export function walletProvider(modal) {
     return null;
 }
 
-export async function addressFromProvider(provider) {
+async function addressFromProvider(provider) {
     if (!provider) {
         return "";
     }
