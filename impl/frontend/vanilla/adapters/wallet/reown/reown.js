@@ -1,24 +1,11 @@
 import { createAppKit } from "@reown/appkit";
 import { EthersAdapter } from "@reown/appkit-adapter-ethers";
 import { defineChain, mainnet } from "@reown/appkit/networks";
+import { apiBase } from "../../../common/js/api-base.js";
 
 let modalPromise;
 let hostNetwork;
 let publicConfigPromise;
-
-function apiBase() {
-    const query = new URLSearchParams(location.search).get("api");
-    if (query) {
-        return query.replace(/\/$/, "");
-    }
-    if (
-        location.hostname === "localhost" ||
-        location.hostname === "127.0.0.1"
-    ) {
-        return "http://127.0.0.1:3000";
-    }
-    return "";
-}
 
 function hexFromUtf8(text) {
     const bytes = new TextEncoder().encode(text);
