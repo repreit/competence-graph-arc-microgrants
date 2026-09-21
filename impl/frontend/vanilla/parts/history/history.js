@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { shortAddress } from "../../common/js/address.js";
+import { shortAddress } from "../../common/js/a001.js";
 
 let windowEl;
 let imageEl;

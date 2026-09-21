@@ -5,8 +5,7 @@ import {
     hostChainId,
 } from "../../adapters/wallet/reown/reown.js";
 import { isUserRejected } from "../../adapters/wallet/reown/provider.js";
-import { shortAddress } from "../../common/js/address.js";
-import { apiBase } from "../../common/js/api.js";
+import { shortAddress, apiBase, pageUri } from "../../common/js/a001.js";
 
 const TOKEN_KEY = "competence-graph.session";
 
@@ -76,7 +75,7 @@ async function signIn() {
     const message = siweMessage({
         domain: location.host,
         address: address,
-        uri: location.origin + location.pathname,
+        uri: pageUri(),
         chainId: chainId,
         nonce: issued.nonce,
     });
