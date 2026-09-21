@@ -31,7 +31,18 @@ export async function readAddress(modal) {
     return address || "";
 }
 
-export function hexFromUtf8(text) {
+export async function signMessage(modal, message, address) {
+    const provider = walletProvider(modal);
+    if (!provider) {
+        throw new Error("wallet");
+    }
+    return provider.request({
+        method: "personal_sign",
+        params: [hexFromUtf8(message), address],
+    });
+}
+
+function hexFromUtf8(text) {
     const bytes = new TextEncoder().encode(text);
     let out = "0x";
     for (let i = 0; i < bytes.length; i += 1) {
