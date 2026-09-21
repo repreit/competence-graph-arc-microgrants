@@ -48,10 +48,15 @@ async function api(path, options) {
     if (session) {
         headers.Authorization = "Bearer " + session;
     }
-    const response = await fetch(
-        base + path,
-        Object.assign({}, options, { headers }),
-    );
+    let response;
+    try {
+        response = await fetch(
+            base + path,
+            Object.assign({}, options, { headers }),
+        );
+    } catch (err) {
+        throw new Error("http", { cause: err });
+    }
     const data = await response.json().catch(function () {
         return {};
     });
@@ -201,7 +206,7 @@ export function bindAuth() {
                 showSignedIn(account);
             }
         })
-        .catch(function () {
-            showStatus("Could not reach the API.");
+        .catch(function (err) {
+            showStatus(errorText(err));
         });
 }
