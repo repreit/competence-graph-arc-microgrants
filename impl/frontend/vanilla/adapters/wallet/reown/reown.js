@@ -114,26 +114,36 @@ async function createModal() {
     });
 }
 
-function eip155Provider(modal) {
-    if (typeof modal.getWalletProvider === "function") {
-        const provider = modal.getWalletProvider();
-        if (provider) {
-            return provider;
-        }
+/** AppKit provider, else injected MetaMask. */
+function walletProvider(modal) {
+    const fromAppKit =
+        (typeof modal.getWalletProvider === "function" &&
+            modal.getWalletProvider()) ||
+        (typeof modal.getProviders === "function" &&
+            modal.getProviders()?.eip155);
+    if (fromAppKit && typeof fromAppKit.request === "function") {
+        return fromAppKit;
     }
-    if (typeof modal.getProviders === "function") {
-        const providers = modal.getProviders();
-        if (providers && providers.eip155) {
-            return providers.eip155;
-        }
+    if (window.ethereum && typeof window.ethereum.request === "function") {
+        return window.ethereum;
     }
     return null;
+}
+
+async function addressFromProvider(provider) {
+    if (!provider) {
+        return "";
+    }
+    const accounts = await provider.request({ method: "eth_accounts" });
+    return Array.isArray(accounts) && accounts[0] ? accounts[0] : "";
 }
 
 function waitForConnect(modal) {
     return new Promise(function (resolve, reject) {
         let seenOpen = false;
         let settled = false;
+        let unsubProvider = null;
+        let unsubState = null;
 
         function finish(err, address) {
             if (settled) {
@@ -158,30 +168,43 @@ function waitForConnect(modal) {
             finish(new Error("wallet"));
         }, 120000);
 
-        const unsubProvider =
-            typeof modal.subscribeProvider === "function"
-                ? modal.subscribeProvider(function (state) {
-                      if (state && state.isConnected && state.address) {
-                          finish(null, state.address);
-                      }
-                  })
-                : null;
+        if (typeof modal.subscribeProvider === "function") {
+            unsubProvider = modal.subscribeProvider(function (state) {
+                if (state && state.address) {
+                    finish(null, state.address);
+                }
+            });
+        }
 
-        const unsubState =
-            typeof modal.subscribeState === "function"
-                ? modal.subscribeState(function (state) {
-                      if (state && state.open) {
-                          seenOpen = true;
-                          return;
-                      }
-                      if (
-                          seenOpen &&
-                          !(modal.getIsConnected && modal.getIsConnected())
-                      ) {
-                          finish(new Error("wallet"));
-                      }
-                  })
-                : null;
+        if (typeof modal.subscribeState === "function") {
+            unsubState = modal.subscribeState(function (state) {
+                if (state && state.open) {
+                    seenOpen = true;
+                    return;
+                }
+                if (!seenOpen) {
+                    return;
+                }
+                // Modal closed: AppKit often reports Connected while getIsConnected is false.
+                const address = modal.getAddress && modal.getAddress();
+                if (address) {
+                    finish(null, address);
+                    return;
+                }
+                addressFromProvider(walletProvider(modal)).then(
+                    function (fromProvider) {
+                        if (fromProvider) {
+                            finish(null, fromProvider);
+                        } else {
+                            finish(new Error("wallet"));
+                        }
+                    },
+                    function (err) {
+                        finish(err && err.code === 4001 ? err : new Error("wallet"));
+                    },
+                );
+            });
+        }
 
         try {
             const opened = modal.open({ view: "Connect" });
@@ -198,11 +221,13 @@ function waitForConnect(modal) {
 
 export async function requestAccount() {
     const modal = await getModal();
-    if (modal.getIsConnected && modal.getIsConnected()) {
-        const address = modal.getAddress && modal.getAddress();
-        if (address) {
-            return address;
-        }
+    const existing = modal.getAddress && modal.getAddress();
+    if (existing) {
+        return existing;
+    }
+    const fromProvider = await addressFromProvider(walletProvider(modal));
+    if (fromProvider) {
+        return fromProvider;
     }
     return waitForConnect(modal);
 }
@@ -222,6 +247,47 @@ export async function switchChain() {
     }
     try {
         await modal.switchNetwork(hostNetwork);
+        return;
+    } catch (err) {
+        if (err && err.code === 4001) {
+            throw err;
+        }
+    }
+
+    const provider = walletProvider(modal);
+    if (!provider) {
+        throw new Error("chain");
+    }
+    const chainIdHex = "0x" + Number(hostNetwork.id).toString(16);
+    try {
+        await provider.request({
+            method: "wallet_switchEthereumChain",
+            params: [{ chainId: chainIdHex }],
+        });
+        return;
+    } catch (err) {
+        if (err && err.code === 4001) {
+            throw err;
+        }
+        if (!err || (err.code !== 4902 && err.code !== -32603)) {
+            throw new Error("chain");
+        }
+    }
+    try {
+        await provider.request({
+            method: "wallet_addEthereumChain",
+            params: [
+                {
+                    chainId: chainIdHex,
+                    chainName: hostNetwork.name,
+                    nativeCurrency: hostNetwork.nativeCurrency,
+                    rpcUrls: hostNetwork.rpcUrls?.default?.http || [],
+                    blockExplorerUrls: hostNetwork.blockExplorers?.default?.url
+                        ? [hostNetwork.blockExplorers.default.url]
+                        : [],
+                },
+            ],
+        });
     } catch (err) {
         if (err && err.code === 4001) {
             throw err;
@@ -232,8 +298,8 @@ export async function switchChain() {
 
 export async function signMessage(message, address) {
     const modal = await getModal();
-    const provider = eip155Provider(modal);
-    if (!provider || typeof provider.request !== "function") {
+    const provider = walletProvider(modal);
+    if (!provider) {
         throw new Error("wallet");
     }
     return provider.request({
