@@ -1,6 +1,7 @@
 .auth {
     display: flex;
     align-items: center;
+    justify-content: flex-end;
     flex-wrap: wrap;
     gap: 0.55rem;
     margin: 0.5rem 0 0;
@@ -30,4 +31,5 @@
 #auth-status {
     flex-basis: 100%;
     margin: 0;
+    text-align: right;
 }
