@@ -1,14 +1,20 @@
+const USER_REJECTED = 4001;
+
+function hasRequest(provider) {
+    return Boolean(provider) && typeof provider.request === "function";
+}
+
 /** AppKit provider, else injected MetaMask. */
-export function walletProvider(modal) {
+export function getProvider(modal) {
     const fromAppKit =
         (typeof modal.getWalletProvider === "function" &&
             modal.getWalletProvider()) ||
         (typeof modal.getProviders === "function" &&
             modal.getProviders()?.eip155);
-    if (fromAppKit && typeof fromAppKit.request === "function") {
+    if (hasRequest(fromAppKit)) {
         return fromAppKit;
     }
-    if (window.ethereum && typeof window.ethereum.request === "function") {
+    if (hasRequest(window.ethereum)) {
         return window.ethereum;
     }
     return null;
@@ -30,11 +36,11 @@ export async function readAddress(modal) {
             return address;
         }
     }
-    return addressFromProvider(walletProvider(modal));
+    return addressFromProvider(getProvider(modal));
 }
 
 export async function signMessage(modal, message, address) {
-    const provider = walletProvider(modal);
+    const provider = getProvider(modal);
     if (!provider) {
         throw new Error("wallet");
     }
@@ -54,5 +60,5 @@ function hexFromUtf8(text) {
 }
 
 export function isUserRejected(err) {
-    return Boolean(err && err.code === 4001);
+    return err?.code === USER_REJECTED;
 }
