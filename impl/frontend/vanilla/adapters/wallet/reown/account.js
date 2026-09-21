@@ -1,5 +1,8 @@
 import { isUserRejected, readAddress } from "./provider.js";
 
+const CONNECT_TIMEOUT_MS = 120000;
+const MODAL_CLOSE_GRACE_MS = 1000;
+
 function finishConnect(ctx, err, address) {
     if (ctx.settled) {
         return;
@@ -33,7 +36,7 @@ function waitForConnect(modal) {
 
         ctx.timer = setTimeout(function () {
             finishConnect(ctx, new Error("wallet"));
-        }, 120000);
+        }, CONNECT_TIMEOUT_MS);
 
         if (typeof modal.subscribeProvider === "function") {
             ctx.unsubProvider = modal.subscribeProvider(function (state) {
@@ -56,9 +59,20 @@ function waitForConnect(modal) {
                     function (address) {
                         if (address) {
                             finishConnect(ctx, null, address);
-                        } else {
-                            finishConnect(ctx, new Error("wallet"));
+                            return;
                         }
+                        // AppKit can set the address just after the modal closes.
+                        setTimeout(function () {
+                            readAddress(modal).then(function (late) {
+                                finishConnect(
+                                    ctx,
+                                    late ? null : new Error("wallet"),
+                                    late,
+                                );
+                            }, function () {
+                                finishConnect(ctx, new Error("wallet"));
+                            });
+                        }, MODAL_CLOSE_GRACE_MS);
                     },
                     function (err) {
                         finishConnect(
