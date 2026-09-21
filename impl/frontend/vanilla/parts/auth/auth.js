@@ -5,7 +5,8 @@ import {
     hostChainId,
 } from "../../adapters/wallet/reown/reown.js";
 import { isUserRejected } from "../../adapters/wallet/reown/provider.js";
-import { apiBase } from "../../common/js/api-base.js";
+import { shortAddress } from "../../common/js/address.js";
+import { apiBase } from "../../common/js/api.js";
 
 const TOKEN_KEY = "competence-graph.session";
 
@@ -19,13 +20,6 @@ function setToken(value) {
     } else {
         sessionStorage.removeItem(TOKEN_KEY);
     }
-}
-
-function shortAddress(address) {
-    if (!address || address.length < 10) {
-        return address || "";
-    }
-    return address.slice(0, 6) + "…" + address.slice(-4);
 }
 
 function siweMessage({ domain, address, uri, chainId, nonce }) {
