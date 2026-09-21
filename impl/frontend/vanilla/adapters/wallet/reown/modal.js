@@ -9,7 +9,6 @@ const WALLET_IDS = [
 
 let modalPromise;
 let hostNetwork;
-let publicConfigPromise;
 
 async function loadPublicConfig() {
     const base = apiBase();
@@ -27,13 +26,6 @@ async function loadPublicConfig() {
         throw new Error("api");
     }
     return data;
-}
-
-function fetchPublicConfig() {
-    if (!publicConfigPromise) {
-        publicConfigPromise = loadPublicConfig();
-    }
-    return publicConfigPromise;
 }
 
 function networkFromHostChain(chain) {
@@ -72,7 +64,7 @@ function networkFromHostChain(chain) {
 }
 
 async function createModal() {
-    const config = await fetchPublicConfig();
+    const config = await loadPublicConfig();
     const projectId = config.reown?.projectId || "";
     if (!projectId) {
         throw new Error("reown");
