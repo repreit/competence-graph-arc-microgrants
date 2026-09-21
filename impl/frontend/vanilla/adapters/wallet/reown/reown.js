@@ -1,10 +1,10 @@
-import { requestAccount as requestAccountFromModal } from "./account.js";
-import { switchChain as switchHostChain } from "./chain.js";
+import * as account from "./account.js";
+import * as chain from "./chain.js";
 import { getHostNetwork, getModal } from "./modal.js";
-import { signMessage as signWithProvider } from "./provider.js";
+import * as provider from "./provider.js";
 
 export async function requestAccount() {
-    return requestAccountFromModal(await getModal());
+    return account.requestAccount(await getModal());
 }
 
 export async function hostChainId() {
@@ -17,9 +17,9 @@ export async function hostChainId() {
 }
 
 export async function switchChain() {
-    await switchHostChain(await getModal(), getHostNetwork());
+    await chain.switchChain(await getModal(), getHostNetwork());
 }
 
 export async function signMessage(message, address) {
-    return signWithProvider(await getModal(), message, address);
+    return provider.signMessage(await getModal(), message, address);
 }
