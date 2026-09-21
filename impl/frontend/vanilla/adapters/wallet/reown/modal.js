@@ -83,9 +83,7 @@ async function createModal() {
             url: location.origin,
             icons: [location.origin + config.app.iconPath],
         },
-        includeWalletIds: WALLET_IDS,
         featuredWalletIds: WALLET_IDS,
-        allWallets: "HIDE",
         features: {
             analytics: Boolean(config.reown?.analytics),
         },
