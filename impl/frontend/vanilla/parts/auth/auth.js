@@ -10,14 +10,14 @@ import { shortAddress, apiBase, pageUri } from "../../common/js/a001.js";
 const TOKEN_KEY = "competence-graph.session";
 
 function token() {
-    return sessionStorage.getItem(TOKEN_KEY);
+    return localStorage.getItem(TOKEN_KEY);
 }
 
 function setToken(value) {
     if (value) {
-        sessionStorage.setItem(TOKEN_KEY, value);
+        localStorage.setItem(TOKEN_KEY, value);
     } else {
-        sessionStorage.removeItem(TOKEN_KEY);
+        localStorage.removeItem(TOKEN_KEY);
     }
 }
 
