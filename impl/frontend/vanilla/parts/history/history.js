@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { shortAddress } from "../../common/js/address.js";
 
 let windowEl;
 let imageEl;
@@ -53,16 +54,6 @@ function unlockScroll() {
     document.body.style.left = "";
     document.body.style.right = "";
     window.scrollTo(0, Math.abs(parseInt(top || "0", 10)));
-}
-
-function shortAddress(address) {
-    if (!address) {
-        return "";
-    }
-    if (address.length < 12) {
-        return address;
-    }
-    return address.slice(0, 6) + "…" + address.slice(-4);
 }
 
 function pairsFromNodes(nodes) {
