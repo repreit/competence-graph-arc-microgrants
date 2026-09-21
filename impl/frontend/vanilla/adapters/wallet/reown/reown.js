@@ -101,8 +101,17 @@ async function createModal() {
             url: location.origin,
             icons: [location.origin + config.app.iconPath],
         },
+        includeWalletIds: [
+            "c57ca95b47569778a828d19178114f2db125b25b778adf5cba72bd778e231769",
+        ],
+        featuredWalletIds: [
+            "c57ca95b47569778a828d19178114f2db125b25b778adf5cba72bd778e231769",
+        ],
+        allWallets: "HIDE",
         features: {
             analytics: Boolean(config.reown?.analytics),
+            email: false,
+            socials: false,
         },
     });
 }
