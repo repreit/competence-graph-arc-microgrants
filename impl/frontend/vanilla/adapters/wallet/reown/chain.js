@@ -41,7 +41,7 @@ async function switchViaProvider(provider, network) {
             method: "wallet_addEthereumChain",
             params: [addChainParams(network)],
         });
-        // Adding registers the chain but can leave the wallet on the old one.
+        // Add then switch.
         await requestSwitch(provider, network);
     } catch (err) {
         throw chainError(err);
