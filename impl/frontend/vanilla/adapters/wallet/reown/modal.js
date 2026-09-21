@@ -23,9 +23,6 @@ async function loadPublicConfig() {
     if (!response.ok) {
         throw new Error("api");
     }
-    if (data.chain?.id == null) {
-        throw new Error("chain");
-    }
     if (!data.app?.name) {
         throw new Error("api");
     }
@@ -40,10 +37,15 @@ function fetchPublicConfig() {
 }
 
 function networkFromHostChain(chain) {
-    const id = Number(chain.id);
-    if (!chain.rpcUrl || !chain.name || !chain.nativeCurrency) {
+    if (
+        chain?.id == null ||
+        !chain.rpcUrl ||
+        !chain.name ||
+        !chain.nativeCurrency
+    ) {
         throw new Error("chain");
     }
+    const id = Number(chain.id);
     const currency = chain.nativeCurrency;
     return defineChain({
         id: id,
