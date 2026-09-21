@@ -1,4 +1,6 @@
-import { getProvider, isChainNotAdded, isUserRejected } from "./provider.js";
+import { getProvider, isUserRejected } from "./provider.js";
+
+const CHAIN_NOT_ADDED = 4902;
 
 function chainIdFromNetwork(network) {
     return "0x" + Number(network.id).toString(16);
@@ -18,6 +20,14 @@ function chainParams(network) {
 
 function chainError(err) {
     return isUserRejected(err) ? err : new Error("chain", { cause: err });
+}
+
+function isChainNotAdded(err) {
+    return (
+        err?.code === CHAIN_NOT_ADDED ||
+        err?.data?.originalError?.code === CHAIN_NOT_ADDED ||
+        err?.data?.code === CHAIN_NOT_ADDED
+    );
 }
 
 function requestSwitch(provider, network) {
