@@ -71,6 +71,7 @@ section {
 .difference > h2,
 .difference > p,
 header,
+.auth,
 footer,
 main > section:not(.difference) {
     transition:
@@ -81,6 +82,7 @@ main > section:not(.difference) {
 body:has(.time-scene:hover)
     :is(
         header,
+        .auth,
         footer,
         .difference > :not(.time-scene),
         main > section:not(.difference)
@@ -88,6 +90,7 @@ body:has(.time-scene:hover)
 body:has(.clip:focus-visible)
     :is(
         header,
+        .auth,
         footer,
         .difference > :not(.time-scene),
         main > section:not(.difference)
@@ -95,6 +98,7 @@ body:has(.clip:focus-visible)
 body.timeline-focus
     :is(
         header,
+        .auth,
         footer,
         .difference > :not(.time-scene),
         main > section:not(.difference)
