@@ -1,0 +1,33 @@
+.auth {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+    margin: 0.5rem 0 0;
+}
+
+.auth button {
+    font: inherit;
+    font-size: 0.85rem;
+    color: inherit;
+    background: transparent;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 0.15rem 0.55rem;
+    cursor: pointer;
+}
+
+.auth button:disabled {
+    opacity: 0.55;
+    cursor: default;
+}
+
+#account-address {
+    font-size: 0.85rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+#auth-status {
+    flex-basis: 100%;
+    margin: 0;
+}
