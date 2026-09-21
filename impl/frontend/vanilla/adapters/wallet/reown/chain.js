@@ -1,4 +1,4 @@
-import { getProvider, isUserRejected } from "./provider.js";
+import { getProvider, isChainNotAdded, isUserRejected } from "./provider.js";
 
 function chainIdHex(network) {
     return "0x" + Number(network.id).toString(16);
@@ -16,19 +16,24 @@ function addChainParams(network) {
     };
 }
 
+function chainError(err) {
+    return isUserRejected(err) ? err : new Error("chain", { cause: err });
+}
+
+function requestSwitch(provider, network) {
+    return provider.request({
+        method: "wallet_switchEthereumChain",
+        params: [{ chainId: chainIdHex(network) }],
+    });
+}
+
 async function switchViaProvider(provider, network) {
     try {
-        await provider.request({
-            method: "wallet_switchEthereumChain",
-            params: [{ chainId: chainIdHex(network) }],
-        });
+        await requestSwitch(provider, network);
         return;
     } catch (err) {
-        if (isUserRejected(err)) {
-            throw err;
-        }
-        if (!err || (err.code !== 4902 && err.code !== -32603)) {
-            throw new Error("chain");
+        if (!isChainNotAdded(err)) {
+            throw chainError(err);
         }
     }
     try {
@@ -36,11 +41,10 @@ async function switchViaProvider(provider, network) {
             method: "wallet_addEthereumChain",
             params: [addChainParams(network)],
         });
+        // Adding registers the chain but can leave the wallet on the old one.
+        await requestSwitch(provider, network);
     } catch (err) {
-        if (isUserRejected(err)) {
-            throw err;
-        }
-        throw new Error("chain");
+        throw chainError(err);
     }
 }
 
@@ -48,6 +52,7 @@ export async function switchChain(modal, network) {
     if (!network) {
         throw new Error("chain");
     }
+    let appKitError = null;
     try {
         await modal.switchNetwork(network);
         return;
@@ -55,11 +60,12 @@ export async function switchChain(modal, network) {
         if (isUserRejected(err)) {
             throw err;
         }
+        appKitError = err;
     }
 
     const provider = getProvider(modal);
     if (!provider) {
-        throw new Error("chain");
+        throw chainError(appKitError);
     }
     await switchViaProvider(provider, network);
 }
