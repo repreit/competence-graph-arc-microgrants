@@ -9,7 +9,7 @@ export function apiBase() {
         location.hostname === "localhost" ||
         location.hostname === "127.0.0.1"
     ) {
-        return "http://127.0.0.1:3000";
+        return api.local;
     }
     return api.base;
 }
