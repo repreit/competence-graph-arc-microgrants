@@ -6,6 +6,7 @@
     "editor.detectIndentation": false,
     "editor.formatOnSave": true,
     "editor.fontSize": 14,
+    "liveServer.settings.root": "/impl/frontend/vanilla",
     "workbench.colorTheme": "Cursor Dark High Contrast",
     "workbench.editor.restoreViewState": false,
     "window.autoDetectColorScheme": false
