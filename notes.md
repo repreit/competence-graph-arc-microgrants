@@ -24,7 +24,7 @@ rm -rf ~/"Library/Application Support/Cursor/User/workspaceStorage"
 # Frequently used prompts
 
 ```
-Code-review the whole project. (in Ask mode)
+Code-review the whole project. (in read-only mode)
 ```
 
 # TODOs
