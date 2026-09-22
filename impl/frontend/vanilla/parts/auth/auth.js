@@ -73,7 +73,7 @@ async function signIn() {
     emit("signInStarted", { authPending: true, authError: "" });
     try {
         const address = await requestAccount();
-        const issued = await api("/auth/nonce");
+        const { nonce } = await api("/auth/nonce");
         const chainId = await hostChainId();
         await switchChain();
         const message = siweMessage({
@@ -81,7 +81,7 @@ async function signIn() {
             address: address,
             uri: pageUri(),
             chainId: chainId,
-            nonce: issued.nonce,
+            nonce: nonce,
         });
         const signature = await signMessage(message, address);
         const result = await api("/auth/verify", {
