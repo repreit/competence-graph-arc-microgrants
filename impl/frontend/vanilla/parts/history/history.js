@@ -568,13 +568,12 @@ function bindHistoryControls(graph) {
     }
 }
 
-function showGraphLoadError() {
+function showGraphError(message) {
     if (!blurbEl) {
         return;
     }
     blurbEl.hidden = false;
-    blurbEl.textContent =
-        "Could not load the 3D graph. Check the network and reload.";
+    blurbEl.textContent = message;
 }
 
 function createHistoryGraph(ForceGraph3D) {
@@ -627,7 +626,9 @@ function ensureHistoryGraph() {
             if (typeof console !== "undefined" && console.error) {
                 console.error(err);
             }
-            showGraphLoadError();
+            showGraphError(
+                "Could not load the 3D graph. Check the network and reload.",
+            );
             return null;
         });
     return historyGraphPending;
@@ -644,19 +645,25 @@ function renderHistory(account) {
         "aria-label",
         label + ". Click a deed to open details.",
     );
-    ensureHistoryGraph().then(function (graph) {
-        if (!graph || address !== activeAddress) {
-            return;
-        }
-        historyEpoch += 1;
-        hoveredNodeId = "";
-        hoveredNode = null;
-        boardEl.style.cursor = "";
-        disposeHistoryGpu(graph);
-        graph.graphData(graphDataFromHistory(history));
-        sizeHistoryGraph();
-        scheduleFitHistoryGraph();
-    });
+    ensureHistoryGraph()
+        .then(function (graph) {
+            if (!graph || address !== activeAddress) {
+                return;
+            }
+            historyEpoch += 1;
+            hoveredNodeId = "";
+            hoveredNode = null;
+            boardEl.style.cursor = "";
+            disposeHistoryGpu(graph);
+            graph.graphData(graphDataFromHistory(history));
+            sizeHistoryGraph();
+            scheduleFitHistoryGraph();
+        })
+        .catch(function () {
+            showGraphError(
+                "Could not draw the graph for this address. Reload to try again.",
+            );
+        });
 }
 
 function showHistory(address) {
@@ -812,11 +819,8 @@ export function bindHistory() {
             showHistory(list[0] && list[0].address);
         })
         .catch(function () {
-            if (!blurbEl) {
-                return;
-            }
-            blurbEl.hidden = false;
-            blurbEl.textContent =
-                "Could not load this example. Serve this folder with a local server, or open the GitHub Pages demo.";
+            showGraphError(
+                "Could not load this example. Serve this folder with a local server, or open the GitHub Pages demo.",
+            );
         });
 }
