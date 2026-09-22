@@ -1,0 +1,125 @@
+#!/usr/bin/env bash
+# Cline Hook: PreToolUse (gitignore guard)
+#
+# Blocks read_files / editor / apply_patch when the target path matches a
+# pattern in the workspace .gitignore. Shell commands (run_commands) are NOT
+# blocked, to avoid false positives.
+#
+# Install (VS Code extension): the file name must be exactly "PreToolUse" in
+#   .clinerules/hooks/ (workspace) or ~/Documents/Cline/Hooks/ (global),
+#   with a shebang plus the executable bit, and "Hooks" enabled in Cline's
+#   feature settings.
+#
+# Requires: jq, git (git is used purely as a gitignore pattern matcher; the
+# workspace does not need to be a git repository).
+
+set -eu
+
+input=$(cat)
+
+tool=$(echo "$input" | jq -r '.tool_call.name // .preToolUse.toolName // ""')
+
+# Guard file-access tools only. Everything else passes through.
+case "$tool" in
+  read_files|editor|apply_patch) ;;
+  *) echo '{"cancel": false}'; exit 0 ;;
+esac
+
+root=$(echo "$input" | jq -r '.workspaceRoots[0] // empty')
+[ -n "$root" ] || root="$PWD"
+ignore_file="$root/.gitignore"
+if [ ! -f "$ignore_file" ]; then
+  echo '{"cancel": false}'
+  exit 0
+fi
+
+# Normalize the tool input: prefer the rich CLI shape, fall back to the
+# extension's stringified parameters (dejson re-parses those values).
+jq_prelude='
+  def dejson: if type == "string" then (fromjson? // .) else . end;
+  ((.tool_call.input // .preToolUse.parameters // {}) | dejson) as $in |'
+
+case "$tool" in
+  apply_patch)
+    paths=$(echo "$input" | jq -r "$jq_prelude"'
+        if ($in | type) == "string" then $in
+        elif ($in | type) == "object" then ($in.input // "" | dejson)
+        else "" end | strings' \
+      | sed -n \
+          -e 's/^\*\*\* Add File: //p' \
+          -e 's/^\*\*\* Update File: //p' \
+          -e 's/^\*\*\* Delete File: //p' \
+          -e 's/^\*\*\* Move to: //p')
+    ;;
+  *)
+    paths=$(echo "$input" | jq -r "$jq_prelude"'
+        (if ($in | type) == "string" then [$in]
+         elif ($in | type) == "array" then $in
+         elif ($in | type) == "object" then
+           [$in.path?, $in.file_path?, $in.filePath?]
+           + (($in.files // []) | dejson | if type == "array" then . else [.] end)
+           + (($in.paths // []) | dejson | if type == "array" then . else [.] end)
+           + (($in.file_paths // []) | dejson | if type == "array" then . else [.] end)
+         else [] end)
+        | .[]
+        | dejson
+        | if type == "object" then (.path // .file_path // .filePath // empty) else . end
+        | strings')
+    ;;
+esac
+
+# Lexically collapse ".", "..", and empty segments of an absolute path, so
+# noncanonical forms like ./secrets/../.env cannot slip past the checks.
+normalize_abs() {
+  local out="" seg rest="$1/"
+  while [ -n "$rest" ]; do
+    seg="${rest%%/*}"
+    rest="${rest#*/}"
+    case "$seg" in
+      ""|".") ;;
+      "..") out="${out%/*}" ;;
+      *) out="$out/$seg" ;;
+    esac
+  done
+  printf '%s\n' "${out:-/}"
+}
+
+# Make paths canonical and workspace-relative. Paths outside the workspace are
+# not covered by .gitignore, so they pass through.
+root=$(normalize_abs "$root")
+rel_paths=""
+while IFS= read -r p; do
+  [ -n "$p" ] || continue
+  case "$p" in
+    /*) ;;
+    *) p="$root/$p" ;;
+  esac
+  p=$(normalize_abs "$p")
+  case "$p" in
+    "$root"/*) rel_paths+="${p#"$root"/}"$'\n' ;;
+  esac
+done <<< "$paths"
+
+if [ -z "$rel_paths" ]; then
+  echo '{"cancel": false}'
+  exit 0
+fi
+
+# Evaluate paths against the workspace .gitignore with real gitignore
+# semantics. Running inside an empty scratch repo scopes the check to
+# .gitignore alone (nested .gitignore files are never consulted) and works
+# even outside a git repository.
+scratch=$(mktemp -d)
+trap 'rm -rf "$scratch"' EXIT
+git init -q "$scratch"
+
+blocked=$(printf '%s' "$rel_paths" \
+  | git -C "$scratch" -c core.excludesFile="$ignore_file" check-ignore --stdin --no-index 2>/dev/null \
+  | paste -sd, -)
+
+if [ -n "$blocked" ]; then
+  jq -n --arg tool "$tool" --arg files "$blocked" \
+    '{cancel: true, errorMessage: "Blocked \($tool): \($files) matched a .gitignore pattern, so Cline may not access it. Edit .gitignore if access should be allowed."}'
+else
+  echo '{"cancel": false}'
+fi
