@@ -6,6 +6,7 @@ import {
 } from "../../adapters/wallet/reown/reown.js";
 import { isUserRejected } from "../../adapters/wallet/reown/provider.js";
 import { shortAddress, apiBase, pageUri } from "../../common/js/a001.js";
+import { emit, on, state } from "../../common/js/store.js";
 
 const TOKEN_KEY = "competence-graph.session-token";
 
@@ -69,40 +70,63 @@ async function api(path, options) {
 
 // TODO: review AppKit SIWE / One-Click Auth
 async function signIn() {
-    const address = await requestAccount();
-    const issued = await api("/auth/nonce");
-    const chainId = await hostChainId();
-    await switchChain();
-    const message = siweMessage({
-        domain: location.host,
-        address: address,
-        uri: pageUri(),
-        chainId: chainId,
-        nonce: issued.nonce,
-    });
-    const signature = await signMessage(message, address);
-    const result = await api("/auth/verify", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: message, signature: signature }),
-    });
-    setToken(result.token);
-    return result;
-}
-
-async function restore() {
-    if (!token()) {
+    emit("signInStarted", { authPending: true, authError: "" });
+    try {
+        const address = await requestAccount();
+        const issued = await api("/auth/nonce");
+        const chainId = await hostChainId();
+        await switchChain();
+        const message = siweMessage({
+            domain: location.host,
+            address: address,
+            uri: pageUri(),
+            chainId: chainId,
+            nonce: issued.nonce,
+        });
+        const signature = await signMessage(message, address);
+        const result = await api("/auth/verify", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ message: message, signature: signature }),
+        });
+        setToken(result.token);
+        emit("signedIn", {
+            account: { id: result.id, address: result.address },
+            authPending: false,
+        });
+        return result;
+    } catch (err) {
+        emit("authFailed", {
+            authPending: false,
+            authError: errorText(err),
+        });
         return null;
     }
-    try {
-        return await api("/auth/me");
-    } catch (err) {
-        if (err.status === 401) {
-            setToken("");
-            return null;
-        }
-        throw err;
+}
+
+function restore() {
+    if (!token()) {
+        emit("signedOut", { account: null, authPending: false });
+        return Promise.resolve(null);
     }
+    emit("signInStarted", { authPending: true, authError: "" });
+    return api("/auth/me")
+        .then(function (account) {
+            emit("signedIn", { account: account, authPending: false });
+            return account;
+        })
+        .catch(function (err) {
+            if (err.status === 401) {
+                setToken("");
+                emit("signedOut", { account: null, authPending: false });
+                return null;
+            }
+            emit("authFailed", {
+                authPending: false,
+                authError: errorText(err),
+            });
+            return null;
+        });
 }
 
 async function signOut() {
@@ -114,6 +138,7 @@ async function signOut() {
         }
     }
     setToken("");
+    emit("signedOut", { account: null, authError: "" });
 }
 
 function errorText(err) {
@@ -150,63 +175,43 @@ export function bindAuth() {
         return;
     }
 
-    function showStatus(text) {
-        statusEl.hidden = !text;
-        statusEl.textContent = text || "";
+    function render(next) {
+        const account = next.account;
+        signInEl.hidden = Boolean(account);
+        signInEl.disabled = next.authPending;
+        signOutEl.hidden = !account;
+        addressEl.hidden = !account;
+        addressEl.textContent = account ? shortAddress(account.address) : "";
+        if (account) {
+            addressEl.title = account.address;
+        } else {
+            addressEl.removeAttribute("title");
+        }
+        statusEl.hidden = !next.authError;
+        statusEl.textContent = next.authError || "";
     }
 
-    function showSignedOut() {
-        signInEl.hidden = false;
-        signOutEl.hidden = true;
-        addressEl.hidden = true;
-        addressEl.textContent = "";
-        addressEl.removeAttribute("title");
-    }
-
-    function showSignedIn(account) {
-        signInEl.hidden = true;
-        signOutEl.hidden = false;
-        addressEl.hidden = false;
-        addressEl.textContent = shortAddress(account.address);
-        addressEl.title = account.address;
-        showStatus("");
-    }
+    ["signInStarted", "signedIn", "signedOut", "authFailed"].forEach(
+        function (name) {
+            on(name, render);
+        },
+    );
 
     signInEl.addEventListener("click", function () {
-        signInEl.disabled = true;
-        showStatus("");
-        signIn()
-            .then(showSignedIn)
-            .catch(function (err) {
-                showStatus(errorText(err));
-            })
-            .finally(function () {
-                signInEl.disabled = false;
-            });
+        signIn();
     });
 
     signOutEl.addEventListener("click", function () {
         signOutEl.disabled = true;
         signOut()
-            .then(function () {
-                showSignedOut();
-                showStatus("");
-            })
             .catch(function () {
-                showStatus("Could not sign out.");
+                emit("authFailed", { authError: "Could not sign out." });
             })
             .finally(function () {
                 signOutEl.disabled = false;
             });
     });
 
-    restore()
-        .then(function (account) {
-            if (account) {
-                showSignedIn(account);
-            }
-        })
-        .catch(function (err) {
-            showStatus(errorText(err));
-        });
+    render(state);
+    restore();
 }
