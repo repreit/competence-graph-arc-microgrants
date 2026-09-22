@@ -1,9 +1,7 @@
 export let state = Object.freeze({
     account: null,
-    accountPending: false,
-    accountError: "",
-    addresses: [],
-    activeAddress: "",
+    authPending: false,
+    authError: "",
 });
 
 const listeners = new Map();
