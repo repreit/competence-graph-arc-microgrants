@@ -10,7 +10,7 @@ import { emit, on, state } from "../../common/js/store.js";
 
 const TOKEN_KEY = "competence-graph.session-token";
 
-function token() {
+function getToken() {
     return localStorage.getItem(TOKEN_KEY);
 }
 
@@ -44,7 +44,7 @@ async function api(path, options) {
         throw new Error("api");
     }
     const headers = Object.assign({}, options && options.headers);
-    const session = token();
+    const session = getToken();
     if (session) {
         headers.Authorization = "Bearer " + session;
     }
@@ -105,7 +105,7 @@ async function signIn() {
 }
 
 function restore() {
-    if (!token()) {
+    if (!getToken()) {
         emit("signedOut", { account: null, authPending: false });
         return Promise.resolve(null);
     }
