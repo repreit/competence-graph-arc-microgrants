@@ -8,7 +8,7 @@ let linkEl;
 let boardEl;
 let blurbEl;
 let addressesEl;
-let accounts = [];
+let addresses = [];
 let activeAddress = "";
 let historyGraph = null;
 let historyGraphPending = null;
@@ -661,23 +661,31 @@ function renderHistory(account) {
 
 function showHistory(address) {
     const account =
-        accounts.find(function (item) {
+        addresses.find(function (item) {
             return item.address === address;
-        }) || accounts[0];
+        }) || addresses[0];
     if (!account || !addressesEl) {
         return;
     }
     activeAddress = account.address || "";
+    renderSelection();
+    renderHistory(account);
+}
+
+function renderSelection() {
+    if (!addressesEl) {
+        return;
+    }
     addressesEl.querySelectorAll("button").forEach(function (button) {
         button.setAttribute(
             "aria-pressed",
             button.dataset.address === activeAddress ? "true" : "false",
         );
     });
-    renderHistory(account);
 }
 
 function renderAddresses(list) {
+    addresses = list;
     if (!addressesEl) {
         return;
     }
@@ -698,6 +706,7 @@ function renderAddresses(list) {
         });
         addressesEl.appendChild(button);
     });
+    renderSelection();
 }
 
 if (window.matchMedia) {
@@ -799,9 +808,8 @@ export function bindHistory() {
             );
         })
         .then(function (list) {
-            accounts = list;
-            renderAddresses(accounts);
-            showHistory(accounts[0] && accounts[0].address);
+            renderAddresses(list);
+            showHistory(list[0] && list[0].address);
         })
         .catch(function () {
             if (!blurbEl) {
