@@ -15,13 +15,18 @@ async function loadPublicConfig() {
     if (!base) {
         throw new Error("api");
     }
-    const response = await fetch(base + "/public-config");
+    let response;
+    try {
+        response = await fetch(base + "/public-config");
+    } catch (err) {
+        throw new Error("http", { cause: err });
+    }
+    if (!response.ok) {
+        throw new Error("http");
+    }
     const data = await response.json().catch(function () {
         return {};
     });
-    if (!response.ok) {
-        throw new Error("api");
-    }
     if (!data.app?.name) {
         throw new Error("api");
     }
@@ -94,7 +99,10 @@ async function createModal() {
 
 export function getModal() {
     if (!modalPromise) {
-        modalPromise = createModal();
+        modalPromise = createModal().catch(function (err) {
+            modalPromise = null;
+            throw err;
+        });
     }
     return modalPromise;
 }

@@ -153,7 +153,7 @@ function errorText(err) {
         return "Connect a wallet to continue.";
     }
     if (err.message === "reown") {
-        return "No Reown project id. Set REOWN_PROJECT_ID on the API.";
+        return "The API has no Reown project id.";
     }
     if (err.message === "chain") {
         return "Switch the wallet to this host's chain, then try again.";
