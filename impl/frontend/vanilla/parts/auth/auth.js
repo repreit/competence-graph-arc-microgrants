@@ -179,10 +179,10 @@ export function bindAuth() {
         return;
     }
 
-    function render(next) {
-        const account = next.account;
+    function render(nextState) {
+        const account = nextState.account;
         signInEl.hidden = Boolean(account);
-        signInEl.disabled = next.authPending;
+        signInEl.disabled = nextState.authPending;
         signOutEl.hidden = !account;
         addressEl.hidden = !account;
         addressEl.textContent = account ? shortAddress(account.address) : "";
@@ -191,8 +191,8 @@ export function bindAuth() {
         } else {
             addressEl.removeAttribute("title");
         }
-        statusEl.hidden = !next.authError;
-        statusEl.textContent = next.authError || "";
+        statusEl.hidden = !nextState.authError;
+        statusEl.textContent = nextState.authError || "";
     }
 
     ["signInStarted", "signedIn", "signedOut", "authFailed"].forEach(
