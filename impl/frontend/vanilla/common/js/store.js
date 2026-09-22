@@ -13,7 +13,11 @@ export function emit(name, patch) {
         return;
     }
     group.forEach(function (listener) {
-        listener(state);
+        try {
+            listener(state);
+        } catch (err) {
+            console.error(err);
+        }
     });
 }
 
