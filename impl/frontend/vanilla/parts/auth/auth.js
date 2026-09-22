@@ -106,7 +106,7 @@ async function signIn() {
 
 function restore() {
     if (!getToken()) {
-        emit("signedOut", { account: null, authPending: false });
+        emit("signedOut", { account: null, authPending: false, authError: "" });
         return Promise.resolve(null);
     }
     emit("signInStarted", { authPending: true, authError: "" });
@@ -118,7 +118,11 @@ function restore() {
         .catch(function (err) {
             if (err.status === 401) {
                 setToken("");
-                emit("signedOut", { account: null, authPending: false });
+                emit("signedOut", {
+                    account: null,
+                    authPending: false,
+                    authError: "",
+                });
                 return null;
             }
             emit("authFailed", {
@@ -138,7 +142,7 @@ async function signOut() {
         }
     }
     setToken("");
-    emit("signedOut", { account: null, authError: "" });
+    emit("signedOut", { account: null, authPending: false, authError: "" });
 }
 
 function errorText(err) {
@@ -205,7 +209,10 @@ export function bindAuth() {
         signOutEl.disabled = true;
         signOut()
             .catch(function () {
-                emit("authFailed", { authError: "Could not sign out." });
+                emit("authFailed", {
+                    authPending: false,
+                    authError: "Could not sign out.",
+                });
             })
             .finally(function () {
                 signOutEl.disabled = false;
