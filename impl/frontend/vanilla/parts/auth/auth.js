@@ -67,6 +67,7 @@ async function api(path, options) {
     return data;
 }
 
+// TODO: review AppKit SIWE / One-Click Auth
 async function signIn() {
     const address = await requestAccount();
     const issued = await api("/auth/nonce");
