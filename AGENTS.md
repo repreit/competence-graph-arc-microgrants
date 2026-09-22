@@ -1,6 +1,6 @@
 # Git commit
 
-When generating a Git commit message for this repo, use one short subject line (about 50–72 characters). Focus on why, not a file-by-file list. No body unless the change is non-obvious, and then at most two short sentences.
+When generating a Git commit message for this repo, write one line only. Keep it about 50–72 characters. Never add a body, a second line, or bullet points. Focus on why, not a file-by-file list.
 
 # Replies
 
