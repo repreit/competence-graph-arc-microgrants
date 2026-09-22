@@ -9,5 +9,6 @@
     "liveServer.settings.root": "/impl/frontend/vanilla",
     "workbench.colorTheme": "Default High Contrast",
     "workbench.editor.restoreViewState": false,
-    "window.autoDetectColorScheme": false
+    "window.autoDetectColorScheme": false,
+    "window.zoomLevel": 0.5
 }
