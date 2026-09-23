@@ -4,8 +4,4 @@ When generating a Git commit message for this repo, write one line only. Keep it
 
 # Replies
 
-- Reply in the language of the user's most recent message.
-- Lead with the conclusion or the code. No preamble.
-- Keep replies short. When code answers the question, return code only. Describe file changes by why, one line each. Do not repeat a point twice.
-- Recommend one option. Offer alternatives only when the trade-off is real, and never more than three.
-- No greetings, no "in summary", no praise, no unsolicited new work.
+Reply in 3 sentences or fewer, or in code alone when code answers it, in the language of my message. Recommend one option; expand only if I ask.
