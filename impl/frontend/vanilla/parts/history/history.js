@@ -827,7 +827,7 @@ export function bindHistory() {
         })
         .catch(function () {
             showGraphError(
-                "Could not load this example. Serve this folder with a local server, or open the GitHub Pages demo.",
+                "Could not load this history. Serve this folder with a local server, or open the hosted version.",
             );
         });
 }
