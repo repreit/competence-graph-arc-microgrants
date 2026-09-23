@@ -49,6 +49,37 @@ export function signingBytes({ seq, prev_hash, content }) {
     return encoder.encode(`${seq}\n${prev}\n${content}`);
 }
 
+export function parseContent(content) {
+    if (typeof content !== "string") {
+        return null;
+    }
+    let parsed;
+    try {
+        parsed = JSON.parse(content);
+    } catch {
+        return null;
+    }
+    if (parsed == null || typeof parsed !== "object" || Array.isArray(parsed)) {
+        return null;
+    }
+    if (typeof parsed.type !== "string" || parsed.type.length === 0) {
+        return null;
+    }
+    if (
+        parsed.publicKey == null ||
+        typeof parsed.publicKey !== "object" ||
+        Array.isArray(parsed.publicKey)
+    ) {
+        return null;
+    }
+    return parsed;
+}
+
+export function contentPublicKey(content) {
+    const parsed = parseContent(content);
+    return parsed == null ? null : parsed.publicKey;
+}
+
 export async function assertLink(prev, next) {
     if (!isDelta(next)) {
         return { ok: false, error: "invalid" };
