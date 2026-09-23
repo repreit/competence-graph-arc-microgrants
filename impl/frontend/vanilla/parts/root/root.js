@@ -60,6 +60,6 @@ assemblePage()
     .catch(function () {
         document.body.insertAdjacentHTML(
             "afterbegin",
-            '<p class="muted">Could not load this page. Serve this folder with a local server, or open the GitHub Pages demo.</p>',
+            '<p class="muted">Could not load this page. Serve this folder with a local server, or open the hosted version.</p>',
         );
     });
