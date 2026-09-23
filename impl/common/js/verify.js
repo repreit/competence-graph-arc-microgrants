@@ -20,19 +20,23 @@ export async function verifyDeltaSignature(
     if (typeof signature !== "string" || signature.length === 0) {
         return false;
     }
-    const key = await crypto.subtle.importKey(
-        "jwk",
-        publicKey,
-        { name: "ECDSA", namedCurve: "P-256" },
-        false,
-        ["verify"],
-    );
-    const data = signingBytes({ seq, prev_hash, content });
-    const sig = base64UrlToBytes(signature);
-    return crypto.subtle.verify(
-        { name: "ECDSA", hash: "SHA-256" },
-        key,
-        sig,
-        data,
-    );
+    try {
+        const key = await crypto.subtle.importKey(
+            "jwk",
+            publicKey,
+            { name: "ECDSA", namedCurve: "P-256" },
+            false,
+            ["verify"],
+        );
+        const data = signingBytes({ seq, prev_hash, content });
+        const sig = base64UrlToBytes(signature);
+        return await crypto.subtle.verify(
+            { name: "ECDSA", hash: "SHA-256" },
+            key,
+            sig,
+            data,
+        );
+    } catch {
+        return false;
+    }
 }
