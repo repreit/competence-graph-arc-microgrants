@@ -10,5 +10,17 @@
     "workbench.colorTheme": "Default High Contrast",
     "workbench.editor.restoreViewState": false,
     "window.autoDetectColorScheme": false,
-    "window.zoomLevel": 0.5
+    "window.zoomLevel": 0.5,
+
+    "workbench.colorCustomizations": {
+        "diffEditor.insertedLineBackground": "#3fb9501f",
+        "diffEditor.insertedTextBackground": "#3fb9504d",
+        "diffEditor.insertedTextBorder": "#3fb95066",
+
+        "diffEditor.removedLineBackground": "#ef444433",
+        "diffEditor.removedTextBackground": "#ef444459",
+        "diffEditor.removedTextBorder": "#ef444480",
+
+        "diffEditor.diagonalFill": "#2b2b2b80"
+    }
 }
