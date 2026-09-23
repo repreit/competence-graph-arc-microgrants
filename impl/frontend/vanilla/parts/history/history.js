@@ -142,27 +142,34 @@ function fitHistoryGraph() {
     if (camera && camera.up) {
         camera.up.set(0, 1, 0);
     }
-    const controls = historyGraph.controls();
-    if (controls && controls.target) {
-        controls.target.set(0, 0, 0);
-    }
-    historyGraph.cameraPosition(
-        { x: 0, y: 0, z: 400 },
-        { x: 0, y: 0, z: 0 },
-        0,
-    );
-    historyGraph.zoomToFit(0, 16);
-    const cam = historyGraph.cameraPosition();
-    if (!cam) {
+    const nodes = historyGraph.graphData().nodes || [];
+    let x0 = Infinity;
+    let x1 = -Infinity;
+    let y0 = Infinity;
+    let y1 = -Infinity;
+    nodes.forEach(function (node) {
+        const x = isFinite(node.fx) ? node.fx : node.x || 0;
+        const y = isFinite(node.fy) ? node.fy : node.y || 0;
+        x0 = Math.min(x0, x - CARD_HX);
+        x1 = Math.max(x1, x + CARD_HX);
+        y0 = Math.min(y0, y - CARD_HY);
+        y1 = Math.max(y1, y + CARD_HY);
+    });
+    if (!camera || !isFinite(x0) || !isFinite(y0)) {
         return;
     }
+    const height = Math.max(historyGraph.height() || 1, 1);
+    const paddedFov = (1 - 32 / height) * camera.fov;
+    const maxBoxSide = Math.max(x1 - x0, y1 - y0);
+    const distance =
+        (maxBoxSide / Math.atan((paddedFov * Math.PI) / 180)) *
+        Math.max(1, 1 / camera.aspect) *
+        FIT_PULL;
+    const cx = (x0 + x1) / 2;
+    const cy = (y0 + y1) / 2;
     historyGraph.cameraPosition(
-        {
-            x: cam.x * FIT_PULL,
-            y: cam.y * FIT_PULL,
-            z: cam.z * FIT_PULL,
-        },
-        { x: 0, y: 0, z: 0 },
+        { x: cx, y: cy, z: distance },
+        { x: cx, y: cy, z: 0 },
         400,
     );
 }
