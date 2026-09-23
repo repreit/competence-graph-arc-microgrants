@@ -123,12 +123,12 @@ export async function unbindKey(accountId, bindingId, { content, signature }) {
     }
 }
 
-// TODO: avoid always scanning all active keys
-export async function activePublicKeys(accountId) {
+export async function findActiveByKey(accountId, publicKey) {
+    const keyText = canonicalPublicKey(publicKey);
     const { rows } = await pool.query(
-        `SELECT public_key FROM bindings
-     WHERE account_id = $1 AND unbind_seq IS NULL`,
-        [accountId],
+        `SELECT id, public_key FROM bindings
+     WHERE account_id = $1 AND public_key = $2 AND unbind_seq IS NULL`,
+        [accountId, keyText],
     );
-    return rows.map((row) => JSON.parse(row.public_key));
+    return rows[0] ?? null;
 }
