@@ -4,14 +4,14 @@ import { bindHistory } from "../history/history.js";
 import { bindFooter } from "../footer/footer.js";
 
 function addPartStyles() {
-    ["header", "auth", "difference", "history", "footer"].forEach(function (
-        name,
-    ) {
-        const link = document.createElement("link");
-        link.rel = "stylesheet";
-        link.href = "parts/" + name + "/" + name + ".css";
-        document.head.appendChild(link);
-    });
+    ["header", "auth", "difference", "history", "footer"].forEach(
+        function (name) {
+            const link = document.createElement("link");
+            link.rel = "stylesheet";
+            link.href = "parts/" + name + "/" + name + ".css";
+            document.head.appendChild(link);
+        },
+    );
 }
 
 function loadPart(name) {
