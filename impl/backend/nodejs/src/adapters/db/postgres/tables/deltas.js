@@ -4,6 +4,7 @@ import {
     hashContent,
 } from "../../../../../../../common/js/delta.js";
 import { pool } from "../pool.js";
+import { withTransaction } from "../transaction.js";
 
 export async function findTip(accountId, client = pool, forUpdate = false) {
     const { rows } = await client.query(
@@ -31,7 +32,7 @@ export async function nextLink(accountId) {
 }
 
 /** Requires an open transaction on `client` (FOR UPDATE must span the insert). */
-export async function appendDelta(accountId, row, client) {
+export async function appendDeltaInTx(accountId, row, client) {
     const tip = await findTip(accountId, client, true);
     const seq = tip ? tip.seq + 1 : 1;
     const prev_hash = tip ? await hashContent(tip.content) : null;
@@ -57,24 +58,15 @@ export async function appendDelta(accountId, row, client) {
     return { ok: true, row: { ...rows[0], seq: Number(rows[0].seq) } };
 }
 
-export async function appendDeltaRow(accountId, row) {
-    const client = await pool.connect();
+export async function appendDelta(accountId, row) {
     try {
-        await client.query("BEGIN");
-        const appended = await appendDelta(accountId, row, client);
-        if (!appended.ok) {
-            await client.query("ROLLBACK");
-            return appended;
-        }
-        await client.query("COMMIT");
-        return appended;
+        return await withTransaction((client) =>
+            appendDeltaInTx(accountId, row, client),
+        );
     } catch (err) {
-        await client.query("ROLLBACK");
         if (err.code === "23505") {
             return { ok: false, error: "stale_tip" };
         }
         throw err;
-    } finally {
-        client.release();
     }
 }
