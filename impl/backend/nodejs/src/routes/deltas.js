@@ -33,10 +33,6 @@ deltas.post("/append", requireSession, requireJson, async (c) => {
     if (!binding) {
         return c.json({ error: "unbound_key" }, 401);
     }
-    const tip = await nextLink(account.id);
-    if (seq !== tip.seq || prev_hash !== tip.prev_hash) {
-        return c.json({ error: "stale_tip", ...tip }, 409);
-    }
     const verified = await verifyDeltaSignature(
         publicKey,
         { seq, prev_hash, content },
@@ -52,10 +48,13 @@ deltas.post("/append", requireSession, requireJson, async (c) => {
         signature,
     });
     if (!appended.ok) {
-        return c.json(
-            { error: appended.error },
-            appended.error === "invalid" ? 400 : 409,
-        );
+        if (appended.error === "stale_tip") {
+            return c.json(
+                { error: "stale_tip", ...(await nextLink(account.id)) },
+                409,
+            );
+        }
+        return c.json({ error: appended.error }, 400);
     }
     return c.json({ ok: true, seq: appended.row.seq });
 });
