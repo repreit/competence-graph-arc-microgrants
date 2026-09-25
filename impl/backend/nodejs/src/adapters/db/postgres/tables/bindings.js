@@ -1,6 +1,7 @@
 import { parseBindContent } from "../../../../../../../common/js/attest.js";
-import { appendDelta, findTip } from "./deltas.js";
+import { appendDeltaInTx, findTip } from "./deltas.js";
 import { pool } from "../pool.js";
+import { withTransaction } from "../transaction.js";
 
 function canonicalPublicKey(publicKey) {
     return JSON.stringify(publicKey);
@@ -34,34 +35,29 @@ export async function bindKey(accountId, { content, signature }) {
         return { ok: false, error: "invalid" };
     }
     const keyText = canonicalPublicKey(publicKey);
-    const client = await pool.connect();
     try {
-        await client.query("BEGIN");
-        const appended = await appendDelta(
-            accountId,
-            { content, signature },
-            client,
-        );
-        if (!appended.ok) {
-            await client.query("ROLLBACK");
-            return appended;
-        }
-        const bindSeq = appended.row.seq;
-        await client.query(
-            `INSERT INTO bindings (account_id, public_key, bind_seq)
+        return await withTransaction(async (client) => {
+            const appended = await appendDeltaInTx(
+                accountId,
+                { content, signature },
+                client,
+            );
+            if (!appended.ok) {
+                return appended;
+            }
+            const bindSeq = appended.row.seq;
+            await client.query(
+                `INSERT INTO bindings (account_id, public_key, bind_seq)
        VALUES ($1, $2, $3)`,
-            [accountId, keyText, bindSeq],
-        );
-        await client.query("COMMIT");
-        return { ok: true, seq: bindSeq };
+                [accountId, keyText, bindSeq],
+            );
+            return { ok: true, seq: bindSeq };
+        });
     } catch (err) {
-        await client.query("ROLLBACK");
         if (err.code === "23505") {
             return { ok: false, error: "duplicate_key" };
         }
         throw err;
-    } finally {
-        client.release();
     }
 }
 
@@ -80,9 +76,7 @@ export async function unbindKey(accountId, bindingId, { content, signature }) {
     if (!binding) {
         return { ok: false, error: "not_found" };
     }
-    const client = await pool.connect();
-    try {
-        await client.query("BEGIN");
+    return await withTransaction(async (client) => {
         const { rows: lockRows } = await client.query(
             `SELECT id FROM bindings
        WHERE id = $1 AND account_id = $2 AND unbind_seq IS NULL
@@ -90,21 +84,18 @@ export async function unbindKey(accountId, bindingId, { content, signature }) {
             [bindingId, accountId],
         );
         if (lockRows.length === 0) {
-            await client.query("ROLLBACK");
             return { ok: false, error: "not_found" };
         }
         const tip = await findTip(accountId, client);
         if (!tip) {
-            await client.query("ROLLBACK");
             return { ok: false, error: "no_chain" };
         }
-        const appended = await appendDelta(
+        const appended = await appendDeltaInTx(
             accountId,
             { content, signature },
             client,
         );
         if (!appended.ok) {
-            await client.query("ROLLBACK");
             return appended;
         }
         const unbindSeq = appended.row.seq;
@@ -113,14 +104,8 @@ export async function unbindKey(accountId, bindingId, { content, signature }) {
        WHERE id = $1 AND account_id = $2`,
             [bindingId, accountId, unbindSeq],
         );
-        await client.query("COMMIT");
         return { ok: true, seq: unbindSeq };
-    } catch (err) {
-        await client.query("ROLLBACK");
-        throw err;
-    } finally {
-        client.release();
-    }
+    });
 }
 
 export async function findActiveByKey(accountId, publicKey) {
