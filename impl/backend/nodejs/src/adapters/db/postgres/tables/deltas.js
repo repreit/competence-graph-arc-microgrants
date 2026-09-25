@@ -1,4 +1,8 @@
-import { assertLink, hashContent } from "../../../../../../../common/js/delta.js";
+import {
+    assertLink,
+    contentPublicKey,
+    hashContent,
+} from "../../../../../../../common/js/delta.js";
 import { pool } from "../pool.js";
 
 export async function findTip(accountId, client = pool, forUpdate = false) {
@@ -10,7 +14,20 @@ export async function findTip(accountId, client = pool, forUpdate = false) {
      LIMIT 1${forUpdate ? " FOR UPDATE" : ""}`,
         [accountId],
     );
-    return rows[0] ?? null;
+    const row = rows[0];
+    if (!row) {
+        return null;
+    }
+    // pg returns bigint as a string, but seq is used for arithmetic.
+    return { ...row, seq: Number(row.seq) };
+}
+
+export async function nextLink(accountId) {
+    const tip = await findTip(accountId);
+    if (!tip) {
+        return { seq: 1, prev_hash: null };
+    }
+    return { seq: tip.seq + 1, prev_hash: await hashContent(tip.content) };
 }
 
 /** Requires an open transaction on `client` (FOR UPDATE must span the insert). */
@@ -28,11 +45,36 @@ export async function appendDelta(accountId, row, client) {
     if (!link.ok) {
         return { ok: false, error: link.error };
     }
+    if (contentPublicKey(row.content) == null) {
+        return { ok: false, error: "invalid" };
+    }
     const { rows } = await client.query(
         `INSERT INTO deltas (account_id, seq, prev_hash, content, signature)
      VALUES ($1, $2, $3, $4, $5)
      RETURNING id, account_id, seq, prev_hash, content, signature, received_at`,
         [accountId, seq, prev_hash, row.content, row.signature],
     );
-    return { ok: true, row: rows[0] };
+    return { ok: true, row: { ...rows[0], seq: Number(rows[0].seq) } };
+}
+
+export async function appendDeltaRow(accountId, row) {
+    const client = await pool.connect();
+    try {
+        await client.query("BEGIN");
+        const appended = await appendDelta(accountId, row, client);
+        if (!appended.ok) {
+            await client.query("ROLLBACK");
+            return appended;
+        }
+        await client.query("COMMIT");
+        return appended;
+    } catch (err) {
+        await client.query("ROLLBACK");
+        if (err.code === "23505") {
+            return { ok: false, error: "stale_tip" };
+        }
+        throw err;
+    } finally {
+        client.release();
+    }
 }
