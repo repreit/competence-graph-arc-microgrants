@@ -39,6 +39,9 @@ export async function appendDeltaInTx(accountId, row, client) {
     const tip = await findTip(accountId, client, true);
     const seq = tip ? tip.seq + 1 : 1;
     const prev_hash = tip ? await hashContent(tip.content) : null;
+    if (row.seq != null && (row.seq !== seq || row.prev_hash !== prev_hash)) {
+        return { ok: false, error: "stale_tip" };
+    }
     const next = {
         seq,
         prev_hash,
