@@ -6,7 +6,10 @@ import {
 import { pool } from "../pool.js";
 import { withTransaction } from "../transaction.js";
 
-export async function findTip(accountId, client = pool, forUpdate = false) {
+export async function findTip(accountId, client, forUpdate = false) {
+    if (!client) {
+        throw new TypeError("client");
+    }
     const { rows } = await client.query(
         `SELECT seq, prev_hash, content, signature
      FROM deltas
@@ -24,7 +27,7 @@ export async function findTip(accountId, client = pool, forUpdate = false) {
 }
 
 export async function nextLink(accountId) {
-    const tip = await findTip(accountId);
+    const tip = await findTip(accountId, pool);
     if (!tip) {
         return { seq: 1, prev_hash: null };
     }
