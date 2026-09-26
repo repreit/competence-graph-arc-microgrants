@@ -10,13 +10,13 @@ async function verifyWalletMessage(address, message, signature) {
         typeof message !== "string" ||
         typeof signature !== "string"
     ) {
-        return { ok: false, error: "invalid_json" };
+        return { ok: false, error: "invalid_request" };
     }
     let expected;
     try {
         expected = getAddress(address);
     } catch {
-        return { ok: false, error: "invalid_json" };
+        return { ok: false, error: "invalid_request" };
     }
     let recovered;
     try {
@@ -32,13 +32,13 @@ async function verifyWalletMessage(address, message, signature) {
 
 export async function verifyBindAttestation({ address, publicKey, signature }) {
     if (publicKey == null) {
-        return { ok: false, error: "invalid_json" };
+        return { ok: false, error: "invalid_request" };
     }
     let message;
     try {
         message = bindMessage(getAddress(address), publicKey);
     } catch {
-        return { ok: false, error: "invalid_json" };
+        return { ok: false, error: "invalid_request" };
     }
     return verifyWalletMessage(address, message, signature);
 }
@@ -54,13 +54,13 @@ export async function verifyUnbindAttestation({
         !Number.isSafeInteger(bindingId) ||
         bindingId < 1
     ) {
-        return { ok: false, error: "invalid_json" };
+        return { ok: false, error: "invalid_request" };
     }
     let message;
     try {
         message = unbindMessage(getAddress(address), bindingId, publicKey);
     } catch {
-        return { ok: false, error: "invalid_json" };
+        return { ok: false, error: "invalid_request" };
     }
     return verifyWalletMessage(address, message, signature);
 }
