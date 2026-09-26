@@ -1,5 +1,7 @@
 import { Hono } from "hono";
+import { bodyLimit } from "hono/body-limit";
 import { cors } from "hono/cors";
+import { maxBodyBytes } from "./config.js";
 import auth from "./routes/auth.js";
 import bindings from "./routes/bindings.js";
 import deltas from "./routes/deltas.js";
@@ -13,6 +15,14 @@ app.use(
         origin: "*",
         allowHeaders: ["Authorization", "Content-Type"],
         allowMethods: ["GET", "POST", "OPTIONS"],
+    }),
+);
+
+app.use(
+    "*",
+    bodyLimit({
+        maxSize: maxBodyBytes,
+        onError: (c) => c.json({ error: "too_large" }, 413),
     }),
 );
 
