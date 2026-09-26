@@ -1,12 +1,20 @@
+const JSON_TYPE = /^application\/(?:[\w.+-]*\+)?json\b/i;
+
+function isJsonType(value) {
+    return typeof value === "string" && JSON_TYPE.test(value.trim());
+}
+
 export async function requireJson(c, next) {
-    const text = await c.req.text();
-    if (text.length > 65536) {
-        return c.json({ error: "too_large" }, 400);
+    if (!isJsonType(c.req.header("content-type"))) {
+        return c.json({ error: "unsupported_media_type" }, 415);
     }
     let body;
     try {
-        body = JSON.parse(text);
+        body = await c.req.json();
     } catch {
+        return c.json({ error: "invalid_json" }, 400);
+    }
+    if (body === null || typeof body !== "object" || Array.isArray(body)) {
         return c.json({ error: "invalid_json" }, 400);
     }
     c.set("body", body);
