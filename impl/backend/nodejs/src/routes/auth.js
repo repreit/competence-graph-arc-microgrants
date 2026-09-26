@@ -29,7 +29,7 @@ auth.post("/verify", requireJson, async (c) => {
     const message = body.message;
     const signature = body.signature;
     if (typeof message !== "string" || typeof signature !== "string") {
-        return c.json({ error: "invalid_json" }, 400);
+        return c.json({ error: "invalid_request" }, 400);
     }
     const result = await verifySignedMessage({ message, signature });
     if (!result.ok) {
