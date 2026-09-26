@@ -9,11 +9,11 @@ function hex(buffer) {
     return out;
 }
 
-function isSeq(seq) {
+export function isSeq(seq) {
     return Number.isSafeInteger(seq) && seq >= 1;
 }
 
-function isPrevHash(prevHash) {
+export function isPrevHash(prevHash) {
     if (prevHash == null) {
         return true;
     }
