@@ -1,5 +1,9 @@
 import { Hono } from "hono";
-import { contentPublicKey } from "../../../../common/js/delta.js";
+import {
+    contentPublicKey,
+    isPrevHash,
+    isSeq,
+} from "../../../../common/js/delta.js";
 import { verifyDeltaSignature } from "../../../../common/js/verify.js";
 import { findActiveByKey } from "../adapters/db/postgres/tables/bindings.js";
 import {
@@ -23,7 +27,10 @@ deltas.post("/append", requireSession, requireJson, async (c) => {
     const seq = body.seq;
     const prev_hash = body.prev_hash ?? null;
     if (typeof content !== "string" || typeof signature !== "string") {
-        return c.json({ error: "invalid_json" }, 400);
+        return c.json({ error: "invalid_request" }, 400);
+    }
+    if (!isSeq(seq) || !isPrevHash(prev_hash)) {
+        return c.json({ error: "invalid_request" }, 400);
     }
     const publicKey = contentPublicKey(content);
     if (publicKey == null) {
