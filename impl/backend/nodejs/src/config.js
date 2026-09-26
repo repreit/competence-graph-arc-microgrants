@@ -1,5 +1,7 @@
 export const port = Number(process.env.PORT ?? "3000");
 
+export const maxBodyBytes = 65536;
+
 export const chain = {
     id: 5042,
     name: "Arc",
