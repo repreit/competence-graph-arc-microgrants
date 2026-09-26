@@ -159,7 +159,7 @@ function errorText(err) {
         return "Switch the wallet to this host's chain, then try again.";
     }
     if (err.message === "api") {
-        return "No API host. Serve locally, or pass ?api=";
+        return "No API base. Check config.js.";
     }
     if (err.message === "http") {
         return "Could not reach the API.";
