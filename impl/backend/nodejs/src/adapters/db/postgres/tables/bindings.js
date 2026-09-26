@@ -1,10 +1,16 @@
-import { parseBindContent } from "../../../../../../../common/js/attest.js";
-import { appendDeltaInTx, findTip } from "./deltas.js";
+import {
+    canonicalPublicKey,
+    parseBindContent,
+} from "../../../../../../../common/js/attest.js";
+import { appendDeltaInTx } from "./deltas.js";
 import { pool } from "../pool.js";
 import { withTransaction } from "../transaction.js";
 
-function canonicalPublicKey(publicKey) {
-    return JSON.stringify(publicKey);
+function uniqueViolation(err) {
+    if (err.code !== "23505") {
+        return null;
+    }
+    return err.table === "bindings" ? "duplicate_key" : "stale_tip";
 }
 
 export async function listBindings(accountId) {
@@ -29,17 +35,23 @@ export async function listBindings(accountId) {
     }));
 }
 
-export async function bindKey(accountId, { content, signature }) {
-    const publicKey = parseBindContent(content);
-    if (publicKey == null) {
+export async function bindKey(
+    accountId,
+    { seq, prev_hash, content, signature },
+) {
+    const parsed = parseBindContent(content);
+    if (parsed == null) {
         return { ok: false, error: "invalid" };
     }
-    const keyText = canonicalPublicKey(publicKey);
+    const keyText = canonicalPublicKey(parsed.publicKey);
+    if (keyText == null) {
+        return { ok: false, error: "invalid" };
+    }
     try {
         return await withTransaction(async (client) => {
             const appended = await appendDeltaInTx(
                 accountId,
-                { content, signature },
+                { seq, prev_hash, content, signature },
                 client,
             );
             if (!appended.ok) {
@@ -54,8 +66,9 @@ export async function bindKey(accountId, { content, signature }) {
             return { ok: true, seq: bindSeq };
         });
     } catch (err) {
-        if (err.code === "23505") {
-            return { ok: false, error: "duplicate_key" };
+        const unique = uniqueViolation(err);
+        if (unique) {
+            return { ok: false, error: unique };
         }
         throw err;
     }
@@ -71,45 +84,52 @@ export async function findActiveBinding(accountId, bindingId) {
     return rows[0] ?? null;
 }
 
-export async function unbindKey(accountId, bindingId, { content, signature }) {
-    const binding = await findActiveBinding(accountId, bindingId);
-    if (!binding) {
-        return { ok: false, error: "not_found" };
-    }
-    return await withTransaction(async (client) => {
-        const { rows: lockRows } = await client.query(
-            `SELECT id FROM bindings
+export async function unbindKey(
+    accountId,
+    bindingId,
+    { seq, prev_hash, content, signature },
+) {
+    try {
+        return await withTransaction(async (client) => {
+            const { rows: lockRows } = await client.query(
+                `SELECT id FROM bindings
        WHERE id = $1 AND account_id = $2 AND unbind_seq IS NULL
        FOR UPDATE`,
-            [bindingId, accountId],
-        );
-        if (lockRows.length === 0) {
-            return { ok: false, error: "not_found" };
-        }
-        const tip = await findTip(accountId, client);
-        if (!tip) {
-            return { ok: false, error: "no_chain" };
-        }
-        const appended = await appendDeltaInTx(
-            accountId,
-            { content, signature },
-            client,
-        );
-        if (!appended.ok) {
-            return appended;
-        }
-        const unbindSeq = appended.row.seq;
-        await client.query(
-            `UPDATE bindings SET unbind_seq = $3
+                [bindingId, accountId],
+            );
+            if (lockRows.length === 0) {
+                return { ok: false, error: "not_found" };
+            }
+            const appended = await appendDeltaInTx(
+                accountId,
+                { seq, prev_hash, content, signature },
+                client,
+            );
+            if (!appended.ok) {
+                return appended;
+            }
+            const unbindSeq = appended.row.seq;
+            await client.query(
+                `UPDATE bindings SET unbind_seq = $3
        WHERE id = $1 AND account_id = $2`,
-            [bindingId, accountId, unbindSeq],
-        );
-        return { ok: true, seq: unbindSeq };
-    });
+                [bindingId, accountId, unbindSeq],
+            );
+            return { ok: true, seq: unbindSeq };
+        });
+    } catch (err) {
+        const unique = uniqueViolation(err);
+        if (unique) {
+            return { ok: false, error: unique };
+        }
+        throw err;
+    }
 }
 
 export async function findActiveByKey(accountId, publicKey) {
     const keyText = canonicalPublicKey(publicKey);
+    if (keyText == null) {
+        return null;
+    }
     const { rows } = await pool.query(
         `SELECT id, public_key FROM bindings
      WHERE account_id = $1 AND public_key = $2 AND unbind_seq IS NULL`,
