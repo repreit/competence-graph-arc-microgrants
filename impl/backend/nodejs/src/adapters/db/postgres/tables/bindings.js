@@ -74,11 +74,16 @@ export async function bindKey(
     }
 }
 
-export async function findActiveBinding(accountId, bindingId) {
-    const { rows } = await pool.query(
+export async function findActiveBinding(
+    accountId,
+    bindingId,
+    client = pool,
+    forUpdate = false,
+) {
+    const { rows } = await client.query(
         `SELECT id, public_key
      FROM bindings
-     WHERE id = $1 AND account_id = $2 AND unbind_seq IS NULL`,
+     WHERE id = $1 AND account_id = $2 AND unbind_seq IS NULL${forUpdate ? " FOR UPDATE" : ""}`,
         [bindingId, accountId],
     );
     return rows[0] ?? null;
@@ -91,13 +96,13 @@ export async function unbindKey(
 ) {
     try {
         return await withTransaction(async (client) => {
-            const { rows: lockRows } = await client.query(
-                `SELECT id FROM bindings
-       WHERE id = $1 AND account_id = $2 AND unbind_seq IS NULL
-       FOR UPDATE`,
-                [bindingId, accountId],
+            const binding = await findActiveBinding(
+                accountId,
+                bindingId,
+                client,
+                true,
             );
-            if (lockRows.length === 0) {
+            if (!binding) {
                 return { ok: false, error: "not_found" };
             }
             const appended = await appendDeltaInTx(
