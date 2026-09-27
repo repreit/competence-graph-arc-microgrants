@@ -80,6 +80,23 @@ export function contentPublicKey(content) {
     return parsed == null ? null : parsed.publicKey;
 }
 
+export function parseDelta(body) {
+    if (body == null || typeof body !== "object" || Array.isArray(body)) {
+        return null;
+    }
+    const content = body.content;
+    const signature = body.signature;
+    const seq = body.seq;
+    const prev_hash = body.prev_hash ?? null;
+    if (typeof content !== "string" || typeof signature !== "string") {
+        return null;
+    }
+    if (!isSeq(seq) || !isPrevHash(prev_hash)) {
+        return null;
+    }
+    return { content, seq, prev_hash, signature };
+}
+
 export async function assertLink(prev, next) {
     if (!isDelta(next)) {
         return { ok: false, error: "invalid" };
