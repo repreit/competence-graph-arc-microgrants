@@ -4,12 +4,13 @@ function hasRequest(provider) {
     return Boolean(provider) && typeof provider.request === "function";
 }
 
+/** AppKit getProvider("eip155"), else getWalletProvider, else injected. */
 export function getProvider(modal) {
     const fromAppKit =
+        (typeof modal.getProvider === "function" &&
+            modal.getProvider("eip155")) ||
         (typeof modal.getWalletProvider === "function" &&
-            modal.getWalletProvider()) ||
-        (typeof modal.getProviders === "function" &&
-            modal.getProviders()?.eip155);
+            modal.getWalletProvider());
     if (hasRequest(fromAppKit)) {
         return fromAppKit;
     }
