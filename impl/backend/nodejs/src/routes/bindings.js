@@ -30,7 +30,7 @@ function errorStatus(error) {
     return error === "signature" ? 401 : 400;
 }
 
-bindings.get("/", requireSession, async (c) => {
+bindings.get("/list", requireSession, async (c) => {
     return c.json({ bindings: await listBindings(c.get("account").id) });
 });
 
