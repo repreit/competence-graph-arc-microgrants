@@ -1,9 +1,5 @@
 import { Hono } from "hono";
-import {
-    contentPublicKey,
-    isPrevHash,
-    isSeq,
-} from "../../../../common/js/delta.js";
+import { contentPublicKey, parseDelta } from "../../../../common/js/delta.js";
 import { verifyDeltaSignature } from "../../../../common/js/verify.js";
 import { findActiveByKey } from "../adapters/db/postgres/tables/bindings.js";
 import {
@@ -21,18 +17,11 @@ deltas.get("/tip", requireSession, async (c) => {
 
 deltas.post("/append", requireSession, requireJson, async (c) => {
     const account = c.get("account");
-    const body = c.get("body");
-    const content = body.content;
-    const signature = body.signature;
-    const seq = body.seq;
-    const prev_hash = body.prev_hash ?? null;
-    if (typeof content !== "string" || typeof signature !== "string") {
+    const delta = parseDelta(c.get("body"));
+    if (!delta) {
         return c.json({ error: "invalid_request" }, 400);
     }
-    if (!isSeq(seq) || !isPrevHash(prev_hash)) {
-        return c.json({ error: "invalid_request" }, 400);
-    }
-    const publicKey = contentPublicKey(content);
+    const publicKey = contentPublicKey(delta.content);
     if (publicKey == null) {
         return c.json({ error: "invalid_content" }, 400);
     }
@@ -42,18 +31,13 @@ deltas.post("/append", requireSession, requireJson, async (c) => {
     }
     const verified = await verifyDeltaSignature(
         publicKey,
-        { seq, prev_hash, content },
-        signature,
+        delta,
+        delta.signature,
     );
     if (!verified) {
         return c.json({ error: "signature" }, 401);
     }
-    const appended = await appendDelta(account.id, {
-        seq,
-        prev_hash,
-        content,
-        signature,
-    });
+    const appended = await appendDelta(account.id, delta);
     if (!appended.ok) {
         if (appended.error === "stale_tip") {
             return c.json(
