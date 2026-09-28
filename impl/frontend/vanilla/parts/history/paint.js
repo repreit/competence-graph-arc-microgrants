@@ -18,7 +18,19 @@ export function cssColor(value) {
     return color;
 }
 
-export function paintCardMesh(mesh, theme) {
+function eachPaintedObject(scene, visit) {
+    if (!scene || typeof scene.traverse !== "function") {
+        return;
+    }
+    scene.traverse(function (obj) {
+        const data = obj.userData;
+        if (data && (data.historyCard || data.historyLink)) {
+            visit(obj, data);
+        }
+    });
+}
+
+function paintCardMesh(mesh, theme) {
     const card = mesh && mesh.userData && mesh.userData.historyCard;
     if (!card) {
         return;
@@ -39,6 +51,25 @@ export function paintCardMesh(mesh, theme) {
     }
 }
 
+export function paintHoveredCard(graph, hoveredNodeId) {
+    if (!graph) {
+        return;
+    }
+    const theme = historyTheme();
+    eachPaintedObject(graph.scene(), function (obj, data) {
+        const card = data.historyCard;
+        if (!card) {
+            return;
+        }
+        const hovered = data.nodeId === hoveredNodeId;
+        if (card.hovered === hovered) {
+            return;
+        }
+        card.hovered = hovered;
+        paintCardMesh(obj, theme);
+    });
+}
+
 export function paintHistoryGraph(graph) {
     if (!graph) {
         return;
@@ -46,33 +77,20 @@ export function paintHistoryGraph(graph) {
     const theme = historyTheme();
     const ink = cssColor(theme.ink);
     graph.backgroundColor(theme.bg);
-    const scene = graph.scene();
-    if (!scene || typeof scene.traverse !== "function") {
-        return;
-    }
-    scene.traverse(function (obj) {
-        if (obj.userData && obj.userData.historyCard) {
+    eachPaintedObject(graph.scene(), function (obj, data) {
+        if (data.historyCard) {
             paintCardMesh(obj, theme);
         }
-        if (obj.userData && obj.userData.historyLink && obj.material) {
+        if (data.historyLink && obj.material) {
             obj.material.color.copy(ink);
         }
     });
 }
 
 export function disposeHistoryGpu(graph) {
-    const scene = graph && graph.scene && graph.scene();
-    if (!scene || typeof scene.traverse !== "function") {
-        return;
-    }
     const objects = [];
-    scene.traverse(function (obj) {
-        if (
-            obj.userData &&
-            (obj.userData.historyCard || obj.userData.historyLink)
-        ) {
-            objects.push(obj);
-        }
+    eachPaintedObject(graph && graph.scene && graph.scene(), function (obj) {
+        objects.push(obj);
     });
     objects.forEach(disposeObject3D);
 }
