@@ -86,7 +86,7 @@ async function createModal() {
             name: config.app.name,
             description: config.app.description,
             url: location.origin,
-            icons: [location.origin + config.app.iconPath],
+            icons: [new URL(config.app.iconPath, location.href).href],
         },
         includeWalletIds: WALLET_IDS,
         featuredWalletIds: WALLET_IDS,
