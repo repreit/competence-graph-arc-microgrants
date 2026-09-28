@@ -12,9 +12,8 @@ import { clipLinkToCards, makeLinkObject } from "./links.js";
 import { openDeed } from "./deed.js";
 import {
     disposeHistoryGpu,
-    historyTheme,
-    paintCardMesh,
     paintHistoryGraph,
+    paintHoveredCard,
 } from "./paint.js";
 
 let boardEl;
@@ -103,26 +102,7 @@ function setNodeHovered(node) {
     if (boardEl) {
         boardEl.style.cursor = nextId ? "pointer" : "";
     }
-    if (!historyGraph) {
-        return;
-    }
-    const scene = historyGraph.scene();
-    if (!scene || typeof scene.traverse !== "function") {
-        return;
-    }
-    const theme = historyTheme();
-    scene.traverse(function (obj) {
-        const card = obj.userData && obj.userData.historyCard;
-        if (!card) {
-            return;
-        }
-        const hovered = obj.userData.nodeId === hoveredNodeId;
-        if (card.hovered === hovered) {
-            return;
-        }
-        card.hovered = hovered;
-        paintCardMesh(obj, theme);
-    });
+    paintHoveredCard(historyGraph, hoveredNodeId);
 }
 
 function bindHistoryControls(graph) {
