@@ -21,7 +21,7 @@ let boardEl;
 let blurbEl;
 let historyGraph = null;
 let historyGraphPending = null;
-let graphAddress = "";
+let graphRequest = 0;
 let hoveredNodeId = "";
 let hoveredNode = null;
 
@@ -210,15 +210,15 @@ export function renderHistory(account) {
     }
     const history = (account && account.history) || {};
     const label = shortAddress(account.address) || "Unknown";
-    const address = account.address || "";
-    graphAddress = address;
+    graphRequest += 1;
+    const request = graphRequest;
     boardEl.setAttribute(
         "aria-label",
         label + ". Click a deed to open details.",
     );
     ensureHistoryGraph()
         .then(function (graph) {
-            if (!graph || address !== graphAddress) {
+            if (!graph || request !== graphRequest) {
                 return;
             }
             bumpCardEpoch();
