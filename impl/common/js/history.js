@@ -58,11 +58,11 @@ function parseNodeIds(value, id) {
         return null;
     }
     const ids = [];
-    for (const entry of value) {
-        if (!isNonEmptyString(entry) || entry === id) {
+    for (const nodeId of value) {
+        if (!isNonEmptyString(nodeId) || nodeId === id) {
             return null;
         }
-        ids.push(entry);
+        ids.push(nodeId);
     }
     return ids;
 }
@@ -105,19 +105,19 @@ function parseDataPatch(value) {
         if (!hasOwn(value, field)) {
             continue;
         }
-        const entry = value[field];
-        if (entry === null) {
+        const fieldValue = value[field];
+        if (fieldValue === null) {
             patch[field] = null;
             continue;
         }
         if (field === "link") {
-            if (!isNonEmptyString(entry)) {
+            if (!isNonEmptyString(fieldValue)) {
                 return null;
             }
-        } else if (typeof entry !== "string") {
+        } else if (typeof fieldValue !== "string") {
             return null;
         }
-        patch[field] = entry;
+        patch[field] = fieldValue;
     }
     return patch;
 }
@@ -131,15 +131,15 @@ function parsePositionPatch(value) {
         if (!hasOwn(value, axis)) {
             continue;
         }
-        const entry = value[axis];
-        if (entry === null) {
+        const fieldValue = value[axis];
+        if (fieldValue === null) {
             patch[axis] = null;
             continue;
         }
-        if (!Number.isFinite(entry)) {
+        if (!Number.isFinite(fieldValue)) {
             return null;
         }
-        patch[axis] = entry;
+        patch[axis] = fieldValue;
     }
     return patch;
 }
@@ -180,12 +180,12 @@ function parseNodePatch(value) {
         if (!hasOwn(value, field)) {
             continue;
         }
-        const entry = value[field];
-        if (entry === null) {
+        const fieldValue = value[field];
+        if (fieldValue === null) {
             patch[field] = null;
             continue;
         }
-        const parsed = parseNodeField(field, entry);
+        const parsed = parseNodeField(field, fieldValue);
         if (parsed == null) {
             return null;
         }
@@ -245,21 +245,21 @@ function mergeNode(node, patch) {
         if (!hasOwn(patch, field)) {
             continue;
         }
-        const entry = patch[field];
-        if (entry === null) {
+        const fieldValue = patch[field];
+        if (fieldValue === null) {
             delete next[field];
             continue;
         }
         if (field === "nodeIds") {
-            next[field] = entry.slice();
+            next[field] = fieldValue.slice();
             continue;
         }
         const merged = Object.assign({}, next[field]);
-        for (const name of Object.keys(entry)) {
-            if (entry[name] === null) {
+        for (const name of Object.keys(fieldValue)) {
+            if (fieldValue[name] === null) {
                 delete merged[name];
             } else {
-                merged[name] = entry[name];
+                merged[name] = fieldValue[name];
             }
         }
         next[field] = merged;
