@@ -27,7 +27,7 @@ deltas.post("/append", requireSession, requireJson, async (c) => {
     }
     const binding = await findActiveByKey(account.id, publicKey);
     if (!binding) {
-        return c.json({ error: "unbound_key" }, 401);
+        return c.json({ error: "no_active_binding" }, 401);
     }
     const verified = await verifyDeltaSignature(
         publicKey,
