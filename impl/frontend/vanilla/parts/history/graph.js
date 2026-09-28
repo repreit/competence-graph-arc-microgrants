@@ -1,0 +1,296 @@
+import * as THREE from "three";
+import { shortAddress } from "../../common/js/a001.js";
+import { graphDataFromHistory } from "./data.js";
+import {
+    bumpCardEpoch,
+    CARD_HX,
+    CARD_HY,
+    makeCardObject,
+    paintCardOpaque,
+} from "./cards.js";
+import { clipLinkToCards, makeLinkObject } from "./links.js";
+import { openDeed } from "./deed.js";
+import {
+    disposeHistoryGpu,
+    historyTheme,
+    paintCardMesh,
+    paintHistoryGraph,
+} from "./paint.js";
+
+let boardEl;
+let blurbEl;
+let historyGraph = null;
+let historyGraphPending = null;
+let graphAddress = "";
+let hoveredNodeId = "";
+let hoveredNode = null;
+
+let fitTimer = 0;
+const FIT_PULL = 0.72;
+
+export function showGraphError(message) {
+    if (!blurbEl) {
+        return;
+    }
+    blurbEl.hidden = false;
+    blurbEl.textContent = message;
+}
+
+export function sizeHistoryGraph() {
+    if (!historyGraph || !boardEl) {
+        return;
+    }
+    const width = boardEl.clientWidth;
+    const height = boardEl.clientHeight;
+    if (width < 8 || height < 8) {
+        return;
+    }
+    historyGraph.width(width).height(height);
+}
+
+function fitHistoryGraph() {
+    if (!historyGraph) {
+        return;
+    }
+    const camera = historyGraph.camera();
+    if (camera && camera.up) {
+        camera.up.set(0, 1, 0);
+    }
+    const nodes = historyGraph.graphData().nodes || [];
+    let x0 = Infinity;
+    let x1 = -Infinity;
+    let y0 = Infinity;
+    let y1 = -Infinity;
+    nodes.forEach(function (node) {
+        const x = isFinite(node.fx) ? node.fx : node.x || 0;
+        const y = isFinite(node.fy) ? node.fy : node.y || 0;
+        x0 = Math.min(x0, x - CARD_HX);
+        x1 = Math.max(x1, x + CARD_HX);
+        y0 = Math.min(y0, y - CARD_HY);
+        y1 = Math.max(y1, y + CARD_HY);
+    });
+    if (!camera || !isFinite(x0) || !isFinite(y0)) {
+        return;
+    }
+    const height = Math.max(historyGraph.height() || 1, 1);
+    const paddedFov = (1 - 32 / height) * camera.fov;
+    const maxBoxSide = Math.max(x1 - x0, y1 - y0);
+    const distance =
+        (maxBoxSide / Math.atan((paddedFov * Math.PI) / 180)) *
+        Math.max(1, 1 / camera.aspect) *
+        FIT_PULL;
+    const cx = (x0 + x1) / 2;
+    const cy = (y0 + y1) / 2;
+    historyGraph.cameraPosition(
+        { x: cx, y: cy, z: distance },
+        { x: cx, y: cy, z: 0 },
+        400,
+    );
+}
+
+function scheduleFitHistoryGraph() {
+    window.clearTimeout(fitTimer);
+    fitTimer = window.setTimeout(fitHistoryGraph, 300);
+}
+
+function setNodeHovered(node) {
+    const nextId = (node && node.id) || "";
+    if (nextId === hoveredNodeId) {
+        return;
+    }
+    hoveredNodeId = nextId;
+    hoveredNode = node || null;
+    if (boardEl) {
+        boardEl.style.cursor = nextId ? "pointer" : "";
+    }
+    if (!historyGraph) {
+        return;
+    }
+    const scene = historyGraph.scene();
+    if (!scene || typeof scene.traverse !== "function") {
+        return;
+    }
+    const theme = historyTheme();
+    scene.traverse(function (obj) {
+        const card = obj.userData && obj.userData.historyCard;
+        if (!card) {
+            return;
+        }
+        const hovered = obj.userData.nodeId === hoveredNodeId;
+        if (card.hovered === hovered) {
+            return;
+        }
+        card.hovered = hovered;
+        paintCardMesh(obj, theme);
+    });
+}
+
+function bindHistoryControls(graph) {
+    const controls = graph.controls();
+    if (!controls || !controls.mouseButtons) {
+        return;
+    }
+    controls.mouseButtons.LEFT = THREE.MOUSE.PAN;
+    controls.mouseButtons.MIDDLE = THREE.MOUSE.DOLLY;
+    controls.mouseButtons.RIGHT = THREE.MOUSE.ROTATE;
+    if (controls.touches && THREE.TOUCH) {
+        controls.touches.ONE = THREE.TOUCH.PAN;
+        // TODO: Touch two-finger is zoom and rotate at once (DOLLY_ROTATE).
+        // Add a toggle at the top-right of the graph frame: off = zoom, on = rotate (touches.TWO).
+        controls.touches.TWO = THREE.TOUCH.DOLLY_ROTATE;
+    }
+    if ("screenSpacePanning" in controls) {
+        controls.screenSpacePanning = true;
+    }
+}
+
+function createHistoryGraph(ForceGraph3D) {
+    historyGraph = new ForceGraph3D(boardEl, { controlType: "orbit" })
+        .showNavInfo(false)
+        .enableNodeDrag(false)
+        .nodeOpacity(1)
+        .linkOpacity(1)
+        .linkWidth(0)
+        .linkThreeObjectExtend(false)
+        .linkThreeObject(makeLinkObject)
+        .warmupTicks(80)
+        .linkPositionUpdate(clipLinkToCards)
+        .nodeThreeObject(function (node) {
+            return makeCardObject(node, hoveredNodeId);
+        })
+        .nodePositionUpdate(function (obj) {
+            paintCardOpaque(obj);
+        })
+        .nodeLabel(function () {
+            return "";
+        })
+        .onNodeHover(function (node) {
+            setNodeHovered(node);
+        });
+    bindHistoryControls(historyGraph);
+    paintHistoryGraph(historyGraph);
+    sizeHistoryGraph();
+    return historyGraph;
+}
+
+function ensureHistoryGraph() {
+    if (historyGraph) {
+        return Promise.resolve(historyGraph);
+    }
+    if (historyGraphPending) {
+        return historyGraphPending;
+    }
+    if (!boardEl) {
+        return Promise.resolve(null);
+    }
+    historyGraphPending = import("3d-force-graph")
+        .then(function (mod) {
+            const ForceGraph3D = mod.default || mod;
+            if (typeof ForceGraph3D !== "function") {
+                throw new Error("ForceGraph3D");
+            }
+            return createHistoryGraph(ForceGraph3D);
+        })
+        .catch(function (err) {
+            historyGraphPending = null;
+            if (typeof console !== "undefined" && console.error) {
+                console.error(err);
+            }
+            showGraphError(
+                "Could not load the 3D graph. Check the network and reload.",
+            );
+            return null;
+        });
+    return historyGraphPending;
+}
+
+export function renderHistory(account) {
+    if (!boardEl) {
+        return;
+    }
+    const history = (account && account.history) || {};
+    const label = shortAddress(account.address) || "Unknown";
+    const address = account.address || "";
+    graphAddress = address;
+    boardEl.setAttribute(
+        "aria-label",
+        label + ". Click a deed to open details.",
+    );
+    ensureHistoryGraph()
+        .then(function (graph) {
+            if (!graph || address !== graphAddress) {
+                return;
+            }
+            bumpCardEpoch();
+            hoveredNodeId = "";
+            hoveredNode = null;
+            boardEl.style.cursor = "";
+            disposeHistoryGpu(graph);
+            graph.graphData(graphDataFromHistory(history));
+            sizeHistoryGraph();
+            scheduleFitHistoryGraph();
+        })
+        .catch(function () {
+            showGraphError(
+                "Could not draw the graph for this address. Reload to try again.",
+            );
+        });
+}
+
+function paintGraphTheme() {
+    paintHistoryGraph(historyGraph);
+}
+
+export function bindHistoryGraph() {
+    boardEl = document.querySelector(".network-board");
+    if (boardEl) {
+        let press = null;
+        const hoverWaitMs = 50;
+        boardEl.addEventListener("pointerdown", function (ev) {
+            if (ev.button !== 0) {
+                press = null;
+                return;
+            }
+            press = { x: ev.clientX, y: ev.clientY };
+        });
+        boardEl.addEventListener("pointerup", function (ev) {
+            if (!press || ev.button !== 0) {
+                press = null;
+                return;
+            }
+            const dx = ev.clientX - press.x;
+            const dy = ev.clientY - press.y;
+            press = null;
+            if (dx * dx + dy * dy >= 100) {
+                return;
+            }
+            window.setTimeout(function () {
+                if (hoveredNode) {
+                    openDeed(hoveredNode.data || {});
+                }
+            }, hoverWaitMs);
+        });
+    }
+    blurbEl = document.getElementById("example-blurb");
+    const resetViewEl = document.querySelector(".graph-reset");
+    if (resetViewEl) {
+        resetViewEl.addEventListener("click", function () {
+            fitHistoryGraph();
+        });
+    }
+    if (window.ResizeObserver && boardEl) {
+        new ResizeObserver(function () {
+            sizeHistoryGraph();
+        }).observe(boardEl);
+    }
+}
+
+if (window.matchMedia) {
+    window
+        .matchMedia("(prefers-color-scheme: dark)")
+        .addEventListener("change", paintGraphTheme);
+}
+
+window.addEventListener("resize", function () {
+    sizeHistoryGraph();
+});
