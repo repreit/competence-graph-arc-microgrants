@@ -17,7 +17,7 @@ export const chain = {
 export const app = {
     name: "competence-graph",
     description: "A shared language for inspectable competence.",
-    iconPath: "/parts/header/img/mark.svg",
+    iconPath: "parts/header/img/mark.svg",
 };
 
 export const reown = {
