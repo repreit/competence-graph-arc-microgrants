@@ -1,4 +1,4 @@
-import { parseContent } from "./delta.js";
+import { assertLink, parseContent } from "./delta.js";
 
 const NODE_FIELDS = ["id", "position", "data", "nodeIds"];
 const DATA_FIELDS = ["title", "link", "img", "alt"];
@@ -102,4 +102,65 @@ export function parseDeedContent(content) {
         return null;
     }
     return { node };
+}
+
+function collectNodes(rows) {
+    const nodes = new Map();
+    for (const row of rows) {
+        const parsed = parseDeedContent(row.content);
+        if (parsed != null) {
+            nodes.set(parsed.node.id, parsed.node);
+        }
+    }
+    return nodes;
+}
+
+function linkNodes(nodes) {
+    for (const node of nodes.values()) {
+        for (const otherId of node.nodeIds ?? []) {
+            const other = nodes.get(otherId);
+            if (other == null) {
+                continue;
+            }
+            if (other.nodeIds == null) {
+                other.nodeIds = [];
+            }
+            if (!other.nodeIds.includes(node.id)) {
+                other.nodeIds.push(node.id);
+            }
+        }
+    }
+}
+
+function toNodes(nodes) {
+    return Array.from(nodes.values(), function (node) {
+        const item = { id: node.id, data: node.data };
+        if (node.position != null) {
+            item.position = node.position;
+        }
+        const nodeIds = (node.nodeIds ?? []).filter(function (id) {
+            return nodes.has(id);
+        });
+        if (nodeIds.length > 0) {
+            item.nodeIds = nodeIds;
+        }
+        return item;
+    });
+}
+
+export async function foldHistory(rows) {
+    if (!Array.isArray(rows)) {
+        return { ok: false, error: "invalid" };
+    }
+    let prev = null;
+    for (const row of rows) {
+        const link = await assertLink(prev, row);
+        if (!link.ok) {
+            return { ok: false, error: link.error };
+        }
+        prev = row;
+    }
+    const nodes = collectNodes(rows);
+    linkNodes(nodes);
+    return { ok: true, history: { nodes: toNodes(nodes) } };
 }
