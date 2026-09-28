@@ -303,9 +303,16 @@ export async function foldHistory(rows) {
             return { ok: false, error: link.error };
         }
         prev = row;
+        const envelope = parseContent(row.content);
+        if (envelope == null) {
+            return { ok: false, error: "invalid" };
+        }
+        if (envelope.type !== "history") {
+            continue;
+        }
         const parsed = parseHistoryContent(row.content);
         if (parsed == null) {
-            continue;
+            return { ok: false, error: "invalid" };
         }
         const touched = new Set();
         for (const change of parsed.ops) {
