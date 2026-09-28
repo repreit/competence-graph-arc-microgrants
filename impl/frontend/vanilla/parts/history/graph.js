@@ -36,7 +36,7 @@ export function showGraphError(message) {
     blurbEl.textContent = message;
 }
 
-export function sizeHistoryGraph() {
+function sizeHistoryGraph() {
     if (!historyGraph || !boardEl) {
         return;
     }
