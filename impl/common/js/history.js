@@ -149,11 +149,11 @@ function parseNodeIdsPatch(value) {
         return null;
     }
     const ids = [];
-    for (const entry of value) {
-        if (!isNonEmptyString(entry)) {
+    for (const id of value) {
+        if (!isNonEmptyString(id)) {
             return null;
         }
-        ids.push(entry);
+        ids.push(id);
     }
     return ids;
 }
@@ -194,7 +194,7 @@ function parseNodePatch(value) {
     return patch;
 }
 
-function parseOp(value) {
+function parseChange(value) {
     if (!isPlainObject(value)) {
         return null;
     }
@@ -229,12 +229,12 @@ export function parseHistoryContent(content) {
         return null;
     }
     const ops = [];
-    for (const entry of parsed.ops) {
-        const op = parseOp(entry);
-        if (op == null) {
+    for (const change of parsed.ops) {
+        const parsedOp = parseChange(change);
+        if (parsedOp == null) {
             return null;
         }
-        ops.push(op);
+        ops.push(parsedOp);
     }
     return { ops };
 }
@@ -267,13 +267,13 @@ function mergeNode(node, patch) {
     return next;
 }
 
-function applyOp(state, entry) {
-    if (entry.op === "delete") {
-        state.delete(entry.id);
+function applyChange(state, change) {
+    if (change.op === "delete") {
+        state.delete(change.id);
         return;
     }
-    const id = entry.node.id;
-    state.set(id, mergeNode(state.get(id), entry.node));
+    const id = change.node.id;
+    state.set(id, mergeNode(state.get(id), change.node));
 }
 
 function findBrokenLink(state) {
@@ -308,9 +308,9 @@ export async function foldHistory(rows) {
             continue;
         }
         const touched = new Set();
-        for (const entry of parsed.ops) {
-            applyOp(state, entry);
-            touched.add(entry.op === "delete" ? entry.id : entry.node.id);
+        for (const change of parsed.ops) {
+            applyChange(state, change);
+            touched.add(change.op === "delete" ? change.id : change.node.id);
         }
         for (const id of touched) {
             const node = state.get(id);
