@@ -1,0 +1,66 @@
+let windowEl;
+let imageEl;
+let titleEl;
+let linkEl;
+
+export function bindDeed() {
+    windowEl = document.getElementById("deed-window");
+    imageEl = document.getElementById("deed-image");
+    titleEl = document.getElementById("deed-title");
+    linkEl = document.getElementById("deed-link");
+    if (!windowEl) {
+        return;
+    }
+    const closeEl = windowEl.querySelector(".close");
+    if (closeEl) {
+        closeEl.addEventListener("click", function () {
+            windowEl.close();
+        });
+    }
+    windowEl.addEventListener("click", function (event) {
+        if (event.target === windowEl) {
+            windowEl.close();
+        }
+    });
+    windowEl.addEventListener("close", unlockScroll);
+}
+
+export function openDeed(data) {
+    if (!windowEl || windowEl.open) {
+        return;
+    }
+    data = data || {};
+    titleEl.textContent = data.title || "";
+    if (data.link) {
+        linkEl.hidden = false;
+        linkEl.href = data.link;
+        linkEl.textContent = data.link;
+    } else {
+        linkEl.hidden = true;
+        linkEl.removeAttribute("href");
+        linkEl.textContent = "";
+    }
+    imageEl.hidden = !data.img;
+    if (data.img) {
+        imageEl.src = data.img;
+        imageEl.alt = data.alt || "";
+    } else {
+        imageEl.removeAttribute("src");
+        imageEl.alt = "";
+    }
+    const scrollY = window.scrollY;
+    windowEl.showModal();
+    document.body.style.position = "fixed";
+    document.body.style.top = "-" + scrollY + "px";
+    document.body.style.left = "0";
+    document.body.style.right = "0";
+}
+
+function unlockScroll() {
+    const top = document.body.style.top;
+    document.body.style.position = "";
+    document.body.style.top = "";
+    document.body.style.left = "";
+    document.body.style.right = "";
+    window.scrollTo(0, Math.abs(parseInt(top || "0", 10)));
+}
