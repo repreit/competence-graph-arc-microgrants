@@ -7,6 +7,7 @@
     "editor.formatOnSave": true,
     "editor.fontSize": 14,
     "liveServer.settings.root": "/impl/frontend/vanilla",
+    "liveServer.settings.mount": [["/impl/common", "/impl/common"]],
     "workbench.colorTheme": "Default High Contrast",
     "workbench.editor.restoreViewState": false,
     "window.autoDetectColorScheme": false,
