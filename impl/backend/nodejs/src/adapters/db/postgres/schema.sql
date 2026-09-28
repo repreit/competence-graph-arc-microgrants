@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS bindings (
     public_key text NOT NULL,
     bind_seq bigint NOT NULL,
     unbind_seq bigint,
-    -- Intentional: no key re-bind.
+    -- Intentional: never allow key re-bind
     UNIQUE (account_id, public_key)
 );
 
