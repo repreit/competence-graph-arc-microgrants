@@ -6,3 +6,4 @@ competence-graph-context.md
 !.env.example
 node_modules/
 .neon
+impl/frontend/vanilla/impl/
