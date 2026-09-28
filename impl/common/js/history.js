@@ -194,7 +194,7 @@ function parseNodePatch(value) {
     return patch;
 }
 
-function parseChange(value) {
+function parseOp(value) {
     if (!isPlainObject(value)) {
         return null;
     }
@@ -225,18 +225,18 @@ export function parseHistoryContent(content) {
     if (parsed == null || parsed.type !== "history") {
         return null;
     }
-    if (!Array.isArray(parsed.changes)) {
+    if (!Array.isArray(parsed.ops)) {
         return null;
     }
-    const changes = [];
-    for (const entry of parsed.changes) {
-        const change = parseChange(entry);
-        if (change == null) {
+    const ops = [];
+    for (const entry of parsed.ops) {
+        const op = parseOp(entry);
+        if (op == null) {
             return null;
         }
-        changes.push(change);
+        ops.push(op);
     }
-    return { changes };
+    return { ops };
 }
 
 function mergeNode(node, patch) {
@@ -267,13 +267,13 @@ function mergeNode(node, patch) {
     return next;
 }
 
-function applyChange(state, change) {
-    if (change.op === "delete") {
-        state.delete(change.id);
+function applyOp(state, entry) {
+    if (entry.op === "delete") {
+        state.delete(entry.id);
         return;
     }
-    const id = change.node.id;
-    state.set(id, mergeNode(state.get(id), change.node));
+    const id = entry.node.id;
+    state.set(id, mergeNode(state.get(id), entry.node));
 }
 
 function findBrokenLink(state) {
@@ -308,9 +308,9 @@ export async function foldHistory(rows) {
             continue;
         }
         const touched = new Set();
-        for (const change of parsed.changes) {
-            applyChange(state, change);
-            touched.add(change.op === "delete" ? change.id : change.node.id);
+        for (const entry of parsed.ops) {
+            applyOp(state, entry);
+            touched.add(entry.op === "delete" ? entry.id : entry.node.id);
         }
         for (const id of touched) {
             const node = state.get(id);
