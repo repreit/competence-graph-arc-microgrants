@@ -1,4 +1,4 @@
-import { isNonEmptyString, isPlainObject } from "./a001.js";
+import { isNonEmptyString, isPlainObject, isPositiveSafeInt } from "./a001.js";
 
 const encoder = new TextEncoder();
 
@@ -12,7 +12,7 @@ function hex(buffer) {
 }
 
 export function isSeq(seq) {
-    return Number.isSafeInteger(seq) && seq >= 1;
+    return isPositiveSafeInt(seq);
 }
 
 export function isPrevHash(prevHash) {
