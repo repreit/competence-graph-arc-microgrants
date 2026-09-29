@@ -1,4 +1,4 @@
-import { isPlainObject } from "./a001.js";
+import { isNonEmptyString, isPlainObject } from "./a001.js";
 import { parseContent } from "./delta.js";
 
 const JWK_FIELDS = ["kty", "crv", "x", "y"];
@@ -30,10 +30,10 @@ function parseAttestation(value) {
     if (!isPlainObject(value)) {
         return null;
     }
-    if (typeof value.address !== "string" || value.address.length === 0) {
+    if (!isNonEmptyString(value.address)) {
         return null;
     }
-    if (typeof value.signature !== "string" || value.signature.length === 0) {
+    if (!isNonEmptyString(value.signature)) {
         return null;
     }
     return { address: value.address, signature: value.signature };
