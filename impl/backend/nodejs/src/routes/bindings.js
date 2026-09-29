@@ -3,6 +3,7 @@ import {
     verifyBindAttestation,
     verifyUnbindAttestation,
 } from "../adapters/auth/attestation/verify.js";
+import { isPositiveSafeInt } from "../../../../common/js/a001.js";
 import {
     canonicalPublicKey,
     parseBindContent,
@@ -82,7 +83,7 @@ bindings.post("/bind", requireSession, requireJson, async (c) => {
 bindings.post("/:id/unbind", requireSession, requireJson, async (c) => {
     const account = c.get("account");
     const bindingId = Number(c.req.param("id"));
-    if (!Number.isSafeInteger(bindingId) || bindingId < 1) {
+    if (!isPositiveSafeInt(bindingId)) {
         return c.json({ error: "invalid_request" }, 400);
     }
     const delta = parseDelta(c.get("body"));

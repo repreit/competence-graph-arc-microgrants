@@ -1,4 +1,5 @@
 import { getAddress, recoverMessageAddress } from "viem";
+import { isPositiveSafeInt } from "../../../../../../common/js/a001.js";
 import {
     bindMessage,
     unbindMessage,
@@ -49,11 +50,7 @@ export async function verifyUnbindAttestation({
     publicKey,
     signature,
 }) {
-    if (
-        publicKey == null ||
-        !Number.isSafeInteger(bindingId) ||
-        bindingId < 1
-    ) {
+    if (publicKey == null || !isPositiveSafeInt(bindingId)) {
         return { ok: false, error: "invalid_request" };
     }
     let message;

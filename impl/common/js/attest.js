@@ -1,4 +1,4 @@
-import { isNonEmptyString, isPlainObject } from "./a001.js";
+import { isNonEmptyString, isPlainObject, isPositiveSafeInt } from "./a001.js";
 import { parseContent } from "./delta.js";
 
 const JWK_FIELDS = ["kty", "crv", "x", "y"];
@@ -66,7 +66,7 @@ export function unbindMessage(address, bindingId, publicKey) {
     if (typeof address !== "string") {
         throw new TypeError("attest");
     }
-    if (!Number.isSafeInteger(bindingId) || bindingId < 1) {
+    if (!isPositiveSafeInt(bindingId)) {
         throw new TypeError("attest");
     }
     return `Unbind key for ${address}\nBinding: ${bindingId}\n${requireCanonicalKey(publicKey)}`;
@@ -89,7 +89,7 @@ export function unbindContent(bindingId, publicKey, attestation) {
     if (key == null) {
         throw new TypeError("attest");
     }
-    if (!Number.isSafeInteger(bindingId) || bindingId < 1) {
+    if (!isPositiveSafeInt(bindingId)) {
         throw new TypeError("attest");
     }
     return JSON.stringify({
@@ -124,7 +124,7 @@ export function parseUnbindContent(content) {
     if (parsed == null || parsed.type !== "unbind") {
         return null;
     }
-    if (!Number.isSafeInteger(parsed.bindingId) || parsed.bindingId < 1) {
+    if (!isPositiveSafeInt(parsed.bindingId)) {
         return null;
     }
     const pair = readKeyAndAttestation(parsed);
