@@ -8,10 +8,6 @@ Prefer vanilla development.
 npx --ignore-scripts prettier@3.9.6 --write .
 ```
 
-```bash
-npx --ignore-scripts repomix@1.18.0
-```
-
 # Frequently used prompts
 
 ```
