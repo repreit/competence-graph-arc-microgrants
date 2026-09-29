@@ -1,3 +1,5 @@
+import { isPlainObject } from "../../../../common/js/a001.js";
+
 const JSON_TYPE = /^application\/(?:[\w.+-]*\+)?json\b/i;
 
 function isJsonType(value) {
@@ -14,7 +16,7 @@ export async function requireJson(c, next) {
     } catch {
         return c.json({ error: "invalid_json" }, 400);
     }
-    if (body === null || typeof body !== "object" || Array.isArray(body)) {
+    if (!isPlainObject(body)) {
         return c.json({ error: "invalid_json" }, 400);
     }
     c.set("body", body);
