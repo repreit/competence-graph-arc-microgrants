@@ -26,12 +26,12 @@ export async function listBindings(accountId) {
         [accountId],
     );
     return rows.map((row) => ({
-        id: row.id,
+        id: Number(row.id),
         publicKey: JSON.parse(row.public_key),
         bindAt: row.bind_at,
         unbindAt: row.unbind_at,
-        bindSeq: row.bind_seq,
-        unbindSeq: row.unbind_seq,
+        bindSeq: Number(row.bind_seq),
+        unbindSeq: row.unbind_seq == null ? null : Number(row.unbind_seq),
     }));
 }
 
