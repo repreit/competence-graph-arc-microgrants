@@ -43,6 +43,24 @@ export async function readAddress(modal) {
     return "";
 }
 
+export async function requestAccountPermission(modal) {
+    const provider = getProvider(modal);
+    if (!provider) {
+        throw new Error("wallet");
+    }
+    try {
+        await provider.request({
+            method: "wallet_revokePermissions",
+            params: [{ eth_accounts: {} }],
+        });
+    } catch (err) {
+        if (isUserRejected(err)) {
+            throw err;
+        }
+    }
+    await provider.request({ method: "eth_requestAccounts" });
+}
+
 export async function signMessage(modal, message, address) {
     const provider = getProvider(modal);
     if (!provider) {
