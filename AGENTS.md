@@ -9,4 +9,4 @@ A reply MUST satisfy every rule below.
 
 # Code Rules
 
-1. Do not write comments in code unless I explicitly ask.
+1. Do not write comments unless I explicitly ask.
