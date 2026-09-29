@@ -31,14 +31,16 @@ function isDelta(row) {
     );
 }
 
-export async function hashContent(content) {
-    if (typeof content !== "string") {
-        throw new TypeError("content");
+export async function hashRow({ seq, prev_hash, content, signature }) {
+    if (signature != null && typeof signature !== "string") {
+        throw new TypeError("signature");
     }
-    const digest = await crypto.subtle.digest(
-        "SHA-256",
-        encoder.encode(content),
-    );
+    const signing = signingBytes({ seq, prev_hash, content });
+    const tail = encoder.encode(`\n${signature ?? ""}`);
+    const bytes = new Uint8Array(signing.length + tail.length);
+    bytes.set(signing, 0);
+    bytes.set(tail, signing.length);
+    const digest = await crypto.subtle.digest("SHA-256", bytes);
     return hex(digest);
 }
 
@@ -116,7 +118,7 @@ export async function assertLink(prev, next) {
     if (next.seq !== prev.seq + 1) {
         return { ok: false, error: "seq" };
     }
-    const expected = await hashContent(prev.content);
+    const expected = await hashRow(prev);
     if (next.prev_hash !== expected) {
         return { ok: false, error: "prev_hash" };
     }
