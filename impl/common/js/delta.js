@@ -85,13 +85,16 @@ export function parseDelta(body) {
     const signature = body.signature;
     const seq = body.seq;
     const prev_hash = body.prev_hash ?? null;
-    if (typeof content !== "string" || typeof signature !== "string") {
+    if (typeof content !== "string") {
+        return null;
+    }
+    if (signature != null && typeof signature !== "string") {
         return null;
     }
     if (!isSeq(seq) || !isPrevHash(prev_hash)) {
         return null;
     }
-    return { content, seq, prev_hash, signature };
+    return { content, seq, prev_hash, signature: signature ?? null };
 }
 
 export async function assertLink(prev, next) {
