@@ -1,17 +1,5 @@
-import { isNonEmptyString } from "./a001.js";
+import { bytesFromBase64Url, isNonEmptyString } from "./a001.js";
 import { signingBytes } from "./delta.js";
-
-function base64UrlToBytes(value) {
-    const padded =
-        value.replace(/-/g, "+").replace(/_/g, "/") +
-        "==".slice(0, (4 - (value.length % 4)) % 4);
-    const binary = atob(padded);
-    const bytes = new Uint8Array(binary.length);
-    for (let i = 0; i < binary.length; i++) {
-        bytes[i] = binary.charCodeAt(i);
-    }
-    return bytes;
-}
 
 export async function verifyDeltaSignature(
     publicKey,
@@ -30,7 +18,7 @@ export async function verifyDeltaSignature(
             ["verify"],
         );
         const data = signingBytes({ seq, prev_hash, content });
-        const sig = base64UrlToBytes(signature);
+        const sig = bytesFromBase64Url(signature);
         return await crypto.subtle.verify(
             { name: "ECDSA", hash: "SHA-256" },
             key,
