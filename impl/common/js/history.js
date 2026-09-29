@@ -1,12 +1,9 @@
+import { isPlainObject } from "./a001.js";
 import { assertLink, parseContent } from "./delta.js";
 
 const NODE_FIELDS = ["id", "position", "data", "nodeIds"];
 const DATA_FIELDS = ["title", "link", "img", "alt"];
 const POSITION_FIELDS = ["x", "y", "z"];
-
-function isPlainObject(value) {
-    return value != null && typeof value === "object" && !Array.isArray(value);
-}
 
 function isNonEmptyString(value) {
     return typeof value === "string" && value.length > 0;

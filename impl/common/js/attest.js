@@ -1,10 +1,7 @@
+import { isPlainObject } from "./a001.js";
 import { parseContent } from "./delta.js";
 
 const JWK_FIELDS = ["kty", "crv", "x", "y"];
-
-function isPlainObject(value) {
-    return value != null && typeof value === "object" && !Array.isArray(value);
-}
 
 export function canonicalPublicKey(publicKey) {
     if (!isPlainObject(publicKey)) {
