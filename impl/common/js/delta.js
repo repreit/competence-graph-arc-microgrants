@@ -1,3 +1,5 @@
+import { isPlainObject } from "./a001.js";
+
 const encoder = new TextEncoder();
 
 function hex(buffer) {
@@ -59,17 +61,13 @@ export function parseContent(content) {
     } catch {
         return null;
     }
-    if (parsed == null || typeof parsed !== "object" || Array.isArray(parsed)) {
+    if (!isPlainObject(parsed)) {
         return null;
     }
     if (typeof parsed.type !== "string" || parsed.type.length === 0) {
         return null;
     }
-    if (
-        parsed.publicKey == null ||
-        typeof parsed.publicKey !== "object" ||
-        Array.isArray(parsed.publicKey)
-    ) {
+    if (!isPlainObject(parsed.publicKey)) {
         return null;
     }
     return parsed;
@@ -81,7 +79,7 @@ export function contentPublicKey(content) {
 }
 
 export function parseDelta(body) {
-    if (body == null || typeof body !== "object" || Array.isArray(body)) {
+    if (!isPlainObject(body)) {
         return null;
     }
     const content = body.content;
