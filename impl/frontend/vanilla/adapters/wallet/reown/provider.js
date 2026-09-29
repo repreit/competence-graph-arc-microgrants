@@ -4,7 +4,6 @@ function hasRequest(provider) {
     return Boolean(provider) && typeof provider.request === "function";
 }
 
-/** AppKit getProvider("eip155"), else getWalletProvider, else injected. */
 export function getProvider(modal) {
     const fromAppKit =
         (typeof modal.getProvider === "function" &&
