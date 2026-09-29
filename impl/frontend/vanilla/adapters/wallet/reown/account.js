@@ -1,4 +1,8 @@
-import { isUserRejected, readAddress } from "./provider.js";
+import {
+    isUserRejected,
+    readAddress,
+    requestAccountPermission,
+} from "./provider.js";
 
 const CONNECT_TIMEOUT_MS = 120000;
 const MODAL_CLOSE_GRACE_MS = 1000;
@@ -98,10 +102,23 @@ function waitForConnect(modal) {
     });
 }
 
-export async function requestAccount(modal) {
-    const address = await readAddress(modal);
-    if (address) {
+async function reselectAccount(modal, address) {
+    try {
+        await requestAccountPermission(modal);
+    } catch (err) {
+        if (isUserRejected(err)) {
+            throw err;
+        }
         return address;
     }
-    return waitForConnect(modal);
+    const next = await readAddress(modal);
+    return next || address;
+}
+
+export async function requestAccount(modal) {
+    const address = await readAddress(modal);
+    if (!address) {
+        return waitForConnect(modal);
+    }
+    return reselectAccount(modal, address);
 }
