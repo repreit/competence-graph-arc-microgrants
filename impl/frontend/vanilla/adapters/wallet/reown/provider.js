@@ -27,15 +27,20 @@ async function addressFromProvider(provider) {
     return Array.isArray(accounts) && accounts[0] ? accounts[0] : "";
 }
 
-/** AppKit getAddress, else eth_accounts via provider. */
 export async function readAddress(modal) {
+    try {
+        const live = await addressFromProvider(getProvider(modal));
+        if (live) {
+            return live;
+        }
+    } catch {}
     if (typeof modal.getAddress === "function") {
         const address = modal.getAddress();
         if (address) {
             return address;
         }
     }
-    return addressFromProvider(getProvider(modal));
+    return "";
 }
 
 export async function signMessage(modal, message, address) {
