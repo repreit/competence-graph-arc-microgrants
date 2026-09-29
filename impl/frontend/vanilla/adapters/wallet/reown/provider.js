@@ -5,6 +5,9 @@ function hasRequest(provider) {
 }
 
 export function getProvider(modal) {
+    if (hasRequest(window.ethereum)) {
+        return window.ethereum;
+    }
     const fromAppKit =
         (typeof modal.getProvider === "function" &&
             modal.getProvider("eip155")) ||
@@ -12,9 +15,6 @@ export function getProvider(modal) {
             modal.getWalletProvider());
     if (hasRequest(fromAppKit)) {
         return fromAppKit;
-    }
-    if (hasRequest(window.ethereum)) {
-        return window.ethereum;
     }
     return null;
 }
