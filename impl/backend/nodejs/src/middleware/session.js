@@ -1,7 +1,7 @@
 import { findBySessionToken } from "../adapters/db/postgres/tables/sessions.js";
 
 export function publicAccount(row) {
-    return { id: row.id, address: row.address };
+    return { id: Number(row.id), address: row.address };
 }
 
 export function bearerToken(c) {
