@@ -1,3 +1,4 @@
+import { isNonEmptyString } from "./a001.js";
 import { signingBytes } from "./delta.js";
 
 function base64UrlToBytes(value) {
@@ -17,7 +18,7 @@ export async function verifyDeltaSignature(
     { seq, prev_hash, content },
     signature,
 ) {
-    if (typeof signature !== "string" || signature.length === 0) {
+    if (!isNonEmptyString(signature)) {
         return false;
     }
     try {

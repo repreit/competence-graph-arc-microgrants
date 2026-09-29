@@ -1,4 +1,4 @@
-import { isPlainObject } from "./a001.js";
+import { isNonEmptyString, isPlainObject } from "./a001.js";
 
 const encoder = new TextEncoder();
 
@@ -64,7 +64,7 @@ export function parseContent(content) {
     if (!isPlainObject(parsed)) {
         return null;
     }
-    if (typeof parsed.type !== "string" || parsed.type.length === 0) {
+    if (!isNonEmptyString(parsed.type)) {
         return null;
     }
     if (!isPlainObject(parsed.publicKey)) {
