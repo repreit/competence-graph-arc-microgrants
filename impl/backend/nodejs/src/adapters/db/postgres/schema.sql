@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS deltas (
     seq bigint NOT NULL,
     prev_hash text,
     content text NOT NULL,
-    signature text NOT NULL,
+    signature text,
     received_at timestamptz NOT NULL DEFAULT now(),
     UNIQUE (account_id, seq)
 );
