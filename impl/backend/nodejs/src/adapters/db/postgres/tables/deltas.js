@@ -1,7 +1,7 @@
 import {
     assertLink,
     contentPublicKey,
-    hashContent,
+    hashRow,
 } from "../../../../../../../common/js/delta.js";
 import { pool } from "../pool.js";
 import { withTransaction } from "../transaction.js";
@@ -31,14 +31,14 @@ export async function nextLink(accountId) {
     if (!tip) {
         return { seq: 1, prev_hash: null };
     }
-    return { seq: tip.seq + 1, prev_hash: await hashContent(tip.content) };
+    return { seq: tip.seq + 1, prev_hash: await hashRow(tip) };
 }
 
 /** Requires an open transaction on `client` (FOR UPDATE must span the insert). */
 export async function appendDeltaInTx(accountId, row, client) {
     const tip = await findTip(accountId, client, true);
     const seq = tip ? tip.seq + 1 : 1;
-    const prev_hash = tip ? await hashContent(tip.content) : null;
+    const prev_hash = tip ? await hashRow(tip) : null;
     if (row.seq != null && (row.seq !== seq || row.prev_hash !== prev_hash)) {
         return { ok: false, error: "stale_tip" };
     }
