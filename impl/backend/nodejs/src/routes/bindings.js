@@ -113,14 +113,6 @@ bindings.post("/:id/unbind", requireSession, requireJson, async (c) => {
     if (!verified.ok) {
         return c.json({ error: verified.error }, errorStatus(verified.error));
     }
-    const signed = await verifyDeltaSignature(
-        parsed.publicKey,
-        delta,
-        delta.signature,
-    );
-    if (!signed) {
-        return c.json({ error: "signature" }, 401);
-    }
     const result = await unbindKey(account.id, bindingId, delta);
     if (!result.ok) {
         if (result.error === "stale_tip") {
