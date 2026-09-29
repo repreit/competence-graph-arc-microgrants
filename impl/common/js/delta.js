@@ -42,7 +42,6 @@ export async function hashContent(content) {
     return hex(digest);
 }
 
-// seq, then prev_hash (empty if none), then content as the remainder.
 export function signingBytes({ seq, prev_hash, content }) {
     if (!isSeq(seq) || !isPrevHash(prev_hash) || typeof content !== "string") {
         throw new TypeError("delta");
