@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { contentPublicKey, parseDelta } from "../../../../common/js/delta.js";
+import { parseContent, parseDelta } from "../../../../common/js/delta.js";
 import { verifyDeltaSignature } from "../../../../common/js/verify.js";
 import { findActiveByKey } from "../adapters/db/postgres/tables/bindings.js";
 import {
@@ -8,6 +8,8 @@ import {
 } from "../adapters/db/postgres/tables/deltas.js";
 import { requireJson } from "../middleware/json.js";
 import { requireSession } from "../middleware/session.js";
+
+const APPEND_TYPES = new Set(["history"]);
 
 const deltas = new Hono();
 
@@ -21,10 +23,11 @@ deltas.post("/append", requireSession, requireJson, async (c) => {
     if (!delta) {
         return c.json({ error: "invalid_request" }, 400);
     }
-    const publicKey = contentPublicKey(delta.content);
-    if (publicKey == null) {
+    const content = parseContent(delta.content);
+    if (content == null || !APPEND_TYPES.has(content.type)) {
         return c.json({ error: "invalid_content" }, 400);
     }
+    const publicKey = content.publicKey;
     const binding = await findActiveByKey(account.id, publicKey);
     if (!binding) {
         return c.json({ error: "no_active_binding" }, 401);
