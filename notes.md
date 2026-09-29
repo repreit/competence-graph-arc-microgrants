@@ -1,4 +1,4 @@
-# Vanilla
+# Development Concept
 
 Prefer vanilla development.
 
