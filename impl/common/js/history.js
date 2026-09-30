@@ -201,14 +201,14 @@ function parseChange(value) {
         }
         return { op: "set", node: node };
     }
-    if (value.op === "delete") {
+    if (value.op === "node.delete") {
         if (
             !hasOnlyFields(value, ["op", "id"]) ||
             !isNonEmptyString(value.id)
         ) {
             return null;
         }
-        return { op: "delete", id: value.id };
+        return { op: "node.delete", id: value.id };
     }
     return null;
 }
@@ -261,7 +261,7 @@ function mergeNode(node, patch) {
 }
 
 function applyChange(state, change) {
-    if (change.op === "delete") {
+    if (change.op === "node.delete") {
         state.delete(change.id);
         return { ok: true };
     }
@@ -271,7 +271,7 @@ function applyChange(state, change) {
 }
 
 function touchedIds(change) {
-    return change.op === "delete" ? [change.id] : [change.node.id];
+    return change.op === "node.delete" ? [change.id] : [change.node.id];
 }
 
 function findBrokenLink(state) {
