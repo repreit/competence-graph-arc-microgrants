@@ -2,6 +2,7 @@ export let state = Object.freeze({
     account: null,
     authPending: false,
     authError: "",
+    publicConfig: null,
 });
 
 const listeners = new Map();
