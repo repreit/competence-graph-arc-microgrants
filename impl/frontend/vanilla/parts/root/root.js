@@ -2,6 +2,7 @@ import { bindAuth } from "../auth/auth.js";
 import { bindDifference } from "../difference/difference.js";
 import { bindHistory } from "../history/history.js";
 import { bindFooter } from "../footer/footer.js";
+import { loadPublicConfig } from "../../common/js/public-config.js";
 
 function addPartStyles() {
     ["header", "auth", "difference", "history", "footer"].forEach(
@@ -54,6 +55,8 @@ function bindPage() {
     bindHistory();
     bindFooter();
 }
+
+loadPublicConfig().catch(function () {});
 
 assemblePage()
     .then(bindPage)
