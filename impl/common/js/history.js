@@ -2,6 +2,7 @@ import { isNonEmptyString, isPlainObject } from "./a001.js";
 import { assertLink, parseContent } from "./delta.js";
 
 const NODE_FIELDS = ["id", "position", "data", "nodeIds"];
+const PATCH_FIELDS = ["data", "position"];
 const DATA_FIELDS = ["title", "link", "img", "alt"];
 const POSITION_FIELDS = ["x", "y", "z"];
 
@@ -137,39 +138,25 @@ function parsePositionPatch(value) {
     return patch;
 }
 
-function parseNodeIdsPatch(value) {
-    if (!Array.isArray(value)) {
-        return null;
-    }
-    const ids = [];
-    for (const id of value) {
-        if (!isNonEmptyString(id)) {
-            return null;
-        }
-        ids.push(id);
-    }
-    return ids;
-}
-
 function parseNodeField(field, value) {
     if (field === "data") {
         return parseDataPatch(value);
     }
-    if (field === "position") {
-        return parsePositionPatch(value);
-    }
-    return parseNodeIdsPatch(value);
+    return parsePositionPatch(value);
 }
 
 function parseNodePatch(value) {
-    if (!isPlainObject(value) || !hasOnlyFields(value, NODE_FIELDS)) {
+    if (
+        !isPlainObject(value) ||
+        !hasOnlyFields(value, ["id", ...PATCH_FIELDS])
+    ) {
         return null;
     }
     if (!isNonEmptyString(value.id)) {
         return null;
     }
     const patch = { id: value.id };
-    for (const field of ["data", "position", "nodeIds"]) {
+    for (const field of PATCH_FIELDS) {
         if (!hasOwn(value, field)) {
             continue;
         }
@@ -196,7 +183,7 @@ function parseChange(value) {
             return null;
         }
         const node = parseNodePatch(value.node);
-        if (node == null || hasOwn(node, "nodeIds")) {
+        if (node == null) {
             return null;
         }
         return { op: "node.create", node: node };
@@ -219,6 +206,18 @@ function parseChange(value) {
             return null;
         }
         return { op: "node.delete", id: value.id };
+    }
+    if (value.op === "link.add") {
+        if (!hasOnlyFields(value, ["op", "a", "b"])) {
+            return null;
+        }
+        if (!isNonEmptyString(value.a) || !isNonEmptyString(value.b)) {
+            return null;
+        }
+        if (value.a === value.b) {
+            return null;
+        }
+        return { op: "link.add", a: value.a, b: value.b };
     }
     return null;
 }
@@ -287,11 +286,45 @@ function applyChange(state, change) {
         state.set(id, mergeNode(state.get(id), change.node));
         return { ok: true };
     }
+    if (change.op === "link.add") {
+        const a = state.get(change.a);
+        const b = state.get(change.b);
+        if (a == null || b == null) {
+            return { ok: false, error: "missing" };
+        }
+        if ((a.nodeIds ?? []).includes(change.b)) {
+            return { ok: false, error: "exists" };
+        }
+        state.set(
+            change.a,
+            mergeNode(a, {
+                id: change.a,
+                nodeIds: (a.nodeIds ?? []).concat(change.b),
+            }),
+        );
+        state.set(
+            change.b,
+            mergeNode(b, {
+                id: change.b,
+                nodeIds: (b.nodeIds ?? []).concat(change.a),
+            }),
+        );
+        return { ok: true };
+    }
     return { ok: false, error: "invalid" };
 }
 
 function touchedIds(change) {
-    return change.op === "node.delete" ? [change.id] : [change.node.id];
+    if (change.op === "node.create" || change.op === "node.set") {
+        return [change.node.id];
+    }
+    if (change.op === "node.delete") {
+        return [change.id];
+    }
+    if (change.op === "link.add") {
+        return [change.a, change.b];
+    }
+    return [];
 }
 
 function findBrokenLink(state) {
