@@ -113,6 +113,7 @@ bindings.post("/:id/unbind", requireSession, requireJson, async (c) => {
     if (!verified.ok) {
         return c.json({ error: verified.error }, errorStatus(verified.error));
     }
+    // Intentional: unbind deltas are unsigned (lost-key path)
     const result = await unbindKey(account.id, bindingId, delta);
     if (!result.ok) {
         if (result.error === "stale_tip") {
