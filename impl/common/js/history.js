@@ -270,6 +270,10 @@ function applyChange(state, change) {
     return { ok: true };
 }
 
+function touchedIds(change) {
+    return change.op === "delete" ? [change.id] : [change.node.id];
+}
+
 function findBrokenLink(state) {
     for (const node of state.values()) {
         for (const id of node.nodeIds ?? []) {
@@ -314,7 +318,9 @@ export async function foldHistory(rows) {
             if (!applied.ok) {
                 return { ok: false, error: applied.error };
             }
-            touched.add(change.op === "delete" ? change.id : change.node.id);
+            for (const id of touchedIds(change)) {
+                touched.add(id);
+            }
         }
         for (const id of touched) {
             const node = state.get(id);
