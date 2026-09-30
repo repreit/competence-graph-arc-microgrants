@@ -263,10 +263,11 @@ function mergeNode(node, patch) {
 function applyChange(state, change) {
     if (change.op === "delete") {
         state.delete(change.id);
-        return;
+        return { ok: true };
     }
     const id = change.node.id;
     state.set(id, mergeNode(state.get(id), change.node));
+    return { ok: true };
 }
 
 function findBrokenLink(state) {
@@ -309,7 +310,10 @@ export async function foldHistory(rows) {
         }
         const touched = new Set();
         for (const change of parsed.ops) {
-            applyChange(state, change);
+            const applied = applyChange(state, change);
+            if (!applied.ok) {
+                return { ok: false, error: applied.error };
+            }
             touched.add(change.op === "delete" ? change.id : change.node.id);
         }
         for (const id of touched) {
