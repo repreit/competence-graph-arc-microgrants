@@ -5,7 +5,7 @@ import {
     hostChainId,
 } from "../../adapters/wallet/reown/reown.js";
 import { isUserRejected } from "../../adapters/wallet/reown/provider.js";
-import { shortAddress, apiBase, pageUri } from "../../common/js/a001.js";
+import { shortAddress, pageUri, apiFetch } from "../../common/js/a001.js";
 import { emit, on, state } from "../../common/js/store.js";
 
 const TOKEN_KEY = "competence-graph.session-token";
@@ -39,27 +39,15 @@ function siweMessage({ domain, address, uri, chainId, nonce }) {
 }
 
 async function api(path, options) {
-    const base = apiBase();
-    if (!base) {
-        throw new Error("api");
-    }
     const headers = Object.assign({}, options && options.headers);
     const session = getToken();
     if (session) {
         headers.Authorization = "Bearer " + session;
     }
-    let response;
-    try {
-        response = await fetch(
-            base + path,
-            Object.assign({}, options, { headers }),
-        );
-    } catch (err) {
-        throw new Error("http", { cause: err });
-    }
-    const data = await response.json().catch(function () {
-        return {};
-    });
+    const { response, data } = await apiFetch(
+        path,
+        Object.assign({}, options, { headers }),
+    );
     if (!response.ok) {
         const error = new Error(data.error || "http");
         error.status = response.status;
