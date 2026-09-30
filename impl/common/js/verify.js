@@ -1,4 +1,5 @@
 import { bytesFromBase64Url, isNonEmptyString } from "./a001.js";
+import { KEY_PARAMS, SIGN_PARAMS } from "./attest.js";
 import { signingBytes } from "./delta.js";
 
 export async function verifyDeltaSignature(
@@ -13,18 +14,13 @@ export async function verifyDeltaSignature(
         const key = await crypto.subtle.importKey(
             "jwk",
             publicKey,
-            { name: "ECDSA", namedCurve: "P-256" },
+            KEY_PARAMS,
             false,
             ["verify"],
         );
         const data = signingBytes({ seq, prev_hash, content });
         const sig = bytesFromBase64Url(signature);
-        return await crypto.subtle.verify(
-            { name: "ECDSA", hash: "SHA-256" },
-            key,
-            sig,
-            data,
-        );
+        return await crypto.subtle.verify(SIGN_PARAMS, key, sig, data);
     } catch {
         return false;
     }
