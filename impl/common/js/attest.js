@@ -10,24 +10,16 @@ export const KEY_PARAMS = Object.freeze({
 
 export const SIGN_PARAMS = Object.freeze({ name: "ECDSA", hash: "SHA-256" });
 
-const COORDINATE_BYTES = 32;
-const COORDINATE_CHARS = Math.ceil((COORDINATE_BYTES * 4) / 3);
-const COORDINATE_PATTERN = new RegExp(
-    "^[A-Za-z0-9_-]{" + COORDINATE_CHARS + "}$",
-);
-
-function isCoordinate(value) {
-    return typeof value === "string" && COORDINATE_PATTERN.test(value);
-}
+const JWK_FIELDS = ["kty", "crv", "x", "y"];
 
 export function canonicalPublicKey(publicKey) {
     if (!isPlainObject(publicKey)) {
         return null;
     }
-    if (publicKey.kty !== KEY_TYPE.kty || publicKey.crv !== KEY_TYPE.crv) {
-        return null;
-    }
-    if (!isCoordinate(publicKey.x) || !isCoordinate(publicKey.y)) {
+    const incomplete = JWK_FIELDS.some(function (field) {
+        return typeof publicKey[field] !== "string";
+    });
+    if (incomplete) {
         return null;
     }
     return JSON.stringify({
