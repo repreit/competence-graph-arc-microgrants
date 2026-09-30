@@ -1,7 +1,7 @@
 import { createAppKit } from "@reown/appkit";
 import { EthersAdapter } from "@reown/appkit-adapter-ethers";
 import { defineChain } from "@reown/appkit/networks";
-import { apiBase } from "../../../common/js/a001.js";
+import { loadPublicConfig } from "../../../common/js/public-config.js";
 
 const WALLET_IDS = [
     "c57ca95b47569778a828d19178114f4db188b89b763c899ba0be274e97267d96",
@@ -9,29 +9,6 @@ const WALLET_IDS = [
 
 let modalPromise;
 let hostNetwork;
-
-async function loadPublicConfig() {
-    const base = apiBase();
-    if (!base) {
-        throw new Error("api");
-    }
-    let response;
-    try {
-        response = await fetch(base + "/public-config");
-    } catch (err) {
-        throw new Error("http", { cause: err });
-    }
-    if (!response.ok) {
-        throw new Error("http");
-    }
-    const data = await response.json().catch(function () {
-        return {};
-    });
-    if (!data.app?.name) {
-        throw new Error("api");
-    }
-    return data;
-}
 
 function networkFromHostChain(chain) {
     if (
