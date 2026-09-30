@@ -191,6 +191,16 @@ function parseChange(value) {
     if (!isPlainObject(value)) {
         return null;
     }
+    if (value.op === "node.create") {
+        if (!hasOnlyFields(value, ["op", "node"])) {
+            return null;
+        }
+        const node = parseNodePatch(value.node);
+        if (node == null || hasOwn(node, "nodeIds")) {
+            return null;
+        }
+        return { op: "node.create", node: node };
+    }
     if (value.op === "node.set") {
         if (!hasOnlyFields(value, ["op", "node"])) {
             return null;
@@ -261,13 +271,23 @@ function mergeNode(node, patch) {
 }
 
 function applyChange(state, change) {
+    if (change.op === "node.create") {
+        if (state.has(change.node.id)) {
+            return { ok: false, error: "exists" };
+        }
+        state.set(change.node.id, mergeNode(null, change.node));
+        return { ok: true };
+    }
     if (change.op === "node.delete") {
         state.delete(change.id);
         return { ok: true };
     }
-    const id = change.node.id;
-    state.set(id, mergeNode(state.get(id), change.node));
-    return { ok: true };
+    if (change.op === "node.set") {
+        const id = change.node.id;
+        state.set(id, mergeNode(state.get(id), change.node));
+        return { ok: true };
+    }
+    return { ok: false, error: "invalid" };
 }
 
 function touchedIds(change) {
