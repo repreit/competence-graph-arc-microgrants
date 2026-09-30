@@ -1,6 +1,15 @@
 import { isNonEmptyString, isPlainObject, isPositiveSafeInt } from "./a001.js";
 import { parseContent } from "./delta.js";
 
+export const KEY_TYPE = Object.freeze({ kty: "EC", crv: "P-256" });
+
+export const KEY_PARAMS = Object.freeze({
+    name: "ECDSA",
+    namedCurve: KEY_TYPE.crv,
+});
+
+export const SIGN_PARAMS = Object.freeze({ name: "ECDSA", hash: "SHA-256" });
+
 const JWK_FIELDS = ["kty", "crv", "x", "y"];
 
 export function canonicalPublicKey(publicKey) {
