@@ -20,6 +20,23 @@ export function apiBase() {
     return api.base;
 }
 
+export async function apiFetch(path, options) {
+    const base = apiBase();
+    if (!base) {
+        throw new Error("api");
+    }
+    let response;
+    try {
+        response = await fetch(base + path, options);
+    } catch (err) {
+        throw new Error("http", { cause: err });
+    }
+    const data = await response.json().catch(function () {
+        return {};
+    });
+    return { response: response, data: data };
+}
+
 export function pageUri() {
     return location.origin + location.pathname.replace(/\/+$/, "");
 }
