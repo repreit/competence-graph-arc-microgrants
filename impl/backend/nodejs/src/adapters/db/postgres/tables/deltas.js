@@ -3,6 +3,7 @@ import {
     contentPublicKey,
     hashRow,
 } from "../../../../../../../common/js/delta.js";
+import { foldHistory } from "../../../../../../../common/js/history.js";
 import { pool } from "../pool.js";
 import { withTransaction } from "../transaction.js";
 
@@ -68,6 +69,13 @@ export async function appendDeltaInTx(accountId, row, client) {
     }
     if (contentPublicKey(row.content) == null) {
         return { ok: false, error: "invalid" };
+    }
+    const folded = await foldHistory([
+        ...(await listDeltas(accountId, client)),
+        next,
+    ]);
+    if (!folded.ok) {
+        return { ok: false, error: folded.error };
     }
     const { rows } = await client.query(
         `INSERT INTO deltas (account_id, seq, prev_hash, content, signature)
