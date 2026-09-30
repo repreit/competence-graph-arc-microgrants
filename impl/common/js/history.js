@@ -439,10 +439,10 @@ export async function foldHistory(rows) {
             }
             state.set(id, valid);
         }
-        const broken = findBrokenLink(state);
-        if (broken != null) {
-            return { ok: false, error: broken };
-        }
+    }
+    const broken = findBrokenLink(state);
+    if (broken != null) {
+        return { ok: false, error: broken };
     }
     return { ok: true, history: { nodes: Array.from(state.values()) } };
 }
