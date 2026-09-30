@@ -287,12 +287,19 @@ function applyChange(state, change) {
         return { ok: true };
     }
     if (change.op === "node.delete") {
+        if (!state.has(change.id)) {
+            return { ok: false, error: "missing" };
+        }
         state.delete(change.id);
         return { ok: true };
     }
     if (change.op === "node.set") {
         const id = change.node.id;
-        state.set(id, mergeNode(state.get(id), change.node));
+        const node = state.get(id);
+        if (node == null) {
+            return { ok: false, error: "missing" };
+        }
+        state.set(id, mergeNode(node, change.node));
         return { ok: true };
     }
     if (change.op === "link.add") {
