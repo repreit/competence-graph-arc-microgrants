@@ -191,7 +191,7 @@ function parseChange(value) {
     if (!isPlainObject(value)) {
         return null;
     }
-    if (value.op === "set") {
+    if (value.op === "node.set") {
         if (!hasOnlyFields(value, ["op", "node"])) {
             return null;
         }
@@ -199,7 +199,7 @@ function parseChange(value) {
         if (node == null) {
             return null;
         }
-        return { op: "set", node: node };
+        return { op: "node.set", node: node };
     }
     if (value.op === "node.delete") {
         if (
