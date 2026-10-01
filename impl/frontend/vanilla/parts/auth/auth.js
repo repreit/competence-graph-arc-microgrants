@@ -65,6 +65,9 @@ function restore() {
 
 async function signOut() {
     try {
+        await disconnectWallet();
+    } catch {}
+    try {
         await api("/auth/logout", { method: "POST" });
     } catch (err) {
         if (err.status !== 401) {
@@ -72,9 +75,6 @@ async function signOut() {
         }
     }
     setToken("");
-    try {
-        await disconnectWallet();
-    } catch {}
     emit("signedOut", { account: null, authPending: false, authError: "" });
 }
 
