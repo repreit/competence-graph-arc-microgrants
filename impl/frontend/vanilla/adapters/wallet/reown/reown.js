@@ -1,4 +1,4 @@
-import { getModal } from "./modal.js";
+import { getModal, hasModal } from "./modal.js";
 
 export async function openModal() {
     const modal = await getModal();
@@ -6,6 +6,9 @@ export async function openModal() {
 }
 
 export async function disconnectWallet() {
+    if (!hasModal()) {
+        return;
+    }
     const modal = await getModal();
     await modal.disconnect();
 }
