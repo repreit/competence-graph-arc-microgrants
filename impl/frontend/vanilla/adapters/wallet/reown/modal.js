@@ -91,6 +91,10 @@ export function getModal() {
     return modalPromise;
 }
 
+export function hasModal() {
+    return Boolean(modalPromise);
+}
+
 export function getHostNetwork() {
     if (!hostNetwork) {
         throw new Error("chain");
