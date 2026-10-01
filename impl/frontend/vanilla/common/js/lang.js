@@ -5,5 +5,5 @@ const DICTS = { en };
 export const lang = Object.assign(
     {},
     en,
-    DICTS[(navigator.language || "en").slice(0, 2)],
+    DICTS[(globalThis.navigator?.language?.toLowerCase() || "en").slice(0, 2)],
 );
