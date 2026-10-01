@@ -1,4 +1,4 @@
-export const en = {
+export const en = Object.freeze({
     API_UNREACHABLE: "Could not reach the API.",
     HOST_CHAIN_UNUSABLE: "The API host chain is not usable.",
     NO_API_BASE: "No API base. Check config.js.",
@@ -10,4 +10,4 @@ export const en = {
     SIGN_IN_FAILED: "Could not sign in.",
     SIGN_OUT: "Sign out",
     SIGN_OUT_FAILED: "Could not sign out.",
-};
+});
