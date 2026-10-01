@@ -6,6 +6,8 @@ export const en = {
     NONCE_FAILED: "Could not get a nonce from the API.",
     REQUEST_EXPIRED: "This sign-in request expired. Try again.",
     SIGNATURE_INVALID: "Could not verify the signature.",
+    SIGN_IN: "Sign in",
     SIGN_IN_FAILED: "Could not sign in.",
+    SIGN_OUT: "Sign out",
     SIGN_OUT_FAILED: "Could not sign out.",
 };

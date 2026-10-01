@@ -106,6 +106,8 @@ export function bindAuth() {
     if (!signInEl || !signOutEl || !addressEl || !statusEl) {
         return;
     }
+    signInEl.textContent = lang.SIGN_IN;
+    signOutEl.textContent = lang.SIGN_OUT;
 
     function render(nextState) {
         const account = nextState.account;
