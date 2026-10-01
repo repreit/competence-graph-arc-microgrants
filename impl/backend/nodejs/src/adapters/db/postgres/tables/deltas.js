@@ -7,7 +7,7 @@ import { foldHistory } from "../../../../../../../common/js/history.js";
 import { pool } from "../pool.js";
 import { withTransaction } from "../transaction.js";
 
-export async function findTip(accountId, client, forUpdate = false) {
+async function findTip(accountId, client, forUpdate = false) {
     if (!client) {
         throw new TypeError("client");
     }
@@ -27,7 +27,7 @@ export async function findTip(accountId, client, forUpdate = false) {
     return { ...row, seq: Number(row.seq) };
 }
 
-export async function listDeltas(accountId, client) {
+async function listDeltas(accountId, client) {
     if (!client) {
         throw new TypeError("client");
     }
