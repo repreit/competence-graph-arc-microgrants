@@ -66,6 +66,7 @@ async function createModal() {
             messenger: createMessenger(),
             verifiers: [createVerifier()],
         }),
+        enableReconnect: false,
         metadata: {
             name: config.app.name,
             description: config.app.description,
