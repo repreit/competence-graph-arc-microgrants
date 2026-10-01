@@ -3,6 +3,16 @@ import { apiFetch } from "../../../common/js/a001.js";
 import { setToken } from "../../../common/js/session.js";
 import { emit } from "../../../common/js/store.js";
 
+const ERRORS = {
+    nonce: "This sign-in request expired. Try again.",
+    signature: "Could not verify the signature.",
+    invalid_message: "Could not verify the signature.",
+};
+
+function errorFor(data) {
+    return ERRORS[data && data.error] || "Could not sign in.";
+}
+
 class Verifier extends EIP155Verifier {
     async verify(session) {
         try {
@@ -21,6 +31,10 @@ class Verifier extends EIP155Verifier {
                 }),
             });
             if (!response.ok) {
+                emit("authFailed", {
+                    authPending: false,
+                    authError: errorFor(data),
+                });
                 return false;
             }
             session.token = data.token;
@@ -32,6 +46,10 @@ class Verifier extends EIP155Verifier {
             });
             return true;
         } catch {
+            emit("authFailed", {
+                authPending: false,
+                authError: "Could not reach the API.",
+            });
             return false;
         }
     }
