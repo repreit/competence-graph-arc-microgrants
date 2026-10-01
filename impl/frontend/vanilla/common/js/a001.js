@@ -10,7 +10,7 @@ export function shortAddress(address) {
     return address.slice(0, 6) + "…" + address.slice(-4);
 }
 
-export function apiBase() {
+function apiBase() {
     if (
         location.hostname === "localhost" ||
         location.hostname === "127.0.0.1"

@@ -91,10 +91,3 @@ export function getModal() {
     }
     return modalPromise;
 }
-
-export function getHostNetwork() {
-    if (!hostNetwork) {
-        throw new Error("chain");
-    }
-    return hostNetwork;
-}
