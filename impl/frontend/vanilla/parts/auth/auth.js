@@ -1,29 +1,7 @@
-import {
-    requestAccount,
-    switchChain,
-    signMessage,
-    hostChainId,
-} from "../../adapters/wallet/reown/reown.js";
-import { isUserRejected } from "../../adapters/wallet/reown/provider.js";
-import { shortAddress, pageUri, apiFetch } from "../../common/js/a001.js";
+import { openModal } from "../../adapters/wallet/reown/reown.js";
+import { shortAddress, apiFetch } from "../../common/js/a001.js";
 import { getToken, setToken } from "../../common/js/session.js";
 import { emit, on, state } from "../../common/js/store.js";
-
-function siweMessage({ domain, address, uri, chainId, nonce }) {
-    return (
-        domain +
-        " wants you to sign in with your Ethereum account:\n" +
-        address +
-        "\n\nURI: " +
-        uri +
-        "\nVersion: 1\nChain ID: " +
-        chainId +
-        "\nNonce: " +
-        nonce +
-        "\nIssued At: " +
-        new Date().toISOString()
-    );
-}
 
 async function api(path, options) {
     const headers = Object.assign({}, options && options.headers);
@@ -43,40 +21,13 @@ async function api(path, options) {
     return data;
 }
 
-// TODO: review AppKit SIWE / One-Click Auth
-async function signIn() {
-    emit("signInStarted", { authPending: true, authError: "" });
-    try {
-        const address = await requestAccount();
-        const { nonce } = await api("/auth/nonce");
-        const chainId = await hostChainId();
-        await switchChain();
-        const message = siweMessage({
-            domain: location.host,
-            address: address,
-            uri: pageUri(),
-            chainId: chainId,
-            nonce: nonce,
-        });
-        const signature = await signMessage(message, address);
-        const result = await api("/auth/verify", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ message: message, signature: signature }),
-        });
-        setToken(result.token);
-        emit("signedIn", {
-            account: { id: result.id, address: result.address },
-            authPending: false,
-        });
-        return result;
-    } catch (err) {
+function signIn() {
+    openModal().catch(function (err) {
         emit("authFailed", {
             authPending: false,
             authError: errorText(err),
         });
-        return null;
-    }
+    });
 }
 
 function restore() {
@@ -124,23 +75,17 @@ function errorText(err) {
     if (!err) {
         return "Could not sign in.";
     }
-    if (err.message === "wallet") {
-        return "Connect a wallet to continue.";
-    }
     if (err.message === "reown") {
         return "The API has no Reown project id.";
     }
     if (err.message === "chain") {
-        return "Switch the wallet to this host's chain, then try again.";
+        return "The API host chain is not usable.";
     }
     if (err.message === "api") {
         return "No API base. Check config.js.";
     }
     if (err.message === "http") {
         return "Could not reach the API.";
-    }
-    if (isUserRejected(err)) {
-        return "Request was rejected.";
     }
     return "Could not sign in.";
 }
