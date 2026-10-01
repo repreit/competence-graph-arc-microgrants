@@ -1,6 +1,7 @@
 import { SIWXMessenger } from "@reown/appkit-siwx";
 import { apiFetch, pageUri } from "../../../common/js/a001.js";
 import { emit } from "../../../common/js/store.js";
+import { lang } from "../../../common/js/lang.js";
 
 const VERSION = "1";
 
@@ -14,10 +15,10 @@ async function issueNonce() {
     try {
         result = await apiFetch("/auth/nonce");
     } catch {
-        throw fail("Could not reach the API.");
+        throw fail(lang.API_UNREACHABLE);
     }
     if (!result.response.ok) {
-        throw fail("Could not get a nonce from the API.");
+        throw fail(lang.NONCE_FAILED);
     }
     return result.data.nonce;
 }

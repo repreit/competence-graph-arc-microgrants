@@ -5,6 +5,7 @@ import {
 import { shortAddress, apiFetch } from "../../common/js/a001.js";
 import { getToken, setToken } from "../../common/js/session.js";
 import { emit, on, state } from "../../common/js/store.js";
+import { lang } from "../../common/js/lang.js";
 
 async function api(path, options) {
     const headers = Object.assign({}, options && options.headers);
@@ -80,21 +81,21 @@ async function signOut() {
 
 function errorText(err) {
     if (!err) {
-        return "Could not sign in.";
+        return lang.SIGN_IN_FAILED;
     }
     if (err.message === "reown") {
-        return "The API has no Reown project id.";
+        return lang.NO_PROJECT_ID;
     }
     if (err.message === "chain") {
-        return "The API host chain is not usable.";
+        return lang.HOST_CHAIN_UNUSABLE;
     }
     if (err.message === "api") {
-        return "No API base. Check config.js.";
+        return lang.NO_API_BASE;
     }
     if (err.message === "http") {
-        return "Could not reach the API.";
+        return lang.API_UNREACHABLE;
     }
-    return "Could not sign in.";
+    return lang.SIGN_IN_FAILED;
 }
 
 export function bindAuth() {
@@ -138,7 +139,7 @@ export function bindAuth() {
             .catch(function () {
                 emit("authFailed", {
                     authPending: false,
-                    authError: "Could not sign out.",
+                    authError: lang.SIGN_OUT_FAILED,
                 });
             })
             .finally(function () {

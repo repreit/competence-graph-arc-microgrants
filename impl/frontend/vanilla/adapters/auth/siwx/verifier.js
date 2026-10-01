@@ -2,15 +2,16 @@ import { EIP155Verifier } from "@reown/appkit-siwx";
 import { apiFetch } from "../../../common/js/a001.js";
 import { setToken } from "../../../common/js/session.js";
 import { emit } from "../../../common/js/store.js";
+import { lang } from "../../../common/js/lang.js";
 
 const ERRORS = {
-    nonce: "This sign-in request expired. Try again.",
-    signature: "Could not verify the signature.",
-    invalid_message: "Could not verify the signature.",
+    nonce: lang.REQUEST_EXPIRED,
+    signature: lang.SIGNATURE_INVALID,
+    invalid_message: lang.SIGNATURE_INVALID,
 };
 
 function errorFor(data) {
-    return ERRORS[data && data.error] || "Could not sign in.";
+    return ERRORS[data && data.error] || lang.SIGN_IN_FAILED;
 }
 
 class Verifier extends EIP155Verifier {
@@ -48,7 +49,7 @@ class Verifier extends EIP155Verifier {
         } catch {
             emit("authFailed", {
                 authPending: false,
-                authError: "Could not reach the API.",
+                authError: lang.API_UNREACHABLE,
             });
             return false;
         }
