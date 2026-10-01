@@ -6,21 +6,8 @@ import {
 } from "../../adapters/wallet/reown/reown.js";
 import { isUserRejected } from "../../adapters/wallet/reown/provider.js";
 import { shortAddress, pageUri, apiFetch } from "../../common/js/a001.js";
+import { getToken, setToken } from "../../common/js/session.js";
 import { emit, on, state } from "../../common/js/store.js";
-
-const TOKEN_KEY = "competence-graph.session-token";
-
-function getToken() {
-    return localStorage.getItem(TOKEN_KEY);
-}
-
-function setToken(value) {
-    if (value) {
-        localStorage.setItem(TOKEN_KEY, value);
-    } else {
-        localStorage.removeItem(TOKEN_KEY);
-    }
-}
 
 function siweMessage({ domain, address, uri, chainId, nonce }) {
     return (
