@@ -21,6 +21,7 @@ async function api(path, options) {
     return data;
 }
 
+// TODO: review One-Click Auth
 function signIn() {
     openModal().catch(function (err) {
         emit("authFailed", {
