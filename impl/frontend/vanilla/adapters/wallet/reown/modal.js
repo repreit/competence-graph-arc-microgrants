@@ -1,6 +1,9 @@
 import { createAppKit } from "@reown/appkit";
 import { EthersAdapter } from "@reown/appkit-adapter-ethers";
 import { defineChain } from "@reown/appkit/networks";
+import { DefaultSIWX } from "@reown/appkit-siwx";
+import { createMessenger } from "../../auth/siwx/messenger.js";
+import { createVerifier } from "../../auth/siwx/verifier.js";
 import { loadPublicConfig } from "../../../common/js/public-config.js";
 
 const WALLET_IDS = [
@@ -59,6 +62,10 @@ async function createModal() {
         networks: [hostNetwork],
         defaultNetwork: hostNetwork,
         projectId: projectId,
+        siwx: new DefaultSIWX({
+            messenger: createMessenger(),
+            verifiers: [createVerifier()],
+        }),
         metadata: {
             name: config.app.name,
             description: config.app.description,
