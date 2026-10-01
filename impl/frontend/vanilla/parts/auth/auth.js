@@ -1,4 +1,7 @@
-import { openModal } from "../../adapters/wallet/reown/reown.js";
+import {
+    openModal,
+    disconnectWallet,
+} from "../../adapters/wallet/reown/reown.js";
 import { shortAddress, apiFetch } from "../../common/js/a001.js";
 import { getToken, setToken } from "../../common/js/session.js";
 import { emit, on, state } from "../../common/js/store.js";
@@ -69,6 +72,9 @@ async function signOut() {
         }
     }
     setToken("");
+    try {
+        await disconnectWallet();
+    } catch {}
     emit("signedOut", { account: null, authPending: false, authError: "" });
 }
 
