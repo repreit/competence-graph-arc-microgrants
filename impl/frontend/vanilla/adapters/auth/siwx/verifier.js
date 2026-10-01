@@ -28,6 +28,7 @@ class Verifier extends EIP155Verifier {
             emit("signedIn", {
                 account: { id: data.id, address: data.address },
                 authPending: false,
+                authError: "",
             });
             return true;
         } catch {
