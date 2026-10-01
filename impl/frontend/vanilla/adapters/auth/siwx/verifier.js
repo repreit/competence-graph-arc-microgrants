@@ -1,6 +1,7 @@
 import { EIP155Verifier } from "@reown/appkit-siwx";
 import { apiFetch } from "../../../common/js/a001.js";
 import { setToken } from "../../../common/js/session.js";
+import { emit } from "../../../common/js/store.js";
 
 class Verifier extends EIP155Verifier {
     async verify(session) {
@@ -24,6 +25,10 @@ class Verifier extends EIP155Verifier {
             }
             session.token = data.token;
             setToken(data.token);
+            emit("signedIn", {
+                account: { id: data.id, address: data.address },
+                authPending: false,
+            });
             return true;
         } catch {
             return false;
