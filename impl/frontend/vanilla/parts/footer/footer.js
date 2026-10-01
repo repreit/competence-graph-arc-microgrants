@@ -1,3 +1,5 @@
+import { lang } from "../../common/js/lang.js";
+
 export function bindFooter() {
     const timeEl = document.getElementById("last-modified");
     if (!timeEl) {
@@ -18,7 +20,7 @@ export function bindFooter() {
 
     function showModifiedError() {
         timeEl.removeAttribute("datetime");
-        timeEl.textContent = "could not load from GitHub";
+        timeEl.textContent = lang.GITHUB_UNREACHABLE;
     }
 
     fetch(
