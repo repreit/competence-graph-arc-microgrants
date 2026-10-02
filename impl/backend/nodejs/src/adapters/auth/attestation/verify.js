@@ -55,7 +55,11 @@ export async function verifyUnbindAttestation({
     }
     let message;
     try {
-        message = unbindMessage(getAddress(address), bindingId, publicKey);
+        message = unbindMessage(
+            getAddress(address).toLowerCase(),
+            bindingId,
+            publicKey,
+        );
     } catch {
         return { ok: false, error: "invalid_request" };
     }
