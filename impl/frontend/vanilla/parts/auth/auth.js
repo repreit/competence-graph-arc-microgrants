@@ -10,6 +10,7 @@ import { lang } from "../../common/js/lang.js";
 
 // TODO: review One-Click Auth
 function signIn() {
+    emit("signInStarted", { authPending: true, authError: "" });
     openModal().catch(function (err) {
         emit("authFailed", {
             authPending: false,
@@ -89,11 +90,13 @@ export function bindAuth() {
     if (!signInEl || !signOutEl || !addressEl || !statusEl) {
         return;
     }
-    signInEl.textContent = lang.SIGN_IN;
     signOutEl.textContent = lang.SIGN_OUT;
 
     function render(nextState) {
         const account = nextState.account;
+        signInEl.textContent = nextState.authPending
+            ? lang.SIGNING_IN
+            : lang.SIGN_IN;
         signInEl.hidden = Boolean(account);
         signInEl.disabled = nextState.authPending;
         signOutEl.hidden = !account;
@@ -108,11 +111,15 @@ export function bindAuth() {
         statusEl.textContent = nextState.authError || "";
     }
 
-    ["signInStarted", "signedIn", "signedOut", "authFailed"].forEach(
-        function (name) {
-            on(name, render);
-        },
-    );
+    [
+        "signInStarted",
+        "signedIn",
+        "signedOut",
+        "authFailed",
+        "authCancelled",
+    ].forEach(function (name) {
+        on(name, render);
+    });
 
     signInEl.addEventListener("click", function () {
         signIn();
