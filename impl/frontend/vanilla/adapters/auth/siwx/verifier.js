@@ -16,7 +16,7 @@ function errorFor(data) {
 
 class Verifier extends EIP155Verifier {
     async verify(session) {
-        if (session.token) {
+        if (session.tokenIssued) {
             try {
                 await api("/auth/me");
                 return true;
@@ -34,7 +34,7 @@ class Verifier extends EIP155Verifier {
                     signature: session.signature,
                 }),
             });
-            session.token = data.token;
+            session.tokenIssued = true;
             setToken(data.token);
             emit("signedIn", {
                 account: { id: data.id, address: data.address },
