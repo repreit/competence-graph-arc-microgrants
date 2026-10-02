@@ -1,12 +1,14 @@
-import { apiFetch } from "./api.js";
+import { api } from "./api.js";
 import { emit } from "./store.js";
 
 let pending = null;
 
 async function load() {
-    const { response, data } = await apiFetch("/public-config");
-    if (!response.ok) {
-        throw new Error("http");
+    let data;
+    try {
+        data = await api("/public-config", { auth: false });
+    } catch (err) {
+        throw new Error("http", { cause: err });
     }
     if (!data.app?.name) {
         throw new Error("api");
