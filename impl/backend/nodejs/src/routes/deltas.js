@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { parseContent, parseDelta } from "../../../../common/js/delta.js";
 import { verifyDeltaSignature } from "../../../../common/js/verify.js";
-import { findActiveByKey } from "../adapters/db/postgres/tables/bindings.js";
+import { findActiveBindingByKey } from "../adapters/db/postgres/tables/bindings.js";
 import {
     appendDelta,
     nextLink,
@@ -28,7 +28,7 @@ deltas.post("/append", requireSession, requireJson, async (c) => {
         return c.json({ error: "invalid_content" }, 400);
     }
     const publicKey = content.publicKey;
-    const binding = await findActiveByKey(account.id, publicKey);
+    const binding = await findActiveBindingByKey(account.id, publicKey);
     if (!binding) {
         return c.json({ error: "no_active_binding" }, 401);
     }

@@ -130,7 +130,7 @@ export async function unbindKey(
     }
 }
 
-export async function findActiveByKey(accountId, publicKey) {
+export async function findActiveBindingByKey(accountId, publicKey) {
     const keyText = canonicalPublicKey(publicKey);
     if (keyText == null) {
         return null;
