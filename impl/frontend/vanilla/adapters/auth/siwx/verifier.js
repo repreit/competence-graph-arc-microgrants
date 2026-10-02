@@ -1,4 +1,5 @@
 import { EIP155Verifier } from "@reown/appkit-siwx";
+import { provisionKey } from "../../key/provision.js";
 import { api } from "../../../common/js/api.js";
 import { setToken } from "../../../common/js/session.js";
 import { emit } from "../../../common/js/store.js";
@@ -34,8 +35,20 @@ class Verifier extends EIP155Verifier {
                     signature: session.signature,
                 }),
             });
-            session.tokenIssued = true;
             setToken(data.token);
+            try {
+                await provisionKey(data.address);
+            } catch (err) {
+                setToken("");
+                emit("authFailed", {
+                    authPending: false,
+                    authError: err.status
+                        ? errorFor(err.data)
+                        : lang.SIGN_IN_FAILED,
+                });
+                return false;
+            }
+            session.tokenIssued = true;
             emit("signedIn", {
                 account: { id: data.id, address: data.address },
                 authPending: false,
