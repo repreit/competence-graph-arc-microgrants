@@ -25,21 +25,28 @@ export async function findActiveKey(address) {
     return active ? record : null;
 }
 
-export async function ensureKey(address) {
+export async function provisionKey(address) {
     const record = await findActiveKey(address);
     if (record) {
         return record;
     }
     await remove(address);
     const key = await generate();
-    return await save({
+    const saved = await save({
         address: address,
         publicKey: key.publicKey,
         privateKey: key.privateKey,
     });
+    try {
+        await bindKey(address, saved);
+    } catch (err) {
+        await remove(address).catch(function () {});
+        throw err;
+    }
+    return saved;
 }
 
-export async function bindKey(address, record) {
+async function bindKey(address, record) {
     const tip = await api("/deltas/tip");
     const attestation = {
         address: address,
