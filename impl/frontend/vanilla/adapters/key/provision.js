@@ -1,8 +1,4 @@
-import {
-    bindContent,
-    bindMessage,
-    canonicalPublicKey,
-} from "../../../impl/common/js/attest.js";
+import { bindContent, bindMessage } from "../../../impl/common/js/attest.js";
 import { signingBytes } from "../../../impl/common/js/delta.js";
 import { api } from "../../common/js/api.js";
 import { signMessage } from "../wallet/reown/reown.js";
@@ -14,13 +10,10 @@ export async function findActiveKey(address) {
     if (!record) {
         return null;
     }
-    const keyText = canonicalPublicKey(record.publicKey);
-    const { bindings } = await api("/bindings/list");
-    const active = bindings.some(function (binding) {
-        return (
-            binding.unbindSeq == null &&
-            canonicalPublicKey(binding.publicKey) === keyText
-        );
+    const { active } = await api("/bindings/find", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ publicKey: record.publicKey }),
     });
     return active ? record : null;
 }
