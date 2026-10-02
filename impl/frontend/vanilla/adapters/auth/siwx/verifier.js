@@ -1,5 +1,5 @@
 import { EIP155Verifier } from "@reown/appkit-siwx";
-import { apiFetch } from "../../../common/js/api.js";
+import { api } from "../../../common/js/api.js";
 import { setToken } from "../../../common/js/session.js";
 import { emit } from "../../../common/js/store.js";
 import { lang } from "../../../common/js/lang.js";
@@ -16,14 +16,17 @@ function errorFor(data) {
 
 class Verifier extends EIP155Verifier {
     async verify(session) {
-        try {
-            if (session.token) {
-                const { response } = await apiFetch("/auth/me", {
-                    headers: { Authorization: "Bearer " + session.token },
-                });
-                return response.ok;
+        if (session.token) {
+            try {
+                await api("/auth/me");
+                return true;
+            } catch {
+                return false;
             }
-            const { response, data } = await apiFetch("/auth/verify", {
+        }
+        try {
+            const data = await api("/auth/verify", {
+                auth: false,
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -31,13 +34,6 @@ class Verifier extends EIP155Verifier {
                     signature: session.signature,
                 }),
             });
-            if (!response.ok) {
-                emit("authFailed", {
-                    authPending: false,
-                    authError: errorFor(data),
-                });
-                return false;
-            }
             session.token = data.token;
             setToken(data.token);
             emit("signedIn", {
@@ -46,10 +42,12 @@ class Verifier extends EIP155Verifier {
                 authError: "",
             });
             return true;
-        } catch {
+        } catch (err) {
             emit("authFailed", {
                 authPending: false,
-                authError: lang.API_UNREACHABLE,
+                authError: err.status
+                    ? errorFor(err.data)
+                    : lang.API_UNREACHABLE,
             });
             return false;
         }
