@@ -14,10 +14,18 @@ export function emit(name, patch) {
         return;
     }
     [...group].forEach(function (listener) {
+        let result;
         try {
-            listener(state);
+            result = listener(state);
         } catch (err) {
             console.error(name, err);
+            return;
+        }
+        if (result && typeof result.then === "function") {
+            console.error(name, "listener must be synchronous, got a promise");
+            result.catch(function (err) {
+                console.error(name, err);
+            });
         }
     });
 }
