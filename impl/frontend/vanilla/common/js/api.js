@@ -1,4 +1,5 @@
 import { api as apiConfig } from "../../config.js";
+import { getToken } from "./session.js";
 
 function apiBase() {
     if (
@@ -25,4 +26,22 @@ export async function apiFetch(path, options) {
         return {};
     });
     return { response: response, data: data };
+}
+
+export async function api(path, options) {
+    const headers = Object.assign({}, options && options.headers);
+    const session = getToken();
+    if (session) {
+        headers.Authorization = "Bearer " + session;
+    }
+    const { response, data } = await apiFetch(
+        path,
+        Object.assign({}, options, { headers }),
+    );
+    if (!response.ok) {
+        const error = new Error(data.error || "http");
+        error.status = response.status;
+        throw error;
+    }
+    return data;
 }

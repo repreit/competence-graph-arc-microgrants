@@ -2,29 +2,11 @@ import {
     openModal,
     disconnectWallet,
 } from "../../adapters/wallet/reown/reown.js";
-import { apiFetch } from "../../common/js/api.js";
+import { api } from "../../common/js/api.js";
 import { shortAddress } from "../../common/js/a001.js";
 import { getToken, setToken } from "../../common/js/session.js";
 import { emit, on, state } from "../../common/js/store.js";
 import { lang } from "../../common/js/lang.js";
-
-async function api(path, options) {
-    const headers = Object.assign({}, options && options.headers);
-    const session = getToken();
-    if (session) {
-        headers.Authorization = "Bearer " + session;
-    }
-    const { response, data } = await apiFetch(
-        path,
-        Object.assign({}, options, { headers }),
-    );
-    if (!response.ok) {
-        const error = new Error(data.error || "http");
-        error.status = response.status;
-        throw error;
-    }
-    return data;
-}
 
 // TODO: review One-Click Auth
 function signIn() {
