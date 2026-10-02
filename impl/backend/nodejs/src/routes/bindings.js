@@ -14,6 +14,7 @@ import { verifyDeltaSignature } from "../../../../common/js/verify.js";
 import {
     bindKey,
     findActiveBinding,
+    findActiveBindingByKey,
     listBindings,
     unbindKey,
 } from "../adapters/db/postgres/tables/bindings.js";
@@ -33,6 +34,16 @@ function errorStatus(error) {
 
 bindings.get("/list", requireSession, async (c) => {
     return c.json({ bindings: await listBindings(c.get("account").id) });
+});
+
+bindings.post("/find", requireSession, requireJson, async (c) => {
+    const account = c.get("account");
+    const publicKey = c.get("body").publicKey;
+    if (canonicalPublicKey(publicKey) == null) {
+        return c.json({ error: "invalid_request" }, 400);
+    }
+    const binding = await findActiveBindingByKey(account.id, publicKey);
+    return c.json({ active: binding != null });
 });
 
 bindings.post("/bind", requireSession, requireJson, async (c) => {
