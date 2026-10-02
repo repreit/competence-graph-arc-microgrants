@@ -39,6 +39,7 @@ class Verifier extends EIP155Verifier {
             try {
                 await provisionKey(data.address);
             } catch (err) {
+                console.error(err);
                 setToken("");
                 emit("authFailed", {
                     authPending: false,
