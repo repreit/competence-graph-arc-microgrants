@@ -67,10 +67,10 @@ function canonicalJwk(publicKey) {
     return JSON.parse(canonical);
 }
 
-export async function save({ address, publicKeyJwk, privateKey }) {
+export async function save({ address, publicKey, privateKey }) {
     const record = {
         address: address,
-        publicKeyJwk: canonicalJwk(publicKeyJwk),
+        publicKey: canonicalJwk(publicKey),
         privateKey: privateKey,
         createdAt: Date.now(),
     };

@@ -14,7 +14,7 @@ export async function findActiveKey(address) {
     if (!record) {
         return null;
     }
-    const keyText = canonicalPublicKey(record.publicKeyJwk);
+    const keyText = canonicalPublicKey(record.publicKey);
     const { bindings } = await api("/bindings/list");
     const active = bindings.some(function (binding) {
         return (
@@ -34,7 +34,7 @@ export async function ensureKey(address) {
     const key = await generate();
     return await save({
         address: address,
-        publicKeyJwk: key.publicKeyJwk,
+        publicKey: key.publicKey,
         privateKey: key.privateKey,
     });
 }
@@ -43,9 +43,9 @@ export async function bindKey(address, record) {
     const tip = await api("/deltas/tip");
     const attestation = {
         address: address,
-        signature: await signMessage(bindMessage(address, record.publicKeyJwk)),
+        signature: await signMessage(bindMessage(address, record.publicKey)),
     };
-    const content = bindContent(record.publicKeyJwk, attestation);
+    const content = bindContent(record.publicKey, attestation);
     const signature = await sign(
         record.privateKey,
         signingBytes({

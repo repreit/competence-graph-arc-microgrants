@@ -23,7 +23,7 @@ export async function generate() {
     if (canonical == null) {
         throw new Error("key");
     }
-    return { privateKey: pair.privateKey, publicKeyJwk: JSON.parse(canonical) };
+    return { privateKey: pair.privateKey, publicKey: JSON.parse(canonical) };
 }
 
 export async function sign(privateKey, bytes) {
