@@ -1,5 +1,5 @@
 import { EIP155Verifier } from "@reown/appkit-siwx";
-import { apiFetch } from "../../../common/js/a001.js";
+import { apiFetch } from "../../../common/js/api.js";
 import { setToken } from "../../../common/js/session.js";
 import { emit } from "../../../common/js/store.js";
 import { lang } from "../../../common/js/lang.js";

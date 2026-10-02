@@ -2,7 +2,8 @@ import {
     openModal,
     disconnectWallet,
 } from "../../adapters/wallet/reown/reown.js";
-import { shortAddress, apiFetch } from "../../common/js/a001.js";
+import { apiFetch } from "../../common/js/api.js";
+import { shortAddress } from "../../common/js/a001.js";
 import { getToken, setToken } from "../../common/js/session.js";
 import { emit, on, state } from "../../common/js/store.js";
 import { lang } from "../../common/js/lang.js";

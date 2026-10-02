@@ -1,5 +1,6 @@
 import { SIWXMessenger } from "@reown/appkit-siwx";
-import { apiFetch, pageUri } from "../../../common/js/a001.js";
+import { apiFetch } from "../../../common/js/api.js";
+import { pageUri } from "../../../common/js/a001.js";
 import { emit } from "../../../common/js/store.js";
 import { lang } from "../../../common/js/lang.js";
 

@@ -1,4 +1,4 @@
-import { apiFetch } from "./a001.js";
+import { apiFetch } from "./api.js";
 import { emit } from "./store.js";
 
 let pending = null;
