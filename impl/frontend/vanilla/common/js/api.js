@@ -11,23 +11,6 @@ function apiBase() {
     return apiConfig.base;
 }
 
-export async function apiFetch(path, options) {
-    const base = apiBase();
-    if (!base) {
-        throw new Error("api");
-    }
-    let response;
-    try {
-        response = await fetch(base + path, options);
-    } catch (err) {
-        throw new Error("http", { cause: err });
-    }
-    const data = await response.json().catch(function () {
-        return {};
-    });
-    return { response: response, data: data };
-}
-
 export async function api(path, options) {
     const { auth = true, ...rest } = options ?? {};
     const headers = Object.assign({}, rest.headers);
@@ -35,10 +18,22 @@ export async function api(path, options) {
     if (session) {
         headers.Authorization = "Bearer " + session;
     }
-    const { response, data } = await apiFetch(
-        path,
-        Object.assign({}, rest, { headers }),
-    );
+    const base = apiBase();
+    if (!base) {
+        throw new Error("api");
+    }
+    let response;
+    try {
+        response = await fetch(
+            base + path,
+            Object.assign({}, rest, { headers }),
+        );
+    } catch (err) {
+        throw new Error("http", { cause: err });
+    }
+    const data = await response.json().catch(function () {
+        return {};
+    });
     if (!response.ok) {
         const error = new Error(data.error || "http");
         error.status = response.status;
