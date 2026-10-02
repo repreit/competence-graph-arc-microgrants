@@ -1,5 +1,5 @@
 import { SIWXMessenger } from "@reown/appkit-siwx";
-import { apiFetch } from "../../../common/js/api.js";
+import { api } from "../../../common/js/api.js";
 import { pageUri } from "../../../common/js/a001.js";
 import { emit } from "../../../common/js/store.js";
 import { lang } from "../../../common/js/lang.js";
@@ -12,16 +12,12 @@ function fail(authError) {
 }
 
 async function issueNonce() {
-    let result;
     try {
-        result = await apiFetch("/auth/nonce");
-    } catch {
-        throw fail(lang.API_UNREACHABLE);
+        const data = await api("/auth/nonce", { auth: false });
+        return data.nonce;
+    } catch (err) {
+        throw fail(err.status ? lang.NONCE_FAILED : lang.API_UNREACHABLE);
     }
-    if (!result.response.ok) {
-        throw fail(lang.NONCE_FAILED);
-    }
-    return result.data.nonce;
 }
 
 class Messenger extends SIWXMessenger {

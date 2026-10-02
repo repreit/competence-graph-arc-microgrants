@@ -29,14 +29,15 @@ export async function apiFetch(path, options) {
 }
 
 export async function api(path, options) {
-    const headers = Object.assign({}, options && options.headers);
-    const session = getToken();
+    const { auth = true, ...rest } = options ?? {};
+    const headers = Object.assign({}, rest.headers);
+    const session = auth ? getToken() : null;
     if (session) {
         headers.Authorization = "Bearer " + session;
     }
     const { response, data } = await apiFetch(
         path,
-        Object.assign({}, options, { headers }),
+        Object.assign({}, rest, { headers }),
     );
     if (!response.ok) {
         const error = new Error(data.error || "http");
