@@ -9,25 +9,28 @@ import { signMessage } from "../wallet/reown/reown.js";
 import { load, remove, save } from "./indexeddb/store.js";
 import { generate, sign } from "./webcrypto/signer.js";
 
-function hasActiveBinding(record, bindings) {
+export async function findActiveKey(address) {
+    const record = await load(address);
+    if (!record) {
+        return null;
+    }
     const keyText = canonicalPublicKey(record.publicKeyJwk);
-    return bindings.some(function (binding) {
+    const { bindings } = await api("/bindings/list");
+    const active = bindings.some(function (binding) {
         return (
             binding.unbindSeq == null &&
             canonicalPublicKey(binding.publicKey) === keyText
         );
     });
+    return active ? record : null;
 }
 
 export async function ensureKey(address) {
-    const { bindings } = await api("/bindings/list");
-    const record = await load(address);
-    if (record && hasActiveBinding(record, bindings)) {
+    const record = await findActiveKey(address);
+    if (record) {
         return record;
     }
-    if (record) {
-        await remove(address);
-    }
+    await remove(address);
     const key = await generate();
     return await save({
         address: address,
