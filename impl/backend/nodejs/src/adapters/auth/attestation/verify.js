@@ -37,7 +37,7 @@ export async function verifyBindAttestation({ address, publicKey, signature }) {
     }
     let message;
     try {
-        message = bindMessage(getAddress(address), publicKey);
+        message = bindMessage(getAddress(address).toLowerCase(), publicKey);
     } catch {
         return { ok: false, error: "invalid_request" };
     }
