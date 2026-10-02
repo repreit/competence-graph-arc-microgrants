@@ -13,7 +13,7 @@ export async function disconnectWallet() {
 export async function signMessage(message) {
     const { getModal } = await import("./modal.js");
     const modal = await getModal();
-    const provider = modal.getProviders()["eip155"];
+    const provider = modal.getProvider("eip155");
     if (!provider) {
         throw new Error("wallet");
     }
