@@ -1,9 +1,9 @@
-import { base64UrlFromBytes } from "../../../impl/common/js/a001.js";
+import { base64UrlFromBytes } from "impl/common/js/a001.js";
 import {
     KEY_PARAMS,
     SIGN_PARAMS,
     canonicalPublicKey,
-} from "../../../impl/common/js/attest.js";
+} from "impl/common/js/attest.js";
 
 function subtleOrThrow() {
     if (!globalThis.crypto || !globalThis.crypto.subtle) {

@@ -1,4 +1,4 @@
-import { canonicalPublicKey } from "../../../impl/common/js/attest.js";
+import { canonicalPublicKey } from "impl/common/js/attest.js";
 
 const DATABASE = "competence-graph.keys";
 const STORE_NAME = "keys";

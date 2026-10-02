@@ -1,5 +1,5 @@
-import { bindContent, bindMessage } from "../../../impl/common/js/attest.js";
-import { signingBytes } from "../../../impl/common/js/delta.js";
+import { bindContent, bindMessage } from "impl/common/js/attest.js";
+import { signingBytes } from "impl/common/js/delta.js";
 import { api } from "../../common/js/api.js";
 import { signMessage } from "../wallet/reown/reown.js";
 import { load, remove, save } from "./indexeddb/store.js";

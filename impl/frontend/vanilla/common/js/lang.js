@@ -1,4 +1,4 @@
-import { en } from "../../impl/common/js/lang/en.js";
+import { en } from "impl/common/js/lang/en.js";
 
 const DICTS = { en };
 
