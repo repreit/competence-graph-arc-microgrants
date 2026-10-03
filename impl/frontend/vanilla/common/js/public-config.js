@@ -10,9 +10,6 @@ async function load() {
     } catch (err) {
         throw new Error("http", { cause: err });
     }
-    if (!data.app?.name) {
-        throw new Error("api");
-    }
     emit("publicConfigLoaded", { publicConfig: data });
     return data;
 }
