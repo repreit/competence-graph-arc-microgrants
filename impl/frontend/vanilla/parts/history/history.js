@@ -1,7 +1,9 @@
+import { applyOps } from "impl/common/js/history.js";
 import { shortAddress } from "../../common/js/a001.js";
 import { bindDeed } from "./deed.js";
 import { bindHistoryGraph, renderHistory, showHistoryError } from "./graph.js";
 import { loadAccounts, loadHistory } from "./load.js";
+import { pendingOps } from "./write.js";
 
 let addressesEl;
 let addresses = [];
@@ -31,6 +33,16 @@ function showHistory(address) {
         return;
     }
     renderHistory(account);
+}
+
+function nodesWithPending(account) {
+    const committed = (account.history && account.history.nodes) || [];
+    const ops = pendingOps();
+    if (ops.length === 0) {
+        return committed;
+    }
+    const applied = applyOps(committed, ops);
+    return applied.ok ? applied.history.nodes : committed;
 }
 
 function renderSelection() {
