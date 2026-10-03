@@ -433,6 +433,29 @@ function applyOpsToState(state, ops) {
     return { ok: true };
 }
 
+export function applyOps(nodes, ops) {
+    if (!Array.isArray(nodes) || !Array.isArray(ops)) {
+        return { ok: false, error: "invalid" };
+    }
+    const state = new Map();
+    for (const node of nodes) {
+        const valid = parseNode(node);
+        if (valid == null) {
+            return { ok: false, error: "invalid" };
+        }
+        state.set(valid.id, valid);
+    }
+    const applied = applyOpsToState(state, ops);
+    if (!applied.ok) {
+        return applied;
+    }
+    const broken = findBrokenLink(state);
+    if (broken != null) {
+        return { ok: false, error: broken };
+    }
+    return { ok: true, history: { nodes: Array.from(state.values()) } };
+}
+
 export async function foldHistory(rows) {
     if (!Array.isArray(rows)) {
         return { ok: false, error: "invalid" };
