@@ -1,4 +1,5 @@
 import { isNonEmptyString, isPlainObject } from "./a001.js";
+import { canonicalPublicKey } from "./attest.js";
 import { assertLink, parseContent } from "./delta.js";
 
 const NODE_FIELDS = ["id", "position", "data", "nodeIds"];
@@ -220,6 +221,18 @@ function parseChange(value) {
         return { op: value.op, a: value.a, b: value.b };
     }
     return null;
+}
+
+export function historyContent(publicKey, ops) {
+    const key = canonicalPublicKey(publicKey);
+    if (key == null) {
+        throw new TypeError("history");
+    }
+    return JSON.stringify({
+        type: "history",
+        publicKey: JSON.parse(key),
+        ops: ops,
+    });
 }
 
 export function parseHistoryContent(content) {
