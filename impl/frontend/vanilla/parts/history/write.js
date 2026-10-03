@@ -59,6 +59,10 @@ export function pendingCount() {
     return pending.length;
 }
 
+export function discard() {
+    pending = [];
+}
+
 export function createNode({ title, link, img, alt, position }) {
     const data = { title, link };
     if (img != null) {
