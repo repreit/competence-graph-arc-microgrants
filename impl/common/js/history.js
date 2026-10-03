@@ -408,7 +408,7 @@ function findBrokenLink(state) {
     return null;
 }
 
-function applyOps(state, ops) {
+function applyOpsToState(state, ops) {
     const touched = new Set();
     for (const operation of ops) {
         const applied = applyOperation(state, operation);
@@ -456,7 +456,7 @@ export async function foldHistory(rows) {
         if (parsed == null) {
             return { ok: false, error: "invalid" };
         }
-        const applied = applyOps(state, parsed.ops);
+        const applied = applyOpsToState(state, parsed.ops);
         if (!applied.ok) {
             return applied;
         }
