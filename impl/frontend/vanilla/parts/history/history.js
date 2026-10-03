@@ -39,10 +39,10 @@ function showHistory(address) {
 function nodesWithPending(account) {
     const committed = (account.history && account.history.nodes) || [];
     const ops = pendingOps();
-    const mine = Boolean(
+    const isMine = Boolean(
         state.account && state.account.address === account.address,
     );
-    if (!mine || ops.length === 0) {
+    if (!isMine || ops.length === 0) {
         return committed;
     }
     const applied = applyOps(committed, ops);
