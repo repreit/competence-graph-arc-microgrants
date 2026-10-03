@@ -70,3 +70,14 @@ export function createNode({ title, link, img, alt, position }) {
     pending.push({ op: "node.create", node: node });
     return node.id;
 }
+
+export function setNode({ id, data, position }) {
+    const node = { id };
+    if (data !== undefined) {
+        node.data = data;
+    }
+    if (position !== undefined) {
+        node.position = position;
+    }
+    pending.push({ op: "node.set", node: node });
+}
