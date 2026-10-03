@@ -17,7 +17,7 @@ import {
 } from "./paint.js";
 
 let boardEl;
-let blurbEl;
+let statusEl;
 let historyGraph = null;
 let historyGraphPending = null;
 let graphRequest = 0;
@@ -28,11 +28,11 @@ let fitTimer = 0;
 const FIT_PULL = 0.72;
 
 export function showGraphError(message) {
-    if (!blurbEl) {
+    if (!statusEl) {
         return;
     }
-    blurbEl.hidden = false;
-    blurbEl.textContent = message;
+    statusEl.hidden = false;
+    statusEl.textContent = message;
 }
 
 function sizeHistoryGraph() {
@@ -251,7 +251,7 @@ export function bindHistoryGraph() {
             }, hoverWaitMs);
         });
     }
-    blurbEl = document.getElementById("example-blurb");
+    statusEl = document.getElementById("history-status");
     const resetViewEl = document.querySelector(".graph-reset");
     if (resetViewEl) {
         resetViewEl.addEventListener("click", function () {
