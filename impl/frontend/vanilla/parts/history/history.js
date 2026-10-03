@@ -1,5 +1,6 @@
 import { applyOps } from "impl/common/js/history.js";
 import { shortAddress } from "../../common/js/a001.js";
+import { state } from "../../common/js/store.js";
 import { bindDeed } from "./deed.js";
 import { bindHistoryGraph, renderHistory, showHistoryError } from "./graph.js";
 import { loadAccounts, loadHistory } from "./load.js";
