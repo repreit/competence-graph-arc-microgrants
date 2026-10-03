@@ -13,35 +13,35 @@ const WALLET_IDS = [
 let modalPromise;
 let hostNetwork;
 
-function networkFromHostChain(chain) {
+function networkFromHostChain(hostChain) {
     if (
-        chain?.id == null ||
-        !chain.rpcUrl ||
-        !chain.name ||
-        !chain.nativeCurrency
+        hostChain?.id == null ||
+        !hostChain.rpcUrl ||
+        !hostChain.name ||
+        !hostChain.nativeCurrency
     ) {
         throw new Error("chain");
     }
-    const id = Number(chain.id);
-    const currency = chain.nativeCurrency;
+    const id = Number(hostChain.id);
+    const currency = hostChain.nativeCurrency;
     return defineChain({
         id: id,
         caipNetworkId: "eip155:" + id,
         chainNamespace: "eip155",
-        name: chain.name,
+        name: hostChain.name,
         nativeCurrency: {
             name: currency.name,
             symbol: currency.symbol,
             decimals: Number(currency.decimals),
         },
         rpcUrls: {
-            default: { http: [chain.rpcUrl] },
+            default: { http: [hostChain.rpcUrl] },
         },
-        blockExplorers: chain.explorerUrl
+        blockExplorers: hostChain.explorerUrl
             ? {
                   default: {
-                      name: chain.name + " Explorer",
-                      url: chain.explorerUrl,
+                      name: hostChain.name + " Explorer",
+                      url: hostChain.explorerUrl,
                   },
               }
             : undefined,
