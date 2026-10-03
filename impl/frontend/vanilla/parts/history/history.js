@@ -1,6 +1,6 @@
 import { shortAddress } from "../../common/js/a001.js";
 import { bindDeed } from "./deed.js";
-import { bindHistoryGraph, renderHistory, showGraphError } from "./graph.js";
+import { bindHistoryGraph, renderHistory, showHistoryError } from "./graph.js";
 import { loadAccounts, loadHistory } from "./load.js";
 
 let addressesEl;
@@ -26,7 +26,7 @@ function showHistory(address) {
                 }
             })
             .catch(function () {
-                showGraphError("Could not load this history.");
+                showHistoryError("Could not load this history.");
             });
         return;
     }
@@ -80,7 +80,7 @@ export function bindHistory() {
             showHistory(list[0] && list[0].address);
         })
         .catch(function () {
-            showGraphError(
+            showHistoryError(
                 "Could not load this history. Serve this folder with a local server, or open the hosted version.",
             );
         });
