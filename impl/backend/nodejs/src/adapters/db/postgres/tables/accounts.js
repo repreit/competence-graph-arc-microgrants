@@ -8,3 +8,10 @@ export async function findAccountByAddress(address) {
     const row = rows[0];
     return row ? { id: Number(row.id), address: row.address } : null;
 }
+
+export async function listAccounts() {
+    const { rows } = await pool.query(
+        `SELECT id, address FROM accounts ORDER BY id`,
+    );
+    return rows.map((row) => ({ id: Number(row.id), address: row.address }));
+}
