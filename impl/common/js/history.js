@@ -3,7 +3,7 @@ import { canonicalPublicKey } from "./attest.js";
 import { assertLink, parseContent } from "./delta.js";
 
 const NODE_FIELDS = ["id", "position", "data", "nodeIds"];
-const PATCH_FIELDS = ["data", "position"];
+const PATCH_FIELDS = ["position", "data"];
 const DATA_FIELDS = ["title", "link", "img", "alt"];
 const POSITION_FIELDS = ["x", "y", "z"];
 
@@ -73,7 +73,7 @@ function parseNode(value) {
     if (data == null) {
         return null;
     }
-    const node = { id: value.id, data: data };
+    const node = { id: value.id };
     if (value.position != null) {
         const position = parsePosition(value.position);
         if (position == null) {
@@ -81,6 +81,7 @@ function parseNode(value) {
         }
         node.position = position;
     }
+    node.data = data;
     if (value.nodeIds != null) {
         const nodeIds = parseNodeIds(value.nodeIds, value.id);
         if (nodeIds == null) {
