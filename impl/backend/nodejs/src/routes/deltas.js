@@ -1,9 +1,12 @@
 import { Hono } from "hono";
+import { getAddress } from "viem";
 import { parseContent, parseDelta } from "../../../../common/js/delta.js";
 import { verifyDeltaSignature } from "../../../../common/js/verify.js";
+import { findAccountByAddress } from "../adapters/db/postgres/tables/accounts.js";
 import { findActiveBindingByKey } from "../adapters/db/postgres/tables/bindings.js";
 import {
     appendDelta,
+    listDeltas,
     nextLink,
 } from "../adapters/db/postgres/tables/deltas.js";
 import { requireJson } from "../middleware/json.js";
@@ -15,6 +18,20 @@ const deltas = new Hono();
 
 deltas.get("/tip", requireSession, async (c) => {
     return c.json(await nextLink(c.get("account").id));
+});
+
+deltas.get("/list", async (c) => {
+    let address;
+    try {
+        address = getAddress(c.req.query("address") ?? "").toLowerCase();
+    } catch {
+        return c.json({ error: "invalid_request" }, 400);
+    }
+    const account = await findAccountByAddress(address);
+    if (!account) {
+        return c.json({ address, deltas: [] });
+    }
+    return c.json({ address, deltas: await listDeltas(account.id) });
 });
 
 deltas.post("/append", requireSession, requireJson, async (c) => {
