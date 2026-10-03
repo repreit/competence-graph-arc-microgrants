@@ -24,7 +24,10 @@ function showHistory(address) {
             .then(function (loaded) {
                 account.history = loaded.history;
                 if (account.address === activeAddress) {
-                    renderHistory(account.address, nodesWithPending(account));
+                    renderHistory(
+                        account.address,
+                        nodesWithPending(account.history),
+                    );
                 }
             })
             .catch(function () {
@@ -32,11 +35,11 @@ function showHistory(address) {
             });
         return;
     }
-    renderHistory(account.address, nodesWithPending(account));
+    renderHistory(account.address, nodesWithPending(account.history));
 }
 
-function nodesWithPending(account) {
-    const committed = (account.history && account.history.nodes) || [];
+function nodesWithPending(history) {
+    const committed = (history && history.nodes) || [];
     const ops = pendingOps();
     if (ops.length === 0) {
         return committed;
