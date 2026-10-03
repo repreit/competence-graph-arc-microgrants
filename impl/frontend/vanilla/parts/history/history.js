@@ -1,6 +1,7 @@
 import { shortAddress } from "../../common/js/a001.js";
 import { bindDeed } from "./deed.js";
 import { bindHistoryGraph, renderHistory, showGraphError } from "./graph.js";
+import { loadHistory } from "./load.js";
 
 let addressesEl;
 let addresses = [];
@@ -16,6 +17,19 @@ function showHistory(address) {
     }
     activeAddress = account.address || "";
     renderSelection();
+    if (!account.history && account.address) {
+        loadHistory(account.address)
+            .then(function (loaded) {
+                account.history = loaded.history;
+                if (account.address === activeAddress) {
+                    renderHistory(account);
+                }
+            })
+            .catch(function () {
+                showGraphError("Could not load this history.");
+            });
+        return;
+    }
     renderHistory(account);
 }
 
