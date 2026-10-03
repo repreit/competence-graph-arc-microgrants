@@ -63,7 +63,7 @@ export function createNode({ title, link, img, alt, position }) {
     if (alt != null) {
         data.alt = alt;
     }
-    const node = { id: crypto.randomUUID(), data };
+    const node = { id: crypto.randomUUID(), data: data };
     if (position != null) {
         node.position = position;
     }
