@@ -89,3 +89,7 @@ export function deleteNode(id) {
 export function addLink(a, b) {
     pending.push({ op: "link.add", a, b });
 }
+
+export function removeLink(a, b) {
+    pending.push({ op: "link.remove", a, b });
+}
