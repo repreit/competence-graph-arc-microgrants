@@ -184,12 +184,11 @@ function ensureHistoryGraph() {
     return historyGraphPending;
 }
 
-export function renderHistory(account) {
+export function renderHistory(address, nodes) {
     if (!boardEl) {
         return;
     }
-    const history = (account && account.history) || {};
-    const label = shortAddress(account.address) || "Unknown";
+    const label = shortAddress(address) || "Unknown";
     graphRequest += 1;
     const request = graphRequest;
     boardEl.setAttribute(
@@ -206,7 +205,7 @@ export function renderHistory(account) {
             hoveredNode = null;
             boardEl.style.cursor = "";
             disposeHistoryGpu(graph);
-            graph.graphData(graphDataFromNodes(history.nodes));
+            graph.graphData(graphDataFromNodes(nodes));
             sizeHistoryGraph();
             scheduleFitHistoryGraph();
         })

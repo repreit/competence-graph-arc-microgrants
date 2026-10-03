@@ -24,7 +24,7 @@ function showHistory(address) {
             .then(function (loaded) {
                 account.history = loaded.history;
                 if (account.address === activeAddress) {
-                    renderHistory(account);
+                    renderHistory(account.address, nodesWithPending(account));
                 }
             })
             .catch(function () {
@@ -32,7 +32,7 @@ function showHistory(address) {
             });
         return;
     }
-    renderHistory(account);
+    renderHistory(account.address, nodesWithPending(account));
 }
 
 function nodesWithPending(account) {
