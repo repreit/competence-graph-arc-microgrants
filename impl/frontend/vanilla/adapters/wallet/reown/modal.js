@@ -2,9 +2,9 @@ import { createAppKit } from "@reown/appkit";
 import { EthersAdapter } from "@reown/appkit-adapter-ethers";
 import { defineChain } from "@reown/appkit/networks";
 import { DefaultSIWX } from "@reown/appkit-siwx";
+import { app, chain, reown } from "impl/common/js/config.js";
 import { createMessenger } from "../../auth/siwx/messenger.js";
 import { createVerifier } from "../../auth/siwx/verifier.js";
-import { loadPublicConfig } from "../../../common/js/public-config.js";
 
 const WALLET_IDS = [
     "c57ca95b47569778a828d19178114f4db188b89b763c899ba0be274e97267d96",
@@ -49,13 +49,12 @@ function networkFromHostChain(chain) {
 }
 
 async function createModal() {
-    const config = await loadPublicConfig();
-    const projectId = config.reown?.projectId || "";
+    const projectId = reown?.projectId || "";
     if (!projectId) {
         throw new Error("reown");
     }
 
-    hostNetwork = networkFromHostChain(config.chain);
+    hostNetwork = networkFromHostChain(chain);
 
     return createAppKit({
         adapters: [new EthersAdapter()],
@@ -68,16 +67,16 @@ async function createModal() {
         }),
         enableReconnect: false,
         metadata: {
-            name: config.app.name,
-            description: config.app.description,
+            name: app.name,
+            description: app.description,
             url: location.origin,
-            icons: [new URL(config.app.iconPath, location.href).href],
+            icons: [new URL(app.iconPath, location.href).href],
         },
         includeWalletIds: WALLET_IDS,
         featuredWalletIds: WALLET_IDS,
         allWallets: "HIDE",
         features: {
-            analytics: Boolean(config.reown?.analytics),
+            analytics: Boolean(reown?.analytics),
         },
     });
 }
