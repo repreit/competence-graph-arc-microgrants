@@ -18,9 +18,8 @@ function pairsFromNodes(nodes) {
     return pairs;
 }
 
-export function graphDataFromNodes(nodes) {
-    const sourceNodes = nodes || [];
-    const graphNodes = sourceNodes.map(function (node) {
+export function graphDataFromNodes(sourceNodes) {
+    const nodes = (sourceNodes || []).map(function (node) {
         const data = node.data || {};
         const item = {
             id: node.id,
@@ -48,5 +47,5 @@ export function graphDataFromNodes(nodes) {
     const links = pairsFromNodes(sourceNodes).map(function (pair) {
         return { source: pair[0], target: pair[1] };
     });
-    return { nodes: graphNodes, links: links };
+    return { nodes: nodes, links: links };
 }
