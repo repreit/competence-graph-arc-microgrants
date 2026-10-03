@@ -1,0 +1,45 @@
+import { signingBytes } from "impl/common/js/delta.js";
+import { historyContent } from "impl/common/js/history.js";
+import { provisionKey } from "../../adapters/key/provision.js";
+import { sign } from "../../adapters/key/webcrypto/signer.js";
+import { api } from "../../common/js/api.js";
+import { state } from "../../common/js/store.js";
+
+export async function appendHistory(ops) {
+    const account = state.account;
+    if (!account) {
+        throw new Error("auth");
+    }
+    const record = await provisionKey(account.address);
+    let next = null;
+    for (let attempt = 0; attempt < 3; attempt += 1) {
+        const tip = next ?? (await api("/deltas/tip"));
+        const content = historyContent(record.publicKey, ops);
+        const signature = await sign(
+            record.privateKey,
+            signingBytes({
+                seq: tip.seq,
+                prev_hash: tip.prev_hash,
+                content,
+            }),
+        );
+        try {
+            return await api("/deltas/append", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    seq: tip.seq,
+                    prev_hash: tip.prev_hash,
+                    content,
+                    signature,
+                }),
+            });
+        } catch (err) {
+            if (err.message !== "stale_tip") {
+                throw err;
+            }
+            next = { seq: err.data.seq, prev_hash: err.data.prev_hash };
+        }
+    }
+    throw new Error("stale_tip");
+}
