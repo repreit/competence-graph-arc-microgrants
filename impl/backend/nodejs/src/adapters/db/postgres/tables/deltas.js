@@ -27,12 +27,9 @@ async function findTip(accountId, client, forUpdate = false) {
     return { ...row, seq: Number(row.seq) };
 }
 
-async function listDeltas(accountId, client) {
-    if (!client) {
-        throw new TypeError("client");
-    }
+export async function listDeltas(accountId, client = pool) {
     const { rows } = await client.query(
-        `SELECT seq, prev_hash, content, signature
+        `SELECT seq, prev_hash, content, signature, received_at
      FROM deltas
      WHERE account_id = $1
      ORDER BY seq`,
