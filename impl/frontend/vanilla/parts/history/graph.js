@@ -1,5 +1,4 @@
 import * as THREE from "three";
-import { shortAddress } from "../../common/js/a001.js";
 import { graphDataFromNodes } from "./data.js";
 import {
     bumpCardEpoch,
@@ -188,13 +187,8 @@ export function renderHistory(address, nodes) {
     if (!boardEl) {
         return;
     }
-    const label = shortAddress(address) || "Unknown";
     graphRequest += 1;
     const request = graphRequest;
-    boardEl.setAttribute(
-        "aria-label",
-        label + ". Click a deed to open details.",
-    );
     ensureHistoryGraph()
         .then(function (graph) {
             if (!graph || request !== graphRequest) {
