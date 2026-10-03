@@ -18,8 +18,8 @@ function pairsFromNodes(nodes) {
     return pairs;
 }
 
-export function graphDataFromHistory(history) {
-    const sourceNodes = (history && history.nodes) || [];
+export function graphDataFromNodes(nodes) {
+    const sourceNodes = nodes || [];
     const nodes = sourceNodes.map(function (node) {
         const data = node.data || {};
         const item = {

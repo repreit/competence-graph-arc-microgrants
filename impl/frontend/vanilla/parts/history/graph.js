@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { shortAddress } from "../../common/js/a001.js";
-import { graphDataFromHistory } from "./data.js";
+import { graphDataFromNodes } from "./data.js";
 import {
     bumpCardEpoch,
     CARD_HX,
@@ -206,7 +206,7 @@ export function renderHistory(account) {
             hoveredNode = null;
             boardEl.style.cursor = "";
             disposeHistoryGpu(graph);
-            graph.graphData(graphDataFromHistory(history));
+            graph.graphData(graphDataFromNodes(history.nodes));
             sizeHistoryGraph();
             scheduleFitHistoryGraph();
         })
