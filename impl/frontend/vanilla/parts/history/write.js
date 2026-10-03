@@ -81,3 +81,7 @@ export function setNode({ id, data, position }) {
     }
     pending.push({ op: "node.set", node: node });
 }
+
+export function deleteNode(id) {
+    pending.push({ op: "node.delete", id });
+}
