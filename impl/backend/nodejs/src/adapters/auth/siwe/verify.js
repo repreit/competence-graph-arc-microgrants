@@ -1,6 +1,6 @@
 import { getAddress, recoverMessageAddress } from "viem";
 import { parseSiweMessage, validateSiweMessage } from "viem/siwe";
-import { chain } from "../../../config.js";
+import { chain } from "../../../../../../common/js/config.js";
 import { consumeNonce, nonceIsValid } from "./nonce.js";
 
 export async function verifySignedMessage({ message, signature }) {
