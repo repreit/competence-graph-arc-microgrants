@@ -55,6 +55,10 @@ export async function commit() {
     return result;
 }
 
+export function pendingCount() {
+    return pending.length;
+}
+
 export function createNode({ title, link, img, alt, position }) {
     const data = { title, link };
     if (img != null) {
