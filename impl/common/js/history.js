@@ -433,6 +433,14 @@ function applyOpsToState(state, ops) {
     return { ok: true };
 }
 
+function historyFromState(state) {
+    const broken = findBrokenLink(state);
+    if (broken != null) {
+        return { ok: false, error: broken };
+    }
+    return { ok: true, history: { nodes: Array.from(state.values()) } };
+}
+
 export function applyOps(nodes, ops) {
     if (!Array.isArray(nodes) || !Array.isArray(ops)) {
         return { ok: false, error: "invalid" };
@@ -449,11 +457,7 @@ export function applyOps(nodes, ops) {
     if (!applied.ok) {
         return applied;
     }
-    const broken = findBrokenLink(state);
-    if (broken != null) {
-        return { ok: false, error: broken };
-    }
-    return { ok: true, history: { nodes: Array.from(state.values()) } };
+    return historyFromState(state);
 }
 
 export async function foldHistory(rows) {
@@ -484,9 +488,5 @@ export async function foldHistory(rows) {
             return applied;
         }
     }
-    const broken = findBrokenLink(state);
-    if (broken != null) {
-        return { ok: false, error: broken };
-    }
-    return { ok: true, history: { nodes: Array.from(state.values()) } };
+    return historyFromState(state);
 }
