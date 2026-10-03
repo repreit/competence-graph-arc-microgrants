@@ -408,6 +408,31 @@ function findBrokenLink(state) {
     return null;
 }
 
+function applyOps(state, ops) {
+    const touched = new Set();
+    for (const change of ops) {
+        const applied = applyChange(state, change);
+        if (!applied.ok) {
+            return applied;
+        }
+        for (const id of touchedIds(change)) {
+            touched.add(id);
+        }
+    }
+    for (const id of touched) {
+        const node = state.get(id);
+        if (node == null) {
+            continue;
+        }
+        const valid = parseNode(node);
+        if (valid == null) {
+            return { ok: false, error: "invalid" };
+        }
+        state.set(id, valid);
+    }
+    return { ok: true };
+}
+
 export async function foldHistory(rows) {
     if (!Array.isArray(rows)) {
         return { ok: false, error: "invalid" };
@@ -431,26 +456,9 @@ export async function foldHistory(rows) {
         if (parsed == null) {
             return { ok: false, error: "invalid" };
         }
-        const touched = new Set();
-        for (const change of parsed.ops) {
-            const applied = applyChange(state, change);
-            if (!applied.ok) {
-                return { ok: false, error: applied.error };
-            }
-            for (const id of touchedIds(change)) {
-                touched.add(id);
-            }
-        }
-        for (const id of touched) {
-            const node = state.get(id);
-            if (node == null) {
-                continue;
-            }
-            const valid = parseNode(node);
-            if (valid == null) {
-                return { ok: false, error: "invalid" };
-            }
-            state.set(id, valid);
+        const applied = applyOps(state, parsed.ops);
+        if (!applied.ok) {
+            return applied;
         }
     }
     const broken = findBrokenLink(state);
