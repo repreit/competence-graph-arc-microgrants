@@ -41,12 +41,9 @@
     outline-offset: 2px;
 }
 
-.network-scroll {
-    margin-top: 1rem;
-}
-
 .network-frame {
     position: relative;
+    margin-top: 1rem;
 }
 
 .network-board {
