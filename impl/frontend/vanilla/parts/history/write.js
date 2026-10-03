@@ -71,10 +71,11 @@ export function createNode({ title, link, img, alt, position }) {
     if (alt != null) {
         data.alt = alt;
     }
-    const node = { id: crypto.randomUUID(), data };
+    const node = { id: crypto.randomUUID() };
     if (position != null) {
         node.position = position;
     }
+    node.data = data;
     pending.push({ op: "node.create", node });
     return node.id;
 }
