@@ -55,7 +55,7 @@ export async function commit() {
     return result;
 }
 
-export async function createNode({ title, link, img, alt, position }) {
+export function createNode({ title, link, img, alt, position }) {
     const data = { title, link };
     if (img != null) {
         data.img = img;
@@ -67,5 +67,6 @@ export async function createNode({ title, link, img, alt, position }) {
     if (position != null) {
         node.position = position;
     }
-    return await appendHistory([{ op: "node.create", node }]);
+    pending.push({ op: "node.create", node: node });
+    return node.id;
 }
