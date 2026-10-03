@@ -26,7 +26,7 @@ export async function provisionKey(address) {
     await remove(address);
     const key = await generate();
     const saved = await save({
-        address: address,
+        address,
         publicKey: key.publicKey,
         privateKey: key.privateKey,
     });
@@ -42,7 +42,7 @@ export async function provisionKey(address) {
 async function bindKey(address, record) {
     const tip = await api("/deltas/tip");
     const attestation = {
-        address: address,
+        address,
         signature: await signMessage(bindMessage(address, record.publicKey)),
     };
     const content = bindContent(record.publicKey, attestation);
@@ -51,7 +51,7 @@ async function bindKey(address, record) {
         signingBytes({
             seq: tip.seq,
             prev_hash: tip.prev_hash,
-            content: content,
+            content,
         }),
     );
     return await api("/bindings/bind", {
@@ -60,8 +60,8 @@ async function bindKey(address, record) {
         body: JSON.stringify({
             seq: tip.seq,
             prev_hash: tip.prev_hash,
-            content: content,
-            signature: signature,
+            content,
+            signature,
         }),
     });
 }

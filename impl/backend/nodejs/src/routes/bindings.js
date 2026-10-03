@@ -117,7 +117,7 @@ bindings.post("/:id/unbind", requireSession, requireJson, async (c) => {
     }
     const verified = await verifyUnbindAttestation({
         address: account.address,
-        bindingId: bindingId,
+        bindingId,
         publicKey: parsed.publicKey,
         signature: parsed.attestation.signature,
     });

@@ -188,7 +188,7 @@ function parseOperation(value) {
         if (node == null) {
             return null;
         }
-        return { op: "node.create", node: node };
+        return { op: "node.create", node };
     }
     if (value.op === "node.set") {
         if (!hasOnlyFields(value, ["op", "node"])) {
@@ -198,7 +198,7 @@ function parseOperation(value) {
         if (node == null) {
             return null;
         }
-        return { op: "node.set", node: node };
+        return { op: "node.set", node };
     }
     if (value.op === "node.delete") {
         if (
@@ -232,7 +232,7 @@ export function historyContent(publicKey, ops) {
     return JSON.stringify({
         type: "history",
         publicKey: JSON.parse(key),
-        ops: ops,
+        ops,
     });
 }
 

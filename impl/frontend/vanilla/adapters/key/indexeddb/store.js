@@ -69,9 +69,9 @@ function canonicalJwk(publicKey) {
 
 export async function save({ address, publicKey, privateKey }) {
     const record = {
-        address: address,
+        address,
         publicKey: canonicalJwk(publicKey),
-        privateKey: privateKey,
+        privateKey,
         createdAt: Date.now(),
     };
     const box = (await open()).transaction(STORE_NAME, "readwrite");

@@ -24,7 +24,7 @@ export function graphDataFromNodes(sourceNodes) {
         const item = {
             id: node.id,
             name: data.title || node.id,
-            data: data,
+            data,
         };
         const pos = node.position;
         if (
@@ -47,5 +47,5 @@ export function graphDataFromNodes(sourceNodes) {
     const links = pairsFromNodes(sourceNodes).map(function (pair) {
         return { source: pair[0], target: pair[1] };
     });
-    return { nodes: nodes, links: links };
+    return { nodes, links };
 }

@@ -103,7 +103,7 @@ export function unbindContent(bindingId, publicKey, attestation) {
     }
     return JSON.stringify({
         type: "unbind",
-        bindingId: bindingId,
+        bindingId,
         publicKey: key,
         attestation: requireAttestation(attestation),
     });
@@ -117,7 +117,7 @@ function readKeyAndAttestation(parsed) {
     if (canonicalPublicKey(parsed.publicKey) == null) {
         return null;
     }
-    return { publicKey: parsed.publicKey, attestation: attestation };
+    return { publicKey: parsed.publicKey, attestation };
 }
 
 export function parseBindContent(content) {

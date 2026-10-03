@@ -7,7 +7,7 @@ import { lang } from "../../../common/js/lang.js";
 const VERSION = "1";
 
 function fail(authError) {
-    emit("authFailed", { authPending: false, authError: authError });
+    emit("authFailed", { authPending: false, authError });
     return new Error("http");
 }
 

@@ -94,7 +94,7 @@ function clipQueue(clipsEl) {
         function (clip) {
             const rect = clip.getBoundingClientRect();
             return {
-                clip: clip,
+                clip,
                 start: (rect.left - lane.left) / lane.width,
                 end: (rect.right - lane.left) / lane.width,
                 dwell: dwellForClip(clip),
@@ -305,14 +305,14 @@ function startPlayback(edit, fromClip) {
         );
     }
     playback = {
-        edit: edit,
-        button: button,
-        playhead: playhead,
-        tracks: tracks,
-        pass: pass,
+        edit,
+        button,
+        playhead,
+        tracks,
+        pass,
         phase: "play",
         started: performance.now() - elapsed,
-        elapsed: elapsed,
+        elapsed,
         paused: false,
         lastClip: null,
         raf: 0,

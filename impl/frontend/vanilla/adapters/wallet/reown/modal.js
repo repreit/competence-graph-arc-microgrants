@@ -25,7 +25,7 @@ function networkFromHostChain(hostChain) {
     const id = Number(hostChain.id);
     const currency = hostChain.nativeCurrency;
     return defineChain({
-        id: id,
+        id,
         caipNetworkId: "eip155:" + id,
         chainNamespace: "eip155",
         name: hostChain.name,
@@ -60,7 +60,7 @@ async function createModal() {
         adapters: [new EthersAdapter()],
         networks: [hostNetwork],
         defaultNetwork: hostNetwork,
-        projectId: projectId,
+        projectId,
         siwx: new DefaultSIWX({
             messenger: createMessenger(),
             verifiers: [createVerifier()],

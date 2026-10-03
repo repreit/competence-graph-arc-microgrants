@@ -44,10 +44,10 @@ export function makeCardObject(node, hoveredNodeId) {
     const tex = new THREE.CanvasTexture(canvas);
     tex.colorSpace = THREE.SRGBColorSpace;
     const card = {
-        canvas: canvas,
-        ctx: ctx,
-        tex: tex,
-        data: data,
+        canvas,
+        ctx,
+        tex,
+        data,
         image: null,
         hovered: node.id === hoveredNodeId,
     };
