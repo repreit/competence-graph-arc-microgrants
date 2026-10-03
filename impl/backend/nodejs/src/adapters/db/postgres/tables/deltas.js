@@ -1,7 +1,7 @@
 import {
     assertLink,
-    contentPublicKey,
     hashRow,
+    parseContent,
 } from "../../../../../../../common/js/delta.js";
 import { foldHistory } from "../../../../../../../common/js/history.js";
 import { pool } from "../pool.js";
@@ -67,7 +67,8 @@ export async function appendDeltaInTx(accountId, row, client) {
     if (!link.ok) {
         return { ok: false, error: link.error };
     }
-    if (contentPublicKey(row.content) == null) {
+    const envelope = parseContent(row.content);
+    if (envelope == null) {
         return { ok: false, error: "invalid" };
     }
     const folded = await foldHistory([

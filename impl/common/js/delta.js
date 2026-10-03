@@ -74,11 +74,6 @@ export function parseContent(content) {
     return parsed;
 }
 
-export function contentPublicKey(content) {
-    const parsed = parseContent(content);
-    return parsed == null ? null : parsed.publicKey;
-}
-
 export function parseDelta(body) {
     if (!isPlainObject(body)) {
         return null;
