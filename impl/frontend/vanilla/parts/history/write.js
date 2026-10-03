@@ -63,11 +63,11 @@ export function createNode({ title, link, img, alt, position }) {
     if (alt != null) {
         data.alt = alt;
     }
-    const node = { id: crypto.randomUUID(), data: data };
+    const node = { id: crypto.randomUUID(), data };
     if (position != null) {
         node.position = position;
     }
-    pending.push({ op: "node.create", node: node });
+    pending.push({ op: "node.create", node });
     return node.id;
 }
 
@@ -79,7 +79,7 @@ export function setNode({ id, data, position }) {
     if (position !== undefined) {
         node.position = position;
     }
-    pending.push({ op: "node.set", node: node });
+    pending.push({ op: "node.set", node });
 }
 
 export function deleteNode(id) {
