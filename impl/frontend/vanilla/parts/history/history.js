@@ -1,7 +1,7 @@
 import { shortAddress } from "../../common/js/a001.js";
 import { bindDeed } from "./deed.js";
 import { bindHistoryGraph, renderHistory, showGraphError } from "./graph.js";
-import { loadHistory } from "./load.js";
+import { loadAccounts, loadHistory } from "./load.js";
 
 let addressesEl;
 let addresses = [];
@@ -74,33 +74,7 @@ export function bindHistory() {
     bindDeed();
     bindHistoryGraph();
     addressesEl = document.getElementById("addresses");
-    fetch("accounts/index.json")
-        .then(function (response) {
-            if (!response.ok) {
-                throw new Error("accounts/index.json");
-            }
-            return response.json();
-        })
-        .then(function (ids) {
-            const list = Array.isArray(ids) ? ids : [];
-            return Promise.all(
-                list.map(function (id) {
-                    return fetch("accounts/" + id + ".json").then(
-                        function (response) {
-                            if (!response.ok) {
-                                throw new Error("accounts/" + id + ".json");
-                            }
-                            return response.json().then(function (data) {
-                                return {
-                                    address: id,
-                                    history: data.history || { nodes: [] },
-                                };
-                            });
-                        },
-                    );
-                }),
-            );
-        })
+    loadAccounts()
         .then(function (list) {
             renderAddresses(list);
             showHistory(list[0] && list[0].address);
