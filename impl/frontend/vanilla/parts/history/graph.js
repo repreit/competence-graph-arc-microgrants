@@ -183,7 +183,7 @@ function ensureHistoryGraph() {
     return historyGraphPending;
 }
 
-export function renderHistory(address, nodes) {
+export function renderHistory(nodes) {
     if (!boardEl) {
         return;
     }
