@@ -291,7 +291,7 @@ function linkState(a, b) {
     return forward ? "linked" : "unlinked";
 }
 
-function applyChange(state, change) {
+function applyOperation(state, change) {
     if (change.op === "node.create") {
         if (state.has(change.node.id)) {
             return { ok: false, error: "exists" };
@@ -411,7 +411,7 @@ function findBrokenLink(state) {
 function applyOps(state, ops) {
     const touched = new Set();
     for (const change of ops) {
-        const applied = applyChange(state, change);
+        const applied = applyOperation(state, change);
         if (!applied.ok) {
             return applied;
         }
