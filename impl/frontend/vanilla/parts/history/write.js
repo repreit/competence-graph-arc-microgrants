@@ -5,6 +5,8 @@ import { sign } from "../../adapters/key/webcrypto/signer.js";
 import { api } from "../../common/js/api.js";
 import { state } from "../../common/js/store.js";
 
+let pending = [];
+
 export async function appendHistory(ops) {
     const account = state.account;
     if (!account) {
@@ -42,6 +44,15 @@ export async function appendHistory(ops) {
         }
     }
     throw new Error("stale_tip");
+}
+
+export async function commit() {
+    if (pending.length === 0) {
+        return null;
+    }
+    const result = await appendHistory(pending);
+    pending = [];
+    return result;
 }
 
 export async function createNode({ title, link, img, alt, position }) {
