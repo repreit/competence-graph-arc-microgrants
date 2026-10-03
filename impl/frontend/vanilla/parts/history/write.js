@@ -59,6 +59,10 @@ export function pendingCount() {
     return pending.length;
 }
 
+export function pendingOps() {
+    return pending.slice();
+}
+
 export function discard() {
     pending = [];
 }
