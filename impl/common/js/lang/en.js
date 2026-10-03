@@ -3,7 +3,7 @@ export const en = Object.freeze({
     GITHUB_UNREACHABLE: "could not load from GitHub",
     HOST_CHAIN_UNUSABLE: "The configured chain is not usable.",
     NO_API_BASE: "No API base. Check config.js.",
-    NO_PROJECT_ID: "The API has no Reown project id.",
+    NO_PROJECT_ID: "No Reown project id in config.",
     NONCE_FAILED: "Could not get a nonce from the API.",
     REQUEST_EXPIRED: "This sign-in request expired. Try again.",
     SIGNATURE_INVALID: "Could not verify the signature.",
