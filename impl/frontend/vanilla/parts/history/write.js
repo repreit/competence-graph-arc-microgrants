@@ -43,3 +43,18 @@ export async function appendHistory(ops) {
     }
     throw new Error("stale_tip");
 }
+
+export async function appendDeed({ title, link, img, alt, position }) {
+    const data = { title, link };
+    if (img != null) {
+        data.img = img;
+    }
+    if (alt != null) {
+        data.alt = alt;
+    }
+    const node = { id: crypto.randomUUID(), data };
+    if (position != null) {
+        node.position = position;
+    }
+    return await appendHistory([{ op: "node.create", node }]);
+}
