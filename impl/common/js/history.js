@@ -175,7 +175,7 @@ function parseNodePatch(value) {
     return patch;
 }
 
-function parseChange(value) {
+function parseOperation(value) {
     if (!isPlainObject(value)) {
         return null;
     }
@@ -245,7 +245,7 @@ export function parseHistoryContent(content) {
     }
     const ops = [];
     for (const change of parsed.ops) {
-        const parsedOp = parseChange(change);
+        const parsedOp = parseOperation(change);
         if (parsedOp == null) {
             return null;
         }
