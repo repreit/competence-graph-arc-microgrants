@@ -25,7 +25,7 @@ function showHistory(address) {
             .then(function (loaded) {
                 account.history = loaded.history;
                 if (account.address === activeAddress) {
-                    renderHistory(nodesWithPending(account.history));
+                    renderHistory(nodesWithPending(account));
                 }
             })
             .catch(function () {
@@ -33,13 +33,16 @@ function showHistory(address) {
             });
         return;
     }
-    renderHistory(nodesWithPending(account.history));
+    renderHistory(nodesWithPending(account));
 }
 
-function nodesWithPending(history) {
-    const committed = (history && history.nodes) || [];
+function nodesWithPending(account) {
+    const committed = (account.history && account.history.nodes) || [];
     const ops = pendingOps();
-    if (ops.length === 0) {
+    const mine = Boolean(
+        state.account && state.account.address === account.address,
+    );
+    if (!mine || ops.length === 0) {
         return committed;
     }
     const applied = applyOps(committed, ops);
