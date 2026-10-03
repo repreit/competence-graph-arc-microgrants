@@ -44,7 +44,7 @@ export async function appendHistory(ops) {
     throw new Error("stale_tip");
 }
 
-export async function appendDeed({ title, link, img, alt, position }) {
+export async function createNode({ title, link, img, alt, position }) {
     const data = { title, link };
     if (img != null) {
         data.img = img;
