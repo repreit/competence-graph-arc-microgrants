@@ -40,7 +40,7 @@ export async function provisionKey(address) {
 }
 
 async function bindKey(address, record) {
-    const tip = await api("/deltas/tip");
+    const tip = await api("/deltas/next-header");
     const attestation = {
         address,
         signature: await signMessage(bindMessage(address, record.publicKey)),

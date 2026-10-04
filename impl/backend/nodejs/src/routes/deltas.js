@@ -16,7 +16,7 @@ const APPEND_TYPES = new Set(["history"]);
 
 const deltas = new Hono();
 
-deltas.get("/tip", requireSession, async (c) => {
+deltas.get("/next-header", requireSession, async (c) => {
     return c.json(await nextDeltaHeader(c.get("account").id));
 });
 
