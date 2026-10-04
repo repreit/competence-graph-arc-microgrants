@@ -62,7 +62,7 @@ export function paintCardOpaque(obj) {
     });
 }
 
-export function paintHoveredCard(graph, hoveredNodeId) {
+export function paintGraphHover(graph, hoveredNodeId) {
     if (!graph) {
         return;
     }
@@ -98,7 +98,7 @@ export function paintHistoryGraph(graph) {
     });
 }
 
-export function disposeHistoryGpu(graph) {
+export function disposeGraphGpu(graph) {
     const objects = [];
     eachPaintedObject(graph && graph.scene && graph.scene(), function (obj) {
         objects.push(obj);

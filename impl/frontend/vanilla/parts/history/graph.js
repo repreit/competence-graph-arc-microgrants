@@ -8,10 +8,10 @@ import {
 import { clipLinkToCards, makeLinkObject } from "./links.js";
 import { openDeed } from "./deed.js";
 import {
-    disposeHistoryGpu,
+    disposeGraphGpu,
     paintCardOpaque,
+    paintGraphHover,
     paintHistoryGraph,
-    paintHoveredCard,
 } from "./paint.js";
 
 let viewportEl;
@@ -100,7 +100,7 @@ function setNodeHovered(node) {
     if (viewportEl) {
         viewportEl.style.cursor = nextId ? "pointer" : "";
     }
-    paintHoveredCard(historyGraph, hoveredNodeId);
+    paintGraphHover(historyGraph, hoveredNodeId);
 }
 
 function bindHistoryControls(graph) {
@@ -249,7 +249,7 @@ export function renderHistory(nodes) {
             hoveredNodeId = "";
             hoveredNode = null;
             viewportEl.style.cursor = "";
-            disposeHistoryGpu(graph);
+            disposeGraphGpu(graph);
             graph.graphData(graphDataFromNodes(nodes));
             sizeHistoryGraph();
             scheduleFitHistoryGraph();
