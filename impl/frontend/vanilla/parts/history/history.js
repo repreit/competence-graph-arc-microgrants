@@ -48,7 +48,7 @@ function renderSelection() {
     accountsEl.querySelectorAll("button").forEach(function (button) {
         button.setAttribute(
             "aria-pressed",
-            button.dataset.address === (activeAccount && activeAccount.address)
+            button.dataset.address === activeAccount?.address
                 ? "true"
                 : "false",
         );
@@ -86,17 +86,25 @@ function showAccounts() {
     });
 }
 
-export function bindHistory() {
-    bindDeed();
-    bindHistoryGraph();
-    accountsEl = document.getElementById("accounts");
+function f001() {
     showAccounts()
         .then(function (list) {
-            showHistory(list[0]);
+            showHistory(
+                list.find(function (account) {
+                    return account.address === activeAccount?.address;
+                }) || list[0],
+            );
         })
         .catch(function () {
             showHistoryError(
                 "Could not load this history. Serve this folder with a local server, or open the hosted version.",
             );
         });
+}
+
+export function bindHistory() {
+    bindDeed();
+    bindHistoryGraph();
+    accountsEl = document.getElementById("accounts");
+    f001();
 }
