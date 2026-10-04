@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { cssColor, historyTheme, paintCard } from "./paint.js";
+import { cssColor, historyTheme, paintCard, paintCardOpaque } from "./paint.js";
 
 const CARD_W = 16;
 const CARD_H = CARD_W * (384 / 512);
@@ -21,17 +21,6 @@ let cardEpoch = 0;
 
 export function bumpCardEpoch() {
     cardEpoch += 1;
-}
-
-export function paintCardOpaque(obj) {
-    const mats = obj && obj.material;
-    const list = Array.isArray(mats) ? mats : mats ? [mats] : [];
-    list.forEach(function (mat) {
-        mat.transparent = false;
-        mat.opacity = 1;
-        mat.depthTest = true;
-        mat.depthWrite = true;
-    });
 }
 
 export function makeCardObject(node, hoveredNodeId) {

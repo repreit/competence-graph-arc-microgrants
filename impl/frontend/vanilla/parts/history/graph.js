@@ -1,15 +1,10 @@
 import * as THREE from "three";
-import {
-    bumpCardEpoch,
-    CARD_HX,
-    CARD_HY,
-    makeCardObject,
-    paintCardOpaque,
-} from "./cards.js";
+import { bumpCardEpoch, CARD_HX, CARD_HY, makeCardObject } from "./cards.js";
 import { clipLinkToCards, makeLinkObject } from "./links.js";
 import { openDeed } from "./deed.js";
 import {
     disposeHistoryGpu,
+    paintCardOpaque,
     paintHistoryGraph,
     paintHoveredCard,
 } from "./paint.js";

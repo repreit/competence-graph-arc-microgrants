@@ -51,6 +51,17 @@ function paintCardMesh(mesh, theme) {
     }
 }
 
+export function paintCardOpaque(obj) {
+    const mats = obj && obj.material;
+    const list = Array.isArray(mats) ? mats : mats ? [mats] : [];
+    list.forEach(function (mat) {
+        mat.transparent = false;
+        mat.opacity = 1;
+        mat.depthTest = true;
+        mat.depthWrite = true;
+    });
+}
+
 export function paintHoveredCard(graph, hoveredNodeId) {
     if (!graph) {
         return;
