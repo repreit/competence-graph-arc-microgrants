@@ -6,7 +6,7 @@ import { bindHistoryGraph, renderHistory, showHistoryError } from "./graph.js";
 import { loadAccounts, loadHistory } from "./load.js";
 import { pendingOps } from "./write.js";
 
-let addressesEl;
+let accountsEl;
 let accounts = [];
 let activeAddress = "";
 
@@ -15,7 +15,7 @@ function showHistory(address) {
         accounts.find(function (item) {
             return item.address === address;
         }) || accounts[0];
-    if (!account || !addressesEl) {
+    if (!account || !accountsEl) {
         return;
     }
     activeAddress = account.address || "";
@@ -50,10 +50,10 @@ function nodesWithPending(account) {
 }
 
 function renderSelection() {
-    if (!addressesEl) {
+    if (!accountsEl) {
         return;
     }
-    addressesEl.querySelectorAll("button").forEach(function (button) {
+    accountsEl.querySelectorAll("button").forEach(function (button) {
         button.setAttribute(
             "aria-pressed",
             button.dataset.address === activeAddress ? "true" : "false",
@@ -63,10 +63,10 @@ function renderSelection() {
 
 function renderAccounts(list) {
     accounts = list;
-    if (!addressesEl) {
+    if (!accountsEl) {
         return;
     }
-    addressesEl.replaceChildren();
+    accountsEl.replaceChildren();
     list.forEach(function (account) {
         const address = account.address || "";
         const button = document.createElement("button");
@@ -81,7 +81,7 @@ function renderAccounts(list) {
         button.addEventListener("click", function () {
             showHistory(address);
         });
-        addressesEl.appendChild(button);
+        accountsEl.appendChild(button);
     });
     renderSelection();
 }
@@ -89,7 +89,7 @@ function renderAccounts(list) {
 export function bindHistory() {
     bindDeed();
     bindHistoryGraph();
-    addressesEl = document.getElementById("addresses");
+    accountsEl = document.getElementById("accounts");
     loadAccounts()
         .then(function (list) {
             renderAccounts(list);
