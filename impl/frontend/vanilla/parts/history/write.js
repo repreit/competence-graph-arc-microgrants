@@ -7,7 +7,7 @@ import { state } from "../../common/js/store.js";
 
 let pending = [];
 
-export async function appendHistory(ops) {
+async function appendHistory(ops) {
     const account = state.account;
     if (!account) {
         throw new Error("auth");
