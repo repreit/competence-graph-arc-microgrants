@@ -266,7 +266,7 @@ function paintGraphTheme() {
 }
 
 export function bindHistoryGraph() {
-    boardEl = document.querySelector(".network-board");
+    boardEl = document.querySelector(".graph-board");
     if (boardEl) {
         let press = null;
         const hoverWaitMs = 50;
