@@ -40,7 +40,7 @@ export async function provisionKey(address) {
 }
 
 async function bindKey(address, record) {
-    const tip = await api("/deltas/next-header");
+    const nextDeltaHeader = await api("/deltas/next-header");
     const attestation = {
         address,
         signature: await signMessage(bindMessage(address, record.publicKey)),
@@ -49,8 +49,8 @@ async function bindKey(address, record) {
     const signature = await sign(
         record.privateKey,
         signingBytes({
-            seq: tip.seq,
-            prev_hash: tip.prev_hash,
+            seq: nextDeltaHeader.seq,
+            prev_hash: nextDeltaHeader.prev_hash,
             content,
         }),
     );
@@ -58,8 +58,8 @@ async function bindKey(address, record) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-            seq: tip.seq,
-            prev_hash: tip.prev_hash,
+            seq: nextDeltaHeader.seq,
+            prev_hash: nextDeltaHeader.prev_hash,
             content,
             signature,
         }),

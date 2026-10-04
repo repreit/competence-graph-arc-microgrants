@@ -15,13 +15,13 @@ async function appendHistory(ops) {
     const record = await provisionKey(account.address);
     let next = null;
     for (let attempt = 0; attempt < 3; attempt += 1) {
-        const tip = next ?? (await api("/deltas/next-header"));
+        const nextDeltaHeader = next ?? (await api("/deltas/next-header"));
         const content = historyContent(record.publicKey, ops);
         const signature = await sign(
             record.privateKey,
             signingBytes({
-                seq: tip.seq,
-                prev_hash: tip.prev_hash,
+                seq: nextDeltaHeader.seq,
+                prev_hash: nextDeltaHeader.prev_hash,
                 content,
             }),
         );
@@ -30,8 +30,8 @@ async function appendHistory(ops) {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    seq: tip.seq,
-                    prev_hash: tip.prev_hash,
+                    seq: nextDeltaHeader.seq,
+                    prev_hash: nextDeltaHeader.prev_hash,
                     content,
                     signature,
                 }),
