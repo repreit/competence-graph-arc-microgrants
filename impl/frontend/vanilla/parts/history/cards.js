@@ -1,5 +1,10 @@
 import * as THREE from "three";
-import { cssColor, historyTheme, paintCard, paintCardOpaque } from "./paint.js";
+import {
+    cssColor,
+    historyTheme,
+    paintCardTexture,
+    paintCardOpaque,
+} from "./paint.js";
 
 const CARD_W = 16;
 const CARD_H = CARD_W * (384 / 512);
@@ -40,7 +45,7 @@ export function makeCardObject(node, hoveredNodeId) {
         image: null,
         hovered: node.id === hoveredNodeId,
     };
-    paintCard(ctx, canvas, data, theme, null, card.hovered);
+    paintCardTexture(ctx, canvas, data, theme, null, card.hovered);
     const front = new THREE.MeshBasicMaterial(
         Object.assign({ map: tex, transparent: false, opacity: 1 }, CARD_DEPTH),
     );
@@ -80,7 +85,14 @@ export function makeCardObject(node, hoveredNodeId) {
                 return;
             }
             card.image = image;
-            paintCard(ctx, canvas, data, historyTheme(), image, card.hovered);
+            paintCardTexture(
+                ctx,
+                canvas,
+                data,
+                historyTheme(),
+                image,
+                card.hovered,
+            );
             tex.needsUpdate = true;
         };
         image.src = data.img;

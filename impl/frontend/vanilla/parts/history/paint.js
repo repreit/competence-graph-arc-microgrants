@@ -35,7 +35,7 @@ function paintCardMesh(mesh, theme) {
     if (!card) {
         return;
     }
-    paintCard(
+    paintCardTexture(
         card.ctx,
         card.canvas,
         card.data,
@@ -158,7 +158,7 @@ function wrapTitle(ctx, text, maxWidth) {
     return lines.slice(0, 3);
 }
 
-function drawCover(ctx, image, x, y, w, h) {
+function paintCover(ctx, image, x, y, w, h) {
     const ir = image.width / Math.max(image.height, 1);
     const r = w / h;
     let sx = 0;
@@ -175,14 +175,14 @@ function drawCover(ctx, image, x, y, w, h) {
     ctx.drawImage(image, sx, sy, sw, sh, x, y, w, h);
 }
 
-export function paintCard(ctx, canvas, data, theme, image, hovered) {
+export function paintCardTexture(ctx, canvas, data, theme, image, hovered) {
     const w = canvas.width;
     const titleH = 96;
     const imgH = canvas.height - titleH;
     ctx.fillStyle = theme.card;
     ctx.fillRect(0, 0, w, canvas.height);
     if (image && image.width) {
-        drawCover(ctx, image, 0, 0, w, imgH);
+        paintCover(ctx, image, 0, 0, w, imgH);
     } else {
         ctx.fillStyle = theme.line;
         ctx.fillRect(0, 0, w, imgH);
