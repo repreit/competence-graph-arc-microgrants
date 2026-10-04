@@ -7,7 +7,7 @@ import { findActiveBindingByKey } from "../adapters/db/postgres/tables/bindings.
 import {
     appendDelta,
     listDeltas,
-    nextLink,
+    nextDeltaHeader,
 } from "../adapters/db/postgres/tables/deltas.js";
 import { requireJson } from "../middleware/json.js";
 import { requireSession } from "../middleware/session.js";
@@ -17,7 +17,7 @@ const APPEND_TYPES = new Set(["history"]);
 const deltas = new Hono();
 
 deltas.get("/tip", requireSession, async (c) => {
-    return c.json(await nextLink(c.get("account").id));
+    return c.json(await nextDeltaHeader(c.get("account").id));
 });
 
 deltas.get("/list", async (c) => {
@@ -61,7 +61,7 @@ deltas.post("/append", requireSession, requireJson, async (c) => {
     if (!appended.ok) {
         if (appended.error === "stale_tip") {
             return c.json(
-                { error: "stale_tip", ...(await nextLink(account.id)) },
+                { error: "stale_tip", ...(await nextDeltaHeader(account.id)) },
                 409,
             );
         }

@@ -38,7 +38,7 @@ export async function listDeltas(accountId, client = pool) {
     return rows.map((row) => ({ ...row, seq: Number(row.seq) }));
 }
 
-export async function nextLink(accountId) {
+export async function nextDeltaHeader(accountId) {
     const tip = await findTip(accountId, pool);
     if (!tip) {
         return { seq: 1, prev_hash: null };

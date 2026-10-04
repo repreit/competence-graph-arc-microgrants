@@ -18,7 +18,7 @@ import {
     listBindings,
     unbindKey,
 } from "../adapters/db/postgres/tables/bindings.js";
-import { nextLink } from "../adapters/db/postgres/tables/deltas.js";
+import { nextDeltaHeader } from "../adapters/db/postgres/tables/deltas.js";
 import { requireJson } from "../middleware/json.js";
 import { requireSession } from "../middleware/session.js";
 
@@ -79,7 +79,7 @@ bindings.post("/bind", requireSession, requireJson, async (c) => {
     if (!result.ok) {
         if (result.error === "stale_tip") {
             return c.json(
-                { error: "stale_tip", ...(await nextLink(account.id)) },
+                { error: "stale_tip", ...(await nextDeltaHeader(account.id)) },
                 409,
             );
         }
@@ -129,7 +129,7 @@ bindings.post("/:id/unbind", requireSession, requireJson, async (c) => {
     if (!result.ok) {
         if (result.error === "stale_tip") {
             return c.json(
-                { error: "stale_tip", ...(await nextLink(account.id)) },
+                { error: "stale_tip", ...(await nextDeltaHeader(account.id)) },
                 409,
             );
         }
