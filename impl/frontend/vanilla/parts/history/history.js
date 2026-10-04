@@ -79,13 +79,19 @@ function renderAccounts(list) {
     renderSelection();
 }
 
+function showAccounts() {
+    return loadAccounts().then(function (list) {
+        renderAccounts(list);
+        return list;
+    });
+}
+
 export function bindHistory() {
     bindDeed();
     bindHistoryGraph();
     accountsEl = document.getElementById("accounts");
-    loadAccounts()
+    showAccounts()
         .then(function (list) {
-            renderAccounts(list);
             showHistory(list[0]);
         })
         .catch(function () {
