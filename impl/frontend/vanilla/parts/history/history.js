@@ -1,6 +1,6 @@
 import { applyOps } from "impl/common/js/history.js";
 import { shortAddress } from "../../common/js/a001.js";
-import { state } from "../../common/js/store.js";
+import { isSessionAccount } from "../../common/js/session.js";
 import { bindDeed } from "./deed.js";
 import { bindHistoryGraph, renderHistory, showHistoryError } from "./graph.js";
 import { loadAccounts, loadHistory } from "./load.js";
@@ -34,10 +34,7 @@ function showHistory(account) {
 function nodesWithPending(account) {
     const committed = (account.history && account.history.nodes) || [];
     const ops = pendingOps();
-    const isMine = Boolean(
-        state.account && state.account.address === account.address,
-    );
-    if (!isMine || ops.length === 0) {
+    if (!isSessionAccount(account) || ops.length === 0) {
         return committed;
     }
     const applied = applyOps(committed, ops);

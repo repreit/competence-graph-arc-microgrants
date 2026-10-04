@@ -1,3 +1,5 @@
+import { state } from "./store.js";
+
 const KEY = "competence-graph.session-token";
 
 export function getToken() {
@@ -10,4 +12,10 @@ export function setToken(value) {
     } else {
         localStorage.removeItem(KEY);
     }
+}
+
+export function isSessionAccount(account) {
+    return Boolean(
+        state.account && account && state.account.address === account.address,
+    );
 }
