@@ -9,6 +9,7 @@
 
     "liveServer.settings.root": "/impl/frontend/vanilla",
     "liveServer.settings.mount": [["/impl/common", "impl/common"]],
+    "liveServer.settings.NoBrowser": true,
 
     "window.autoDetectColorScheme": false,
     "window.zoomLevel": 0.5,
