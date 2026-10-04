@@ -1,5 +1,5 @@
 import {
-    assertLink,
+    assertChain,
     hashRow,
     parseContent,
 } from "../../../../../../../common/js/delta.js";
@@ -60,9 +60,9 @@ export async function appendDeltaInTx(accountId, row, client) {
         content: row.content,
         signature: row.signature,
     };
-    const link = await assertLink(tip, next);
-    if (!link.ok) {
-        return { ok: false, error: link.error };
+    const checked = await assertChain(tip, next);
+    if (!checked.ok) {
+        return { ok: false, error: checked.error };
     }
     const envelope = parseContent(row.content);
     if (envelope == null) {

@@ -1,6 +1,6 @@
 import { isNonEmptyString, isPlainObject } from "./a001.js";
 import { canonicalPublicKey } from "./attest.js";
-import { assertLink, parseContent } from "./delta.js";
+import { assertChain, parseContent } from "./delta.js";
 
 const NODE_FIELDS = ["id", "position", "data", "nodeIds"];
 const PATCH_FIELDS = ["position", "data"];
@@ -468,9 +468,9 @@ export async function foldHistory(rows) {
     const state = new Map();
     let prev = null;
     for (const row of rows) {
-        const link = await assertLink(prev, row);
-        if (!link.ok) {
-            return { ok: false, error: link.error };
+        const checked = await assertChain(prev, row);
+        if (!checked.ok) {
+            return { ok: false, error: checked.error };
         }
         prev = row;
         const envelope = parseContent(row.content);

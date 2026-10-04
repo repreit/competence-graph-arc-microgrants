@@ -94,7 +94,7 @@ export function parseDelta(body) {
     return { content, seq, prev_hash, signature: signature ?? null };
 }
 
-export async function assertLink(prev, next) {
+export async function assertChain(prev, next) {
     if (!isDelta(next)) {
         return { ok: false, error: "invalid" };
     }
