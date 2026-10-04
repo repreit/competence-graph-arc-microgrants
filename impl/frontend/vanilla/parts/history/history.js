@@ -7,14 +7,9 @@ import { loadAccounts, loadHistory } from "./load.js";
 import { pendingOps } from "./write.js";
 
 let accountsEl;
-let accounts = [];
 let activeAccount;
 
-function showHistory(address) {
-    const account =
-        accounts.find(function (item) {
-            return item.address === address;
-        }) || accounts[0];
+function showHistory(account) {
     if (!account || !accountsEl) {
         return;
     }
@@ -64,7 +59,6 @@ function renderSelection() {
 }
 
 function renderAccounts(list) {
-    accounts = list;
     if (!accountsEl) {
         return;
     }
@@ -81,7 +75,7 @@ function renderAccounts(list) {
         }
         button.setAttribute("aria-pressed", "false");
         button.addEventListener("click", function () {
-            showHistory(address);
+            showHistory(account);
         });
         accountsEl.appendChild(button);
     });
@@ -95,7 +89,7 @@ export function bindHistory() {
     loadAccounts()
         .then(function (list) {
             renderAccounts(list);
-            showHistory(list[0] && list[0].address);
+            showHistory(list[0]);
         })
         .catch(function () {
             showHistoryError(
