@@ -14,7 +14,7 @@ import {
     paintHoveredCard,
 } from "./paint.js";
 
-let boardEl;
+let viewportEl;
 let statusEl;
 let historyGraph = null;
 let historyGraphPending = null;
@@ -34,11 +34,11 @@ export function showHistoryError(message) {
 }
 
 function sizeHistoryGraph() {
-    if (!historyGraph || !boardEl) {
+    if (!historyGraph || !viewportEl) {
         return;
     }
-    const width = boardEl.clientWidth;
-    const height = boardEl.clientHeight;
+    const width = viewportEl.clientWidth;
+    const height = viewportEl.clientHeight;
     if (width < 8 || height < 8) {
         return;
     }
@@ -97,8 +97,8 @@ function setNodeHovered(node) {
     }
     hoveredNodeId = nextId;
     hoveredNode = node || null;
-    if (boardEl) {
-        boardEl.style.cursor = nextId ? "pointer" : "";
+    if (viewportEl) {
+        viewportEl.style.cursor = nextId ? "pointer" : "";
     }
     paintHoveredCard(historyGraph, hoveredNodeId);
 }
@@ -123,7 +123,7 @@ function bindHistoryControls(graph) {
 }
 
 function createHistoryGraph(ForceGraph3D) {
-    historyGraph = new ForceGraph3D(boardEl, { controlType: "orbit" })
+    historyGraph = new ForceGraph3D(viewportEl, { controlType: "orbit" })
         .showNavInfo(false)
         .enableNodeDrag(false)
         .nodeOpacity(1)
@@ -158,7 +158,7 @@ function ensureHistoryGraph() {
     if (historyGraphPending) {
         return historyGraphPending;
     }
-    if (!boardEl) {
+    if (!viewportEl) {
         return Promise.resolve(null);
     }
     historyGraphPending = import("3d-force-graph")
@@ -235,7 +235,7 @@ function graphDataFromNodes(sourceNodes) {
 }
 
 export function renderHistory(nodes) {
-    if (!boardEl) {
+    if (!viewportEl) {
         return;
     }
     graphRequest += 1;
@@ -248,7 +248,7 @@ export function renderHistory(nodes) {
             invalidateCardPaint();
             hoveredNodeId = "";
             hoveredNode = null;
-            boardEl.style.cursor = "";
+            viewportEl.style.cursor = "";
             disposeHistoryGpu(graph);
             graph.graphData(graphDataFromNodes(nodes));
             sizeHistoryGraph();
@@ -266,18 +266,18 @@ function paintGraphTheme() {
 }
 
 export function bindHistoryGraph() {
-    boardEl = document.querySelector(".graph-board");
-    if (boardEl) {
+    viewportEl = document.querySelector(".graph-viewport");
+    if (viewportEl) {
         let press = null;
         const hoverWaitMs = 50;
-        boardEl.addEventListener("pointerdown", function (ev) {
+        viewportEl.addEventListener("pointerdown", function (ev) {
             if (ev.button !== 0) {
                 press = null;
                 return;
             }
             press = { x: ev.clientX, y: ev.clientY };
         });
-        boardEl.addEventListener("pointerup", function (ev) {
+        viewportEl.addEventListener("pointerup", function (ev) {
             if (!press || ev.button !== 0) {
                 press = null;
                 return;
@@ -302,10 +302,10 @@ export function bindHistoryGraph() {
             fitHistoryGraph();
         });
     }
-    if (window.ResizeObserver && boardEl) {
+    if (window.ResizeObserver && viewportEl) {
         new ResizeObserver(function () {
             sizeHistoryGraph();
-        }).observe(boardEl);
+        }).observe(viewportEl);
     }
 }
 

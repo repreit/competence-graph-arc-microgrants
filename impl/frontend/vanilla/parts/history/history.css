@@ -41,12 +41,12 @@
     outline-offset: 2px;
 }
 
-.graph-frame {
+.graph-wrapper {
     position: relative;
     margin-top: 1rem;
 }
 
-.graph-board {
+.graph-viewport {
     position: relative;
     width: 100%;
     height: min(70vh, 36rem);
@@ -57,7 +57,7 @@
     background: var(--bg);
 }
 
-.graph-board canvas {
+.graph-viewport canvas {
     display: block;
 }
 
