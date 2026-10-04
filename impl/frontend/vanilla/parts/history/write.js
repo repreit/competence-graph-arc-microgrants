@@ -13,9 +13,11 @@ async function appendHistory(ops) {
         throw new Error("auth");
     }
     const record = await provisionKey(account.address);
-    let next = null;
+    let nextDeltaHeader = null;
     for (let attempt = 0; attempt < 3; attempt += 1) {
-        const nextDeltaHeader = next ?? (await api("/deltas/next-header"));
+        if (!nextDeltaHeader) {
+            nextDeltaHeader = await api("/deltas/next-header");
+        }
         const content = historyContent(record.publicKey, ops);
         const signature = await sign(
             record.privateKey,
@@ -40,7 +42,10 @@ async function appendHistory(ops) {
             if (err.message !== "stale_tip") {
                 throw err;
             }
-            next = { seq: err.data.seq, prev_hash: err.data.prev_hash };
+            nextDeltaHeader = {
+                seq: err.data.seq,
+                prev_hash: err.data.prev_hash,
+            };
         }
     }
     throw new Error("stale_tip");
