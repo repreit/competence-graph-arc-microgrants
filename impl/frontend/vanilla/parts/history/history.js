@@ -7,14 +7,14 @@ import { loadAccounts, loadHistory } from "./load.js";
 import { pendingOps } from "./write.js";
 
 let addressesEl;
-let addresses = [];
+let accounts = [];
 let activeAddress = "";
 
 function showHistory(address) {
     const account =
-        addresses.find(function (item) {
+        accounts.find(function (item) {
             return item.address === address;
-        }) || addresses[0];
+        }) || accounts[0];
     if (!account || !addressesEl) {
         return;
     }
@@ -61,8 +61,8 @@ function renderSelection() {
     });
 }
 
-function renderAddresses(list) {
-    addresses = list;
+function renderAccounts(list) {
+    accounts = list;
     if (!addressesEl) {
         return;
     }
@@ -92,7 +92,7 @@ export function bindHistory() {
     addressesEl = document.getElementById("addresses");
     loadAccounts()
         .then(function (list) {
-            renderAddresses(list);
+            renderAccounts(list);
             showHistory(list[0] && list[0].address);
         })
         .catch(function () {
