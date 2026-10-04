@@ -17,10 +17,10 @@ const CARD_DEPTH = {
     polygonOffsetUnits: -2,
 };
 
-let cardEpoch = 0;
+let cardPaintEpoch = 0;
 
-export function bumpCardEpoch() {
-    cardEpoch += 1;
+export function invalidateCardPaint() {
+    cardPaintEpoch += 1;
 }
 
 export function makeCardObject(node, hoveredNodeId) {
@@ -74,9 +74,9 @@ export function makeCardObject(node, hoveredNodeId) {
     paintCardOpaque(mesh);
     if (data.img) {
         const image = new Image();
-        const epoch = cardEpoch;
+        const epoch = cardPaintEpoch;
         image.onload = function () {
-            if (epoch !== cardEpoch) {
+            if (epoch !== cardPaintEpoch) {
                 return;
             }
             card.image = image;

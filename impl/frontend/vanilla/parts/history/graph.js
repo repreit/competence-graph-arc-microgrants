@@ -1,5 +1,10 @@
 import * as THREE from "three";
-import { bumpCardEpoch, CARD_HX, CARD_HY, makeCardObject } from "./cards.js";
+import {
+    CARD_HX,
+    CARD_HY,
+    invalidateCardPaint,
+    makeCardObject,
+} from "./cards.js";
 import { clipLinkToCards, makeLinkObject } from "./links.js";
 import { openDeed } from "./deed.js";
 import {
@@ -240,7 +245,7 @@ export function renderHistory(nodes) {
             if (!graph || request !== graphRequest) {
                 return;
             }
-            bumpCardEpoch();
+            invalidateCardPaint();
             hoveredNodeId = "";
             hoveredNode = null;
             boardEl.style.cursor = "";
