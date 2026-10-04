@@ -8,7 +8,7 @@ import { pendingOps } from "./write.js";
 
 let accountsEl;
 let accounts = [];
-let activeAddress = "";
+let activeAccount;
 
 function showHistory(address) {
     const account =
@@ -18,13 +18,13 @@ function showHistory(address) {
     if (!account || !accountsEl) {
         return;
     }
-    activeAddress = account.address || "";
+    activeAccount = account;
     renderSelection();
     if (!account.history && account.address) {
         loadHistory(account.address)
             .then(function (loaded) {
                 account.history = loaded.history;
-                if (account.address === activeAddress) {
+                if (account === activeAccount) {
                     renderHistory(nodesWithPending(account));
                 }
             })
@@ -56,7 +56,9 @@ function renderSelection() {
     accountsEl.querySelectorAll("button").forEach(function (button) {
         button.setAttribute(
             "aria-pressed",
-            button.dataset.address === activeAddress ? "true" : "false",
+            button.dataset.address === (activeAccount && activeAccount.address)
+                ? "true"
+                : "false",
         );
     });
 }
