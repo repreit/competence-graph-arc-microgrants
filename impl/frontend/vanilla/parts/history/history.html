@@ -8,6 +8,28 @@
         role="group"
         aria-label="Which account"
     ></div>
+    <div class="deed-ops">
+        <button type="button" id="deed-create" hidden>Create deed</button>
+    </div>
+    <form class="deed-form" id="deed-form" hidden>
+        <input
+            type="text"
+            id="deed-form-title"
+            name="title"
+            placeholder="Deed title"
+            autocomplete="off"
+            required
+        />
+        <input
+            type="text"
+            id="deed-form-link"
+            name="link"
+            placeholder="Deed link"
+            autocomplete="off"
+            required
+        />
+        <button type="submit">Create</button>
+    </form>
     <div class="network-frame">
         <div
             class="network-board"
