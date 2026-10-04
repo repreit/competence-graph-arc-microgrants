@@ -97,7 +97,7 @@
     stroke-linejoin: round;
 }
 
-dialog {
+#deed-window {
     position: fixed;
     width: min(40rem, calc(100vw - 2rem));
     max-width: calc(100vw - 2rem);
@@ -111,30 +111,30 @@ dialog {
     overflow-y: auto;
 }
 
-dialog::backdrop {
+#deed-window::backdrop {
     background: rgba(22, 21, 19, 0.55);
 }
 
-dialog img {
+#deed-window img {
     display: block;
     width: 100%;
     aspect-ratio: 16 / 9;
     object-fit: cover;
 }
 
-dialog img[hidden] {
+#deed-window img[hidden] {
     display: none;
 }
 
-dialog .sheet {
+#deed-window .sheet {
     padding: 1rem 1.15rem 1.25rem;
 }
 
-dialog h2 {
+#deed-window h2 {
     margin: 0 0 0.25rem;
 }
 
-dialog .sheet p {
+#deed-window .sheet p {
     margin: 0;
 }
 
@@ -145,7 +145,7 @@ dialog .sheet p {
     word-break: break-all;
 }
 
-dialog .close {
+#deed-window .close {
     position: absolute;
     top: 0.55rem;
     right: 0.55rem;
