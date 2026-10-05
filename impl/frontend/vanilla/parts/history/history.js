@@ -16,7 +16,7 @@ function showHistory(account) {
         return;
     }
     activeAccount = account;
-    renderSelection();
+    renderAccountSelection();
     if (!account.history && account.address) {
         loadHistory(account.address)
             .then(function (loaded) {
@@ -43,7 +43,7 @@ function nodesWithPending(account) {
     return applied.ok ? applied.history.nodes : committed;
 }
 
-function renderSelection() {
+function renderAccountSelection() {
     if (!accountsEl) {
         return;
     }
@@ -78,7 +78,7 @@ function renderAccounts(list) {
         });
         accountsEl.appendChild(button);
     });
-    renderSelection();
+    renderAccountSelection();
 }
 
 function showAccounts() {
