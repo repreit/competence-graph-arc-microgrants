@@ -14,7 +14,7 @@ footer p {
 }
 
 footer p:last-child {
-    text-align: right;
+    margin-left: auto;
 }
 
 footer a.github {
