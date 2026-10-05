@@ -1,13 +1,15 @@
 import { applyOps } from "impl/common/js/history.js";
 import { shortAddress } from "../../common/js/a001.js";
 import { isSessionAccount } from "../../common/js/session.js";
+import { on } from "../../common/js/store.js";
 import { bindDeed } from "./deed.js";
 import { bindHistoryGraph, renderHistory, showHistoryError } from "./graph.js";
 import { loadAccounts, loadHistory } from "./load.js";
-import { pendingOps } from "./write.js";
+import { discard, pendingOps } from "./write.js";
 
 let accountsEl;
 let activeAccount;
+let accountsPending = null;
 
 function showHistory(account) {
     if (!account || !accountsEl) {
@@ -80,10 +82,18 @@ function renderAccounts(list) {
 }
 
 function showAccounts() {
-    return loadAccounts().then(function (list) {
-        renderAccounts(list);
-        return list;
-    });
+    if (accountsPending) {
+        return accountsPending;
+    }
+    accountsPending = loadAccounts()
+        .then(function (list) {
+            renderAccounts(list);
+            return list;
+        })
+        .finally(function () {
+            accountsPending = null;
+        });
+    return accountsPending;
 }
 
 function f001() {
@@ -106,5 +116,7 @@ export function bindHistory() {
     bindDeed();
     bindHistoryGraph();
     accountsEl = document.getElementById("accounts");
+    on("signedIn", f001);
+    on("signedOut", discard);
     f001();
 }
