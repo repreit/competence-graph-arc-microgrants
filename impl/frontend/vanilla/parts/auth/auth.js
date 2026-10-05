@@ -21,8 +21,14 @@ function signIn() {
 
 function restore() {
     if (!getToken()) {
-        emit("signedOut", { account: null, authPending: false, authError: "" });
-        return Promise.resolve(null);
+        return Promise.resolve().then(function () {
+            emit("signedOut", {
+                account: null,
+                authPending: false,
+                authError: "",
+            });
+            return null;
+        });
     }
     emit("signInStarted", { authPending: true, authError: "" });
     return api("/auth/me")
