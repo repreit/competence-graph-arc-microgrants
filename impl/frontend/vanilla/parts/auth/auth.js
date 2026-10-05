@@ -33,7 +33,11 @@ function restore() {
     emit("signInStarted", { authPending: true, authError: "" });
     return api("/auth/me")
         .then(function (account) {
-            emit("signedIn", { account, authPending: false });
+            emit("signedIn", {
+                account,
+                authPending: false,
+                authError: "",
+            });
             return account;
         })
         .catch(function (err) {
