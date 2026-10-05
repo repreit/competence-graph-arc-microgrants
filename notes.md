@@ -39,3 +39,7 @@ Each host needs its own key to write its slot.
 ```
 Assemble the adapter stack at download, not at runtime
 ```
+
+```
+Optimize performance
+```
