@@ -25,7 +25,7 @@ let hoveredNode = null;
 let fitTimer = 0;
 const FIT_PULL = 0.72;
 
-export function showHistoryError(message) {
+export function showHistoryStatus(message) {
     if (!statusEl) {
         return;
     }
@@ -174,7 +174,7 @@ function ensureHistoryGraph() {
             if (typeof console !== "undefined" && console.error) {
                 console.error(err);
             }
-            showHistoryError(
+            showHistoryStatus(
                 "Could not load the 3D graph. Check the network and reload.",
             );
             return null;
@@ -255,7 +255,7 @@ export function renderHistoryGraph(nodes) {
             scheduleFitHistoryGraph();
         })
         .catch(function () {
-            showHistoryError(
+            showHistoryStatus(
                 "Could not draw the graph for this address. Reload to try again.",
             );
         });

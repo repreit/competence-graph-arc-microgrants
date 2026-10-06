@@ -6,7 +6,7 @@ import { bindDeed } from "./deed.js";
 import {
     bindHistoryGraph,
     renderHistoryGraph,
-    showHistoryError,
+    showHistoryStatus,
 } from "./graph.js";
 import { loadAccounts, loadHistory } from "./load.js";
 import {
@@ -116,7 +116,7 @@ function f001() {
             );
         })
         .catch(function () {
-            showHistoryError(
+            showHistoryStatus(
                 "Could not load this history. Serve this folder with a local server, or open the hosted version.",
             );
         });
@@ -176,7 +176,7 @@ function savePendingOps() {
             return refreshHistory(selectedAccount);
         })
         .catch(function () {
-            showHistoryError("Could not save these changes.");
+            showHistoryStatus("Could not save these changes.");
         });
 }
 
@@ -192,7 +192,7 @@ function refreshHistory(account) {
             }
         })
         .catch(function () {
-            showHistoryError("Could not load this history.");
+            showHistoryStatus("Could not load this history.");
         });
 }
 
