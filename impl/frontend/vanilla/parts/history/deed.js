@@ -25,11 +25,11 @@ export function bindDeed() {
     windowEl.addEventListener("close", unlockScroll);
 }
 
-export function openDeed(data) {
+export function openDeed(node) {
     if (!windowEl || windowEl.open) {
         return;
     }
-    data = data || {};
+    const data = node?.data ?? {};
     titleEl.textContent = data.title || "";
     if (data.link) {
         linkEl.hidden = false;
