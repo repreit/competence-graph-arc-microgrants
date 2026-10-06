@@ -6,15 +6,15 @@ let pending = null;
 async function load() {
     let data;
     try {
-        data = await api("/public-config", { auth: false });
+        data = await api("/remote-config", { auth: false });
     } catch (err) {
         throw new Error("http", { cause: err });
     }
-    emit("publicConfigLoaded", { publicConfig: data });
+    emit("remoteConfigLoaded", { remoteConfig: data });
     return data;
 }
 
-export function loadPublicConfig() {
+export function loadRemoteConfig() {
     if (!pending) {
         pending = load().catch(function (err) {
             pending = null;
