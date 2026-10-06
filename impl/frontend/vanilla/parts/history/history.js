@@ -120,17 +120,31 @@ function renderDeedToolbar() {
     if (!deedCreateEl) {
         return;
     }
-    deedCreateEl.hidden = !isSessionAccount(selectedAccount);
+    if (isSessionAccount(selectedAccount)) {
+        deedCreateEl.hidden = false;
+    } else {
+        deedCreateEl.hidden = true;
+        closeDeedForm();
+    }
 }
 
 function toggleDeedForm() {
     if (!deedFormEl) {
         return;
     }
-    deedFormEl.hidden = !deedFormEl.hidden;
     if (deedFormEl.hidden) {
-        deedFormEl.reset();
+        deedFormEl.hidden = false;
+    } else {
+        closeDeedForm();
     }
+}
+
+function closeDeedForm() {
+    if (!deedFormEl) {
+        return;
+    }
+    deedFormEl.hidden = true;
+    deedFormEl.reset();
 }
 
 export function bindHistory() {
