@@ -10,6 +10,7 @@ import { discard, pendingOps } from "./write.js";
 let accountsEl;
 let activeAccount;
 let accountsPending = null;
+let deedCreateEl;
 
 function showHistory(account) {
     if (!account || !accountsEl) {
@@ -17,6 +18,7 @@ function showHistory(account) {
     }
     activeAccount = account;
     renderAccountSelection();
+    renderDeedToolbar();
     if (!account.history && account.address) {
         loadHistory(account.address)
             .then(function (loaded) {
@@ -79,6 +81,7 @@ function renderAccounts(list) {
         accountsEl.appendChild(button);
     });
     renderAccountSelection();
+    renderDeedToolbar();
 }
 
 function showAccounts() {
@@ -112,11 +115,24 @@ function f001() {
         });
 }
 
+function renderDeedToolbar() {
+    if (!deedCreateEl) {
+        return;
+    }
+    deedCreateEl.hidden = !isSessionAccount(activeAccount);
+}
+
+function signOutHistory() {
+    discard();
+    renderDeedToolbar();
+}
+
 export function bindHistory() {
     bindDeed();
     bindHistoryGraph();
     accountsEl = document.getElementById("accounts");
+    deedCreateEl = document.getElementById("deed-create");
     on("signedIn", f001);
-    on("signedOut", discard);
+    on("signedOut", signOutHistory);
     f001();
 }
