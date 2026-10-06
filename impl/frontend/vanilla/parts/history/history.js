@@ -5,13 +5,15 @@ import { on } from "../../common/js/store.js";
 import { bindDeed } from "./deed.js";
 import { bindHistoryGraph, renderHistory, showHistoryError } from "./graph.js";
 import { loadAccounts, loadHistory } from "./load.js";
-import { discard, pendingOps } from "./write.js";
+import { createNode, discard, pendingOps } from "./write.js";
 
 let accountsEl;
 let selectedAccount;
 let accountsPending = null;
 let deedCreateEl;
 let deedFormEl;
+let deedFormTitleEl;
+let deedFormLinkEl;
 
 function showHistory(account) {
     if (!account || !accountsEl) {
@@ -147,18 +149,32 @@ function closeDeedForm() {
     deedFormEl.reset();
 }
 
+function createDeed() {
+    const title = deedFormTitleEl.value.trim();
+    const link = deedFormLinkEl.value.trim();
+    if (!title || !link) {
+        return;
+    }
+    createNode({ title, link });
+    toggleDeedForm();
+    renderHistory(nodesWithPending(selectedAccount));
+}
+
 export function bindHistory() {
     bindDeed();
     bindHistoryGraph();
     accountsEl = document.getElementById("accounts");
     deedCreateEl = document.getElementById("deed-create");
     deedFormEl = document.getElementById("deed-form");
+    deedFormTitleEl = document.getElementById("deed-form-title");
+    deedFormLinkEl = document.getElementById("deed-form-link");
     if (deedCreateEl) {
         deedCreateEl.addEventListener("click", toggleDeedForm);
     }
     if (deedFormEl) {
         deedFormEl.addEventListener("submit", function (event) {
             event.preventDefault();
+            createDeed();
         });
     }
     on("signedIn", f001);
