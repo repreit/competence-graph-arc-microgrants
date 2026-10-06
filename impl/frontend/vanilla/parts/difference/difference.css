@@ -185,9 +185,8 @@
     position: relative;
     flex: 1;
     display: flex;
-    justify-content: space-between;
     align-items: flex-start;
-    padding: 0 0.15rem 0 0;
+    padding: 0;
     background-image:
         repeating-linear-gradient(
             to right,
@@ -216,6 +215,22 @@
     width: 1px;
     height: 9px;
     background: var(--line);
+}
+
+.ruler-scale > span {
+    flex: 1;
+}
+
+.ruler-scale > span:first-child {
+    text-align: left;
+}
+
+.ruler-scale > span:nth-child(2) {
+    text-align: center;
+}
+
+.ruler-scale > span:last-child {
+    text-align: right;
 }
 
 .track {
