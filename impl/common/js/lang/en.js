@@ -15,7 +15,7 @@ export const en = Object.freeze({
     SIGNATURE_INVALID: "Could not verify the signature.",
 
     HISTORY_LOAD_FAILED: "Could not load this history.",
-    HISTORY_SAVE_FAILED: "Could not save these changes.",
+    HISTORY_SAVE_FAILED: "Could not save your change(s).",
     GRAPH_LOAD_FAILED:
         "Could not load the 3D graph. Check the network and reload.",
     GRAPH_DRAW_FAILED:
