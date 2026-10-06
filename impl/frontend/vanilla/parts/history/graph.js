@@ -287,7 +287,7 @@ export function bindHistoryGraph() {
             }
             window.setTimeout(function () {
                 if (hoveredNode) {
-                    openDeed(hoveredNode.data || {});
+                    openDeed(hoveredNode);
                 }
             }, hoverWaitMs);
         });
