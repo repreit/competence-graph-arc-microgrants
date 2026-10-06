@@ -8,7 +8,7 @@ import { loadAccounts, loadHistory } from "./load.js";
 import { discard, pendingOps } from "./write.js";
 
 let accountsEl;
-let activeAccount;
+let selectedAccount;
 let accountsPending = null;
 let deedCreateEl;
 let deedFormEl;
@@ -17,14 +17,14 @@ function showHistory(account) {
     if (!account || !accountsEl) {
         return;
     }
-    activeAccount = account;
+    selectedAccount = account;
     renderAccountSelection();
     renderDeedToolbar();
     if (!account.history && account.address) {
         loadHistory(account.address)
             .then(function (loaded) {
                 account.history = loaded.history;
-                if (account === activeAccount) {
+                if (account === selectedAccount) {
                     renderHistory(nodesWithPending(account));
                 }
             })
@@ -53,7 +53,7 @@ function renderAccountSelection() {
     accountsEl.querySelectorAll("button").forEach(function (button) {
         button.setAttribute(
             "aria-pressed",
-            button.dataset.address === activeAccount?.address
+            button.dataset.address === selectedAccount?.address
                 ? "true"
                 : "false",
         );
@@ -105,7 +105,7 @@ function f001() {
         .then(function (list) {
             showHistory(
                 list.find(function (account) {
-                    return account.address === activeAccount?.address;
+                    return account.address === selectedAccount?.address;
                 }) || list[0],
             );
         })
@@ -120,7 +120,7 @@ function renderDeedToolbar() {
     if (!deedCreateEl) {
         return;
     }
-    deedCreateEl.hidden = !isSessionAccount(activeAccount);
+    deedCreateEl.hidden = !isSessionAccount(selectedAccount);
 }
 
 function toggleDeedForm() {
