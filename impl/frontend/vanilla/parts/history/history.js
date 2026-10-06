@@ -22,7 +22,7 @@ function showHistory(account) {
     }
     selectedAccount = account;
     renderAccountSelection();
-    renderDeedControls();
+    renderMainToolbar();
     if (!account.history && account.address) {
         loadHistory(account.address)
             .then(function (loaded) {
@@ -85,7 +85,7 @@ function renderAccounts(list) {
         accountsEl.appendChild(button);
     });
     renderAccountSelection();
-    renderDeedControls();
+    renderMainToolbar();
 }
 
 function showAccounts() {
@@ -119,7 +119,7 @@ function f001() {
         });
 }
 
-function renderDeedControls() {
+function renderMainToolbar() {
     if (!deedCreateEl || !deedPendingStatusEl) {
         return;
     }
@@ -162,7 +162,7 @@ function createDeed() {
     }
     createNode({ title, link });
     toggleDeedForm();
-    renderDeedControls();
+    renderMainToolbar();
     renderHistory(nodesWithPending(selectedAccount));
 }
 
@@ -187,7 +187,7 @@ export function bindHistory() {
     on("signedIn", f001);
     on("signedOut", function () {
         discard();
-        renderDeedControls();
+        renderMainToolbar();
     });
     f001();
 }
