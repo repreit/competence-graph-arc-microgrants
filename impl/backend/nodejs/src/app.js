@@ -6,7 +6,7 @@ import accounts from "./routes/accounts.js";
 import auth from "./routes/auth.js";
 import bindings from "./routes/bindings.js";
 import deltas from "./routes/deltas.js";
-import publicConfig from "./routes/public-config.js";
+import remoteConfig from "./routes/remote-config.js";
 
 const app = new Hono();
 
@@ -27,7 +27,7 @@ app.use(
     }),
 );
 
-app.route("/public-config", publicConfig);
+app.route("/remote-config", remoteConfig);
 app.route("/auth", auth);
 app.route("/accounts", accounts);
 app.route("/bindings", bindings);
