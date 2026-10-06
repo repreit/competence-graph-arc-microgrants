@@ -43,7 +43,7 @@ function showHistory(account) {
 }
 
 function nodesWithPendingOps(account) {
-    const committed = (account.history && account.history.nodes) || [];
+    const committed = account.history?.nodes || [];
     const ops = getPendingOps();
     if (!isSessionAccount(account) || ops.length === 0) {
         return committed;
