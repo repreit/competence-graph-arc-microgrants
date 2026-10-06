@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { lang } from "../../common/js/lang.js";
 import {
     CARD_HX,
     CARD_HY,
@@ -174,9 +175,7 @@ function ensureHistoryGraph() {
             if (typeof console !== "undefined" && console.error) {
                 console.error(err);
             }
-            showHistoryStatus(
-                "Could not load the 3D graph. Check the network and reload.",
-            );
+            showHistoryStatus(lang.GRAPH_LOAD_FAILED);
             return null;
         });
     return historyGraphPending;
@@ -255,9 +254,7 @@ export function renderHistoryGraph(nodes) {
             scheduleFitHistoryGraph();
         })
         .catch(function () {
-            showHistoryStatus(
-                "Could not draw the graph for this address. Reload to try again.",
-            );
+            showHistoryStatus(lang.GRAPH_DRAW_FAILED);
         });
 }
 

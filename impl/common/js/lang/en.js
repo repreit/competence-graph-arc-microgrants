@@ -1,5 +1,11 @@
 export const en = Object.freeze({
     API_UNREACHABLE: "Could not reach the API.",
+    GRAPH_DRAW_FAILED:
+        "Could not draw the graph for this address. Reload to try again.",
+    GRAPH_LOAD_FAILED:
+        "Could not load the 3D graph. Check the network and reload.",
+    HISTORY_LOAD_FAILED: "Could not load this history.",
+    HISTORY_SAVE_FAILED: "Could not save these changes.",
     HOST_CHAIN_UNUSABLE: "The configured chain is not usable.",
     NO_API_BASE: "No API base. Check the frontend config.",
     NO_PROJECT_ID: "No Reown project id in config.",

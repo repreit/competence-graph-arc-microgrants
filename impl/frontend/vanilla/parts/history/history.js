@@ -1,5 +1,6 @@
 import { applyOps } from "impl/common/js/history.js";
 import { shortAddress } from "../../common/js/a001.js";
+import { lang } from "../../common/js/lang.js";
 import { isSessionAccount } from "../../common/js/session.js";
 import { on } from "../../common/js/store.js";
 import { bindDeed } from "./deed.js";
@@ -116,7 +117,7 @@ function f001() {
             );
         })
         .catch(function () {
-            showHistoryStatus("Could not load this history.");
+            showHistoryStatus(lang.HISTORY_LOAD_FAILED);
         });
 }
 
@@ -174,7 +175,7 @@ function savePendingOps() {
             return refreshHistory(selectedAccount);
         })
         .catch(function () {
-            showHistoryStatus("Could not save these changes.");
+            showHistoryStatus(lang.HISTORY_SAVE_FAILED);
         });
 }
 
@@ -190,7 +191,7 @@ function refreshHistory(account) {
             }
         })
         .catch(function () {
-            showHistoryStatus("Could not load this history.");
+            showHistoryStatus(lang.HISTORY_LOAD_FAILED);
         });
 }
 
