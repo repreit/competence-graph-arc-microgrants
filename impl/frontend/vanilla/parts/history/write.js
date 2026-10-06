@@ -72,14 +72,7 @@ export function discard() {
     pending = [];
 }
 
-export function createNode({ title, link, img, alt, position }) {
-    const data = { title, link };
-    if (img != null) {
-        data.img = img;
-    }
-    if (alt != null) {
-        data.alt = alt;
-    }
+export function createNode({ data, position }) {
     const node = { id: crypto.randomUUID() };
     if (position != null) {
         node.position = position;
