@@ -91,7 +91,7 @@ export function parseDelta(body) {
     if (!isSeq(seq) || !isPrevHash(prev_hash)) {
         return null;
     }
-    return { content, seq, prev_hash, signature: signature ?? null };
+    return { seq, prev_hash, content, signature: signature ?? null };
 }
 
 export async function assertChain(prev, next) {
