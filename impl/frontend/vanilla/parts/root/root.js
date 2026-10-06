@@ -2,7 +2,7 @@ import { bindAuth } from "../auth/auth.js";
 import { bindDifference } from "../difference/difference.js";
 import { bindHistory } from "../history/history.js";
 import { bindFooter } from "../footer/footer.js";
-import { loadPublicConfig } from "../../common/js/public-config.js";
+import { loadRemoteConfig } from "../../common/js/remote-config.js";
 
 function addPartStyles() {
     ["header", "auth", "difference", "history", "footer"].forEach(
@@ -56,7 +56,7 @@ function bindPage() {
     bindFooter();
 }
 
-loadPublicConfig().catch(function () {});
+loadRemoteConfig().catch(function () {});
 
 assemblePage()
     .then(bindPage)
