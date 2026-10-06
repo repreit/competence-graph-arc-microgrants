@@ -30,8 +30,8 @@ export function showHistoryStatus(message) {
     if (!statusEl) {
         return;
     }
-    statusEl.hidden = false;
-    statusEl.textContent = message;
+    statusEl.hidden = !message;
+    statusEl.textContent = message ?? "";
 }
 
 function sizeHistoryGraph() {
