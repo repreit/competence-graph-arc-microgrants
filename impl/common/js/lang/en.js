@@ -1,7 +1,7 @@
 export const en = Object.freeze({
     API_UNREACHABLE: "Could not reach the API.",
     NO_API_BASE: "No API base. Check the frontend config.",
-    NO_PROJECT_ID: "No Reown project id in config.",
+    NO_PROJECT_ID: "No Reown project id. Check the common config.",
     HOST_CHAIN_UNUSABLE: "The configured chain is not usable.",
 
     SIGN_IN: "Sign in",
