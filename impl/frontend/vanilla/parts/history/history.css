@@ -126,7 +126,7 @@
     display: none;
 }
 
-#deed-window .sheet {
+#deed-window .details {
     padding: 1rem 1.15rem 1.25rem;
 }
 
@@ -134,7 +134,7 @@
     margin: 0 0 0.25rem;
 }
 
-#deed-window .sheet p {
+#deed-window .details p {
     margin: 0;
 }
 
