@@ -5,7 +5,7 @@ import { sign } from "../../adapters/key/webcrypto/signer.js";
 import { api } from "../../common/js/api.js";
 import { state } from "../../common/js/store.js";
 
-let pending = [];
+let pendingOps = [];
 
 async function appendHistory(ops) {
     const account = state.account;
@@ -52,24 +52,24 @@ async function appendHistory(ops) {
 }
 
 export async function commit() {
-    if (pending.length === 0) {
+    if (pendingOps.length === 0) {
         return null;
     }
-    const result = await appendHistory(pending);
-    pending = [];
+    const result = await appendHistory(pendingOps);
+    pendingOps = [];
     return result;
 }
 
 export function pendingCount() {
-    return pending.length;
+    return pendingOps.length;
 }
 
 export function getPendingOps() {
-    return pending.slice();
+    return pendingOps.slice();
 }
 
 export function discard() {
-    pending = [];
+    pendingOps = [];
 }
 
 export function createNode({ data, position }) {
@@ -78,7 +78,7 @@ export function createNode({ data, position }) {
         node.position = position;
     }
     node.data = data;
-    pending.push({ op: "node.create", node });
+    pendingOps.push({ op: "node.create", node });
     return node.id;
 }
 
@@ -90,17 +90,17 @@ export function setNode({ id, data, position }) {
     if (data !== undefined) {
         node.data = data;
     }
-    pending.push({ op: "node.set", node });
+    pendingOps.push({ op: "node.set", node });
 }
 
 export function deleteNode(id) {
-    pending.push({ op: "node.delete", id });
+    pendingOps.push({ op: "node.delete", id });
 }
 
 export function addLink(a, b) {
-    pending.push({ op: "link.add", a, b });
+    pendingOps.push({ op: "link.add", a, b });
 }
 
 export function removeLink(a, b) {
-    pending.push({ op: "link.remove", a, b });
+    pendingOps.push({ op: "link.remove", a, b });
 }
