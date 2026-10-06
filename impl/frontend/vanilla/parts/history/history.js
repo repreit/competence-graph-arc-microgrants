@@ -32,7 +32,7 @@ function showHistory(account) {
     renderAccountSelection();
     renderMainToolbar();
     if (!account.history && account.address) {
-        refreshAccountHistory(account);
+        refreshHistory(account);
         return;
     }
     renderHistory(nodesWithPendingOps(account));
@@ -169,14 +169,14 @@ function savePendingOps() {
                 return;
             }
             renderMainToolbar();
-            return refreshAccountHistory(selectedAccount);
+            return refreshHistory(selectedAccount);
         })
         .catch(function () {
             showHistoryError("Could not save these changes.");
         });
 }
 
-function refreshAccountHistory(account) {
+function refreshHistory(account) {
     if (!account || !account.address) {
         return Promise.resolve();
     }
