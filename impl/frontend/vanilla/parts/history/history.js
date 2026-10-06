@@ -5,7 +5,7 @@ import { on } from "../../common/js/store.js";
 import { bindDeed } from "./deed.js";
 import { bindHistoryGraph, renderHistory, showHistoryError } from "./graph.js";
 import { loadAccounts, loadHistory } from "./load.js";
-import { createNode, discard, pendingOps } from "./write.js";
+import { createNode, discard, pendingCount, pendingOps } from "./write.js";
 
 let accountsEl;
 let selectedAccount;
@@ -14,6 +14,7 @@ let deedCreateEl;
 let deedFormEl;
 let deedFormTitleEl;
 let deedFormLinkEl;
+let deedPendingStatusEl;
 
 function showHistory(account) {
     if (!account || !accountsEl) {
@@ -119,13 +120,17 @@ function f001() {
 }
 
 function renderDeedControls() {
-    if (!deedCreateEl) {
+    if (!deedCreateEl || !deedPendingStatusEl) {
         return;
     }
     if (isSessionAccount(selectedAccount)) {
+        const count = pendingCount();
         deedCreateEl.hidden = false;
+        deedPendingStatusEl.hidden = count === 0;
+        deedPendingStatusEl.textContent = `${count} deed(s) not saved`;
     } else {
         deedCreateEl.hidden = true;
+        deedPendingStatusEl.hidden = true;
         closeDeedForm();
     }
 }
@@ -157,6 +162,7 @@ function createDeed() {
     }
     createNode({ title, link });
     toggleDeedForm();
+    renderDeedControls();
     renderHistory(nodesWithPending(selectedAccount));
 }
 
@@ -168,6 +174,7 @@ export function bindHistory() {
     deedFormEl = document.getElementById("deed-form");
     deedFormTitleEl = document.getElementById("deed-form-title");
     deedFormLinkEl = document.getElementById("deed-form-link");
+    deedPendingStatusEl = document.getElementById("deed-pending-status");
     if (deedCreateEl) {
         deedCreateEl.addEventListener("click", toggleDeedForm);
     }
