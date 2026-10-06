@@ -2,12 +2,17 @@ let windowEl;
 let imageEl;
 let titleEl;
 let linkEl;
+let deleteEl;
+
+let openedNode = null;
+let deleteHandler = null;
 
 export function bindDeed() {
     windowEl = document.getElementById("deed-window");
     imageEl = document.getElementById("deed-image");
     titleEl = document.getElementById("deed-title");
     linkEl = document.getElementById("deed-link");
+    deleteEl = document.getElementById("deed-delete");
     if (!windowEl) {
         return;
     }
@@ -22,12 +27,28 @@ export function bindDeed() {
             windowEl.close();
         }
     });
-    windowEl.addEventListener("close", unlockScroll);
+    windowEl.addEventListener("close", function () {
+        unlockScroll();
+        openedNode = null;
+        deleteHandler = null;
+    });
+    if (deleteEl) {
+        deleteEl.addEventListener("click", function () {
+            if (deleteHandler && openedNode) {
+                deleteHandler(openedNode);
+            }
+        });
+    }
 }
 
-export function openDeed(node) {
+export function openDeed(node, { onDelete } = {}) {
     if (!windowEl || windowEl.open) {
         return;
+    }
+    openedNode = node;
+    deleteHandler = onDelete || null;
+    if (deleteEl) {
+        deleteEl.hidden = !deleteHandler;
     }
     const data = node?.data ?? {};
     titleEl.textContent = data.title || "";
