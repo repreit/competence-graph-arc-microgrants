@@ -20,6 +20,7 @@ let deedFormEl;
 let deedFormTitleEl;
 let deedFormLinkEl;
 let pendingOpsStatusEl;
+let pendingOpsDiscardEl;
 
 function showHistory(account) {
     if (!account || !accountsEl) {
@@ -125,16 +126,18 @@ function f001() {
 }
 
 function renderMainToolbar() {
-    if (!deedCreateEl || !pendingOpsStatusEl) {
+    if (!deedCreateEl || !pendingOpsStatusEl || !pendingOpsDiscardEl) {
         return;
     }
     if (isSessionAccount(selectedAccount)) {
         const count = pendingOpsCount();
         deedCreateEl.hidden = false;
+        pendingOpsDiscardEl.hidden = count === 0;
         pendingOpsStatusEl.hidden = count === 0;
         pendingOpsStatusEl.textContent = `${count} change(s) not saved`;
     } else {
         deedCreateEl.hidden = true;
+        pendingOpsDiscardEl.hidden = true;
         pendingOpsStatusEl.hidden = true;
         closeDeedForm();
     }
@@ -159,6 +162,12 @@ function closeDeedForm() {
     deedFormEl.reset();
 }
 
+function discardPendingOps() {
+    discard();
+    renderMainToolbar();
+    renderHistory(nodesWithPendingOps(selectedAccount));
+}
+
 function createDeed() {
     const title = deedFormTitleEl.value.trim();
     const link = deedFormLinkEl.value.trim();
@@ -180,6 +189,10 @@ export function bindHistory() {
     deedFormTitleEl = document.getElementById("deed-form-title");
     deedFormLinkEl = document.getElementById("deed-form-link");
     pendingOpsStatusEl = document.getElementById("pending-ops-status");
+    pendingOpsDiscardEl = document.getElementById("pending-ops-discard");
+    if (pendingOpsDiscardEl) {
+        pendingOpsDiscardEl.addEventListener("click", discardPendingOps);
+    }
     if (deedCreateEl) {
         deedCreateEl.addEventListener("click", toggleDeedForm);
     }
