@@ -19,7 +19,7 @@ function showHistory(account) {
     }
     selectedAccount = account;
     renderAccountSelection();
-    renderDeedToolbar();
+    renderDeedControls();
     if (!account.history && account.address) {
         loadHistory(account.address)
             .then(function (loaded) {
@@ -82,7 +82,7 @@ function renderAccounts(list) {
         accountsEl.appendChild(button);
     });
     renderAccountSelection();
-    renderDeedToolbar();
+    renderDeedControls();
 }
 
 function showAccounts() {
@@ -116,7 +116,7 @@ function f001() {
         });
 }
 
-function renderDeedToolbar() {
+function renderDeedControls() {
     if (!deedCreateEl) {
         return;
     }
@@ -164,7 +164,7 @@ export function bindHistory() {
     on("signedIn", f001);
     on("signedOut", function () {
         discard();
-        renderDeedToolbar();
+        renderDeedControls();
     });
     f001();
 }
