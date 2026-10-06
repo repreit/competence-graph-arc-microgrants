@@ -11,6 +11,7 @@ let accountsEl;
 let activeAccount;
 let accountsPending = null;
 let deedCreateEl;
+let deedFormEl;
 
 function showHistory(account) {
     if (!account || !accountsEl) {
@@ -122,11 +123,30 @@ function renderDeedToolbar() {
     deedCreateEl.hidden = !isSessionAccount(activeAccount);
 }
 
+function toggleDeedForm() {
+    if (!deedFormEl) {
+        return;
+    }
+    deedFormEl.hidden = !deedFormEl.hidden;
+    if (deedFormEl.hidden) {
+        deedFormEl.reset();
+    }
+}
+
 export function bindHistory() {
     bindDeed();
     bindHistoryGraph();
     accountsEl = document.getElementById("accounts");
     deedCreateEl = document.getElementById("deed-create");
+    deedFormEl = document.getElementById("deed-form");
+    if (deedCreateEl) {
+        deedCreateEl.addEventListener("click", toggleDeedForm);
+    }
+    if (deedFormEl) {
+        deedFormEl.addEventListener("submit", function (event) {
+            event.preventDefault();
+        });
+    }
     on("signedIn", f001);
     on("signedOut", function () {
         discard();
