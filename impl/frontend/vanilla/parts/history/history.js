@@ -6,6 +6,7 @@ import { bindDeed } from "./deed.js";
 import { bindHistoryGraph, renderHistory, showHistoryError } from "./graph.js";
 import { loadAccounts, loadHistory } from "./load.js";
 import {
+    commit,
     createNode,
     discard,
     getPendingOps,
@@ -21,6 +22,7 @@ let deedFormTitleEl;
 let deedFormLinkEl;
 let pendingOpsStatusEl;
 let pendingOpsDiscardEl;
+let pendingOpsSaveEl;
 
 function showHistory(account) {
     if (!account || !accountsEl) {
@@ -126,17 +128,24 @@ function f001() {
 }
 
 function renderMainToolbar() {
-    if (!deedCreateEl || !pendingOpsStatusEl || !pendingOpsDiscardEl) {
+    if (
+        !deedCreateEl ||
+        !pendingOpsStatusEl ||
+        !pendingOpsSaveEl ||
+        !pendingOpsDiscardEl
+    ) {
         return;
     }
     if (isSessionAccount(selectedAccount)) {
         const count = pendingOpsCount();
         deedCreateEl.hidden = false;
+        pendingOpsSaveEl.hidden = count === 0;
         pendingOpsDiscardEl.hidden = count === 0;
         pendingOpsStatusEl.hidden = count === 0;
         pendingOpsStatusEl.textContent = `${count} change(s) not saved`;
     } else {
         deedCreateEl.hidden = true;
+        pendingOpsSaveEl.hidden = true;
         pendingOpsDiscardEl.hidden = true;
         pendingOpsStatusEl.hidden = true;
         closeDeedForm();
@@ -160,6 +169,36 @@ function closeDeedForm() {
     }
     deedFormEl.hidden = true;
     deedFormEl.reset();
+}
+
+function savePendingOps() {
+    commit()
+        .then(function (appended) {
+            if (!appended) {
+                return;
+            }
+            renderMainToolbar();
+            return refreshAccountHistory(selectedAccount);
+        })
+        .catch(function () {
+            showHistoryError("Could not save these changes.");
+        });
+}
+
+function refreshAccountHistory(account) {
+    if (!account || !account.address) {
+        return Promise.resolve();
+    }
+    return loadHistory(account.address)
+        .then(function (loaded) {
+            account.history = loaded.history;
+            if (account === selectedAccount) {
+                renderHistory(nodesWithPendingOps(account));
+            }
+        })
+        .catch(function () {
+            showHistoryError("Could not load this history.");
+        });
 }
 
 function discardPendingOps() {
@@ -189,6 +228,10 @@ export function bindHistory() {
     deedFormTitleEl = document.getElementById("deed-form-title");
     deedFormLinkEl = document.getElementById("deed-form-link");
     pendingOpsStatusEl = document.getElementById("pending-ops-status");
+    pendingOpsSaveEl = document.getElementById("pending-ops-save");
+    if (pendingOpsSaveEl) {
+        pendingOpsSaveEl.addEventListener("click", savePendingOps);
+    }
     pendingOpsDiscardEl = document.getElementById("pending-ops-discard");
     if (pendingOpsDiscardEl) {
         pendingOpsDiscardEl.addEventListener("click", discardPendingOps);
