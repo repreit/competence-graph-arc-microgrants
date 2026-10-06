@@ -171,6 +171,7 @@ function savePendingOps() {
             if (!appended) {
                 return;
             }
+            showHistoryStatus("");
             renderMainToolbar();
             return refreshHistory(selectedAccount);
         })
@@ -187,6 +188,7 @@ function refreshHistory(account) {
         .then(function (loaded) {
             account.history = loaded.history;
             if (account === selectedAccount) {
+                showHistoryStatus("");
                 renderHistoryGraph(nodesWithPendingOps(account));
             }
         })
