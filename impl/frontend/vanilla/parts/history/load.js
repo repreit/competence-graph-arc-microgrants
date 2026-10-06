@@ -12,8 +12,11 @@ export async function loadHistory(address) {
         { auth: false },
     );
     const folded = await foldHistory(data.deltas);
+    if (!folded.ok) {
+        throw new Error("fold");
+    }
     return {
         address: data.address,
-        history: folded.ok ? folded.history : { nodes: [] },
+        history: folded.history,
     };
 }
