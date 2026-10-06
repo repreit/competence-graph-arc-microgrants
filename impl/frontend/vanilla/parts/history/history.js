@@ -122,17 +122,15 @@ function renderDeedToolbar() {
     deedCreateEl.hidden = !isSessionAccount(activeAccount);
 }
 
-function signOutHistory() {
-    discard();
-    renderDeedToolbar();
-}
-
 export function bindHistory() {
     bindDeed();
     bindHistoryGraph();
     accountsEl = document.getElementById("accounts");
     deedCreateEl = document.getElementById("deed-create");
     on("signedIn", f001);
-    on("signedOut", signOutHistory);
+    on("signedOut", function () {
+        discard();
+        renderDeedToolbar();
+    });
     f001();
 }
