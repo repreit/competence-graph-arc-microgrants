@@ -84,11 +84,11 @@ export function createNode({ data, position }) {
 
 export function setNode({ id, data, position }) {
     const node = { id };
-    if (data !== undefined) {
-        node.data = data;
-    }
     if (position !== undefined) {
         node.position = position;
+    }
+    if (data !== undefined) {
+        node.data = data;
     }
     pending.push({ op: "node.set", node });
 }
