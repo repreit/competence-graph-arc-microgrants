@@ -103,8 +103,8 @@ export function unbindContent(bindingId, publicKey, attestation) {
     }
     return JSON.stringify({
         type: "unbind",
-        bindingId,
         publicKey: key,
+        bindingId,
         attestation: requireAttestation(attestation),
     });
 }
