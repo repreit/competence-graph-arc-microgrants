@@ -132,7 +132,7 @@ function renderMainToolbar() {
         const count = pendingOpsCount();
         deedCreateEl.hidden = false;
         pendingOpsStatusEl.hidden = count === 0;
-        pendingOpsStatusEl.textContent = `${count} deed(s) not saved`;
+        pendingOpsStatusEl.textContent = `${count} change(s) not saved`;
     } else {
         deedCreateEl.hidden = true;
         pendingOpsStatusEl.hidden = true;
