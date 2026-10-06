@@ -32,16 +32,7 @@ function showHistory(account) {
     renderAccountSelection();
     renderMainToolbar();
     if (!account.history && account.address) {
-        loadHistory(account.address)
-            .then(function (loaded) {
-                account.history = loaded.history;
-                if (account === selectedAccount) {
-                    renderHistory(nodesWithPendingOps(account));
-                }
-            })
-            .catch(function () {
-                showHistoryError("Could not load this history.");
-            });
+        refreshAccountHistory(account);
         return;
     }
     renderHistory(nodesWithPendingOps(account));
