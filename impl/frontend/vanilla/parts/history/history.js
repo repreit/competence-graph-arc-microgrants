@@ -33,7 +33,7 @@ function showHistory(account) {
             .then(function (loaded) {
                 account.history = loaded.history;
                 if (account === selectedAccount) {
-                    renderHistory(nodesWithPending(account));
+                    renderHistory(nodesWithPendingOps(account));
                 }
             })
             .catch(function () {
@@ -41,10 +41,10 @@ function showHistory(account) {
             });
         return;
     }
-    renderHistory(nodesWithPending(account));
+    renderHistory(nodesWithPendingOps(account));
 }
 
-function nodesWithPending(account) {
+function nodesWithPendingOps(account) {
     const committed = (account.history && account.history.nodes) || [];
     const ops = getPendingOps();
     if (!isSessionAccount(account) || ops.length === 0) {
@@ -168,7 +168,7 @@ function createDeed() {
     createNode({ data: { title, link } });
     toggleDeedForm();
     renderMainToolbar();
-    renderHistory(nodesWithPending(selectedAccount));
+    renderHistory(nodesWithPendingOps(selectedAccount));
 }
 
 export function bindHistory() {
