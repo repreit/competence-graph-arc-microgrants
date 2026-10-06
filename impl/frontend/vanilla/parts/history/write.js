@@ -64,7 +64,7 @@ export function pendingCount() {
     return pending.length;
 }
 
-export function pendingOps() {
+export function getPendingOps() {
     return pending.slice();
 }
 

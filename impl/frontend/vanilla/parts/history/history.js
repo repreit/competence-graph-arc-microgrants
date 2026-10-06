@@ -5,7 +5,7 @@ import { on } from "../../common/js/store.js";
 import { bindDeed } from "./deed.js";
 import { bindHistoryGraph, renderHistory, showHistoryError } from "./graph.js";
 import { loadAccounts, loadHistory } from "./load.js";
-import { createNode, discard, pendingCount, pendingOps } from "./write.js";
+import { createNode, discard, getPendingOps, pendingCount } from "./write.js";
 
 let accountsEl;
 let selectedAccount;
@@ -41,7 +41,7 @@ function showHistory(account) {
 
 function nodesWithPending(account) {
     const committed = (account.history && account.history.nodes) || [];
-    const ops = pendingOps();
+    const ops = getPendingOps();
     if (!isSessionAccount(account) || ops.length === 0) {
         return committed;
     }
