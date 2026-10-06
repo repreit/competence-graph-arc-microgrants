@@ -152,6 +152,7 @@ function toggleDeedForm() {
     }
     if (deedFormEl.hidden) {
         deedFormEl.hidden = false;
+        deedFormTitleEl?.focus();
     } else {
         closeDeedForm();
     }
