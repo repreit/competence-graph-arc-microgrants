@@ -234,7 +234,7 @@ function graphDataFromNodes(sourceNodes) {
     return { nodes, links };
 }
 
-export function renderHistory(nodes) {
+export function renderHistoryGraph(nodes) {
     if (!viewportEl) {
         return;
     }

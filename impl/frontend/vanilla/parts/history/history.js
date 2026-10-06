@@ -3,7 +3,11 @@ import { shortAddress } from "../../common/js/a001.js";
 import { isSessionAccount } from "../../common/js/session.js";
 import { on } from "../../common/js/store.js";
 import { bindDeed } from "./deed.js";
-import { bindHistoryGraph, renderHistory, showHistoryError } from "./graph.js";
+import {
+    bindHistoryGraph,
+    renderHistoryGraph,
+    showHistoryError,
+} from "./graph.js";
 import { loadAccounts, loadHistory } from "./load.js";
 import {
     commit,
@@ -35,7 +39,7 @@ function showHistory(account) {
         refreshHistory(account);
         return;
     }
-    renderHistory(nodesWithPendingOps(account));
+    renderHistoryGraph(nodesWithPendingOps(account));
 }
 
 function nodesWithPendingOps(account) {
@@ -184,7 +188,7 @@ function refreshHistory(account) {
         .then(function (loaded) {
             account.history = loaded.history;
             if (account === selectedAccount) {
-                renderHistory(nodesWithPendingOps(account));
+                renderHistoryGraph(nodesWithPendingOps(account));
             }
         })
         .catch(function () {
@@ -195,7 +199,7 @@ function refreshHistory(account) {
 function discardPendingOps() {
     discard();
     renderMainToolbar();
-    renderHistory(nodesWithPendingOps(selectedAccount));
+    renderHistoryGraph(nodesWithPendingOps(selectedAccount));
 }
 
 function createDeed() {
@@ -207,7 +211,7 @@ function createDeed() {
     createNode({ data: { title, link } });
     toggleDeedForm();
     renderMainToolbar();
-    renderHistory(nodesWithPendingOps(selectedAccount));
+    renderHistoryGraph(nodesWithPendingOps(selectedAccount));
 }
 
 export function bindHistory() {
