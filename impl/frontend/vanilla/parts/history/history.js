@@ -116,9 +116,7 @@ function f001() {
             );
         })
         .catch(function () {
-            showHistoryStatus(
-                "Could not load this history. Serve this folder with a local server, or open the hosted version.",
-            );
+            showHistoryStatus("Could not load this history.");
         });
 }
 
