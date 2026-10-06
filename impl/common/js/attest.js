@@ -141,8 +141,8 @@ export function parseUnbindContent(content) {
         return null;
     }
     return {
-        bindingId: parsed.bindingId,
         publicKey: pair.publicKey,
+        bindingId: parsed.bindingId,
         attestation: pair.attestation,
     };
 }
