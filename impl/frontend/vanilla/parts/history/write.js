@@ -60,7 +60,7 @@ export async function commit() {
     return result;
 }
 
-export function pendingCount() {
+export function pendingOpsCount() {
     return pendingOps.length;
 }
 
