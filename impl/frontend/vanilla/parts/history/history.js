@@ -160,7 +160,7 @@ function createDeed() {
     if (!title || !link) {
         return;
     }
-    createNode({ title, link });
+    createNode({ data: { title, link } });
     toggleDeedForm();
     renderMainToolbar();
     renderHistory(nodesWithPending(selectedAccount));
