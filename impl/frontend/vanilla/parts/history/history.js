@@ -25,8 +25,8 @@ let deedFormEl;
 let deedFormTitleEl;
 let deedFormLinkEl;
 let pendingOpsStatusEl;
-let pendingOpsDiscardEl;
 let pendingOpsSaveEl;
+let pendingOpsDiscardEl;
 
 function showHistory(account) {
     if (!account || !accountsEl) {
