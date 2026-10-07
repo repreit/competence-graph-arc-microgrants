@@ -24,7 +24,7 @@ let hoveredNodeId = "";
 let hoveredNode = null;
 
 let fitTimer = 0;
-const FIT_PULL = 0.72;
+const FIT_PULL = 1;
 
 export function showHistoryStatus(message) {
     if (!statusEl) {
