@@ -23,6 +23,10 @@
     cursor: default;
 }
 
+.auth button:hover:not(:disabled) {
+    border-color: var(--ink);
+}
+
 #account-address {
     font-size: 0.85rem;
     font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
