@@ -36,6 +36,10 @@
     background: color-mix(in srgb, var(--ink) 12%, var(--surface));
 }
 
+.chips button:hover {
+    border-color: var(--ink);
+}
+
 .chips button:focus-visible {
     outline: 2px solid var(--ink);
     outline-offset: 2px;
