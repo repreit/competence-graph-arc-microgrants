@@ -173,3 +173,7 @@
     color: var(--ink);
     cursor: pointer;
 }
+
+#deed-window .inner button:hover {
+    border-color: var(--ink);
+}
