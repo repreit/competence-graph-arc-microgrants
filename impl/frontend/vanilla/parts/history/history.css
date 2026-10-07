@@ -206,3 +206,28 @@
     color: var(--muted);
     font-size: 0.85rem;
 }
+
+.deed-form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+}
+
+.deed-form[hidden] {
+    display: none;
+}
+
+.deed-form button {
+    padding: 0.35rem 0.8rem;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: transparent;
+    color: var(--ink);
+    cursor: pointer;
+}
+
+.deed-form button:hover {
+    border-color: var(--ink);
+}
