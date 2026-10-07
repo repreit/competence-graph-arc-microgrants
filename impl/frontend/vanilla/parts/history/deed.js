@@ -33,6 +33,14 @@ export function bindDeed() {
         unlockScroll();
         openedNode = null;
     });
+    if (deleteEl) {
+        deleteEl.addEventListener("click", function () {
+            if (openedNode) {
+                deleteDeed(openedNode);
+                windowEl.close();
+            }
+        });
+    }
 }
 
 export function openDeed(node) {
