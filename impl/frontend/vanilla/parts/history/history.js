@@ -13,6 +13,7 @@ import { loadAccounts, loadHistory } from "./load.js";
 import {
     commit,
     createNode,
+    deleteNode,
     discard,
     getPendingOps,
     pendingOpsCount,
