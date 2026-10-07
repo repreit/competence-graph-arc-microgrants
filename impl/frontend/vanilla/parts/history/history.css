@@ -158,3 +158,13 @@
     font-size: 1.1rem;
     cursor: pointer;
 }
+
+#deed-window .inner button {
+    margin-top: 0.75rem;
+    padding: 0.35rem 0.8rem;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: transparent;
+    color: var(--ink);
+    cursor: pointer;
+}
