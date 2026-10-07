@@ -155,7 +155,7 @@ function wrapTitle(ctx, text, maxWidth) {
     if (line) {
         lines.push(line);
     }
-    return lines.slice(0, 3);
+    return lines.slice(0, 2);
 }
 
 function paintCover(ctx, image, x, y, w, h) {
