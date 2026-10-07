@@ -48,6 +48,9 @@ export function openDeed(node) {
         return;
     }
     openedNode = node;
+    if (deleteEl) {
+        deleteEl.hidden = !isSessionAccount(selectedAccount);
+    }
     const data = node?.data ?? {};
     titleEl.textContent = data.title || "";
     if (data.link) {
