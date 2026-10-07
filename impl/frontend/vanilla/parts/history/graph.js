@@ -148,7 +148,7 @@ function createHistoryGraph(ForceGraph3D) {
         });
     const charge = historyGraph.d3Force("charge");
     if (charge) {
-        charge.strength(-5);
+        charge.strength(-3);
     }
     bindHistoryControls(historyGraph);
     paintHistoryGraph(historyGraph);
