@@ -146,6 +146,10 @@ function createHistoryGraph(ForceGraph3D) {
         .onNodeHover(function (node) {
             setNodeHovered(node);
         });
+    const charge = historyGraph.d3Force("charge");
+    if (charge) {
+        charge.strength(-5);
+    }
     bindHistoryControls(historyGraph);
     paintHistoryGraph(historyGraph);
     sizeHistoryGraph();
