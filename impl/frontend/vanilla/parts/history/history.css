@@ -159,6 +159,11 @@
     cursor: pointer;
 }
 
+#deed-window .buttons {
+    display: flex;
+    justify-content: flex-end;
+}
+
 #deed-window .inner button {
     margin-top: 0.75rem;
     padding: 0.35rem 0.8rem;
