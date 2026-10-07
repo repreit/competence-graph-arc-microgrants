@@ -43,6 +43,18 @@ export function bindDeed() {
     }
 }
 
+function safeLink(value) {
+    if (typeof value !== "string") {
+        return "";
+    }
+    try {
+        const url = new URL(value);
+        return ["http:", "https:"].includes(url.protocol) ? url.href : "";
+    } catch {
+        return "";
+    }
+}
+
 export function openDeed(node) {
     if (!windowEl || windowEl.open) {
         return;
@@ -53,9 +65,10 @@ export function openDeed(node) {
     }
     const data = node?.data ?? {};
     titleEl.textContent = data.title || "";
-    if (data.link) {
+    const href = safeLink(data.link);
+    if (href) {
         linkEl.hidden = false;
-        linkEl.href = data.link;
+        linkEl.href = href;
         linkEl.textContent = data.link;
     } else {
         linkEl.hidden = true;
