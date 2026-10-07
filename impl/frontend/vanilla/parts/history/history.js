@@ -216,6 +216,7 @@ function createDeed() {
     }
     createNode({ data: { title, link } });
     toggleDeedForm();
+    showHistoryStatus("");
     renderMainToolbar();
     renderHistoryGraph(nodesWithPendingOps(selectedAccount));
 }
@@ -225,6 +226,7 @@ export function deleteDeed(node) {
         return;
     }
     deleteNode(node.id);
+    showHistoryStatus("");
     renderMainToolbar();
     renderHistoryGraph(nodesWithPendingOps(selectedAccount));
 }
