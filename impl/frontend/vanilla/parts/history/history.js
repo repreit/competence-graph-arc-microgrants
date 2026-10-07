@@ -19,7 +19,7 @@ import {
 } from "./write.js";
 
 let accountsEl;
-let selectedAccount;
+export let selectedAccount;
 let accountsPending = null;
 let deedCreateEl;
 let deedFormEl;
