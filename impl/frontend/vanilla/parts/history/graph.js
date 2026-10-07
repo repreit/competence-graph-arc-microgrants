@@ -1,6 +1,11 @@
 import * as THREE from "three";
 import { lang } from "../../common/js/lang.js";
-import { invalidateCardPaint, makeCardObject } from "./cards.js";
+import {
+    CARD_HX,
+    CARD_HY,
+    invalidateCardPaint,
+    makeCardObject,
+} from "./cards.js";
 import { clipLinkToCards, makeLinkObject } from "./links.js";
 import { openDeed } from "./deed.js";
 import {
@@ -17,6 +22,9 @@ let historyGraphPending = null;
 let graphRequest = 0;
 let hoveredNodeId = "";
 let hoveredNode = null;
+
+let fitTimer = 0;
+const FIT_PULL = 1;
 
 export function showHistoryStatus(message) {
     if (!statusEl) {
@@ -43,21 +51,44 @@ function fitHistoryGraph() {
         return;
     }
     const camera = historyGraph.camera();
-    if (!camera) {
-        return;
-    }
-    if (camera.up) {
+    if (camera && camera.up) {
         camera.up.set(0, 1, 0);
     }
-    const bbox = historyGraph.getGraphBbox();
-    const cx = bbox ? (bbox.x[0] + bbox.x[1]) / 2 : 0;
-    const cy = bbox ? (bbox.y[0] + bbox.y[1]) / 2 : 0;
+    const nodes = historyGraph.graphData().nodes || [];
+    let x0 = Infinity;
+    let x1 = -Infinity;
+    let y0 = Infinity;
+    let y1 = -Infinity;
+    nodes.forEach(function (node) {
+        const x = isFinite(node.fx) ? node.fx : node.x || 0;
+        const y = isFinite(node.fy) ? node.fy : node.y || 0;
+        x0 = Math.min(x0, x - CARD_HX);
+        x1 = Math.max(x1, x + CARD_HX);
+        y0 = Math.min(y0, y - CARD_HY);
+        y1 = Math.max(y1, y + CARD_HY);
+    });
+    if (!camera || !isFinite(x0) || !isFinite(y0)) {
+        return;
+    }
+    const height = Math.max(historyGraph.height() || 1, 1);
+    const paddedFov = (1 - 32 / height) * camera.fov;
+    const maxBoxSide = Math.max(x1 - x0, y1 - y0);
+    const distance =
+        (maxBoxSide / Math.atan((paddedFov * Math.PI) / 180)) *
+        Math.max(1, 1 / camera.aspect) *
+        FIT_PULL;
+    const cx = (x0 + x1) / 2;
+    const cy = (y0 + y1) / 2;
     historyGraph.cameraPosition(
-        { x: cx, y: cy, z: camera.position.z },
+        { x: cx, y: cy, z: distance },
         { x: cx, y: cy, z: 0 },
-        0,
+        400,
     );
-    historyGraph.zoomToFit(400, 40);
+}
+
+function scheduleFitHistoryGraph() {
+    window.clearTimeout(fitTimer);
+    fitTimer = window.setTimeout(fitHistoryGraph, 300);
 }
 
 function setNodeHovered(node) {
@@ -114,9 +145,6 @@ function createHistoryGraph(ForceGraph3D) {
         })
         .onNodeHover(function (node) {
             setNodeHovered(node);
-        })
-        .onEngineStop(function () {
-            fitHistoryGraph();
         });
     const charge = historyGraph.d3Force("charge");
     if (charge) {
@@ -227,7 +255,7 @@ export function renderHistoryGraph(nodes) {
             disposeGraphGpu(graph);
             graph.graphData(graphDataFromNodes(nodes));
             sizeHistoryGraph();
-            fitHistoryGraph();
+            scheduleFitHistoryGraph();
         })
         .catch(function () {
             showHistoryStatus(lang.GRAPH_DRAW_FAILED);
