@@ -182,6 +182,13 @@
     border-color: var(--ink);
 }
 
+.main-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+}
+
 .main-toolbar button {
     padding: 0.35rem 0.8rem;
     border: 1px solid var(--line);
