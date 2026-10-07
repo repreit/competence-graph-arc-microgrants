@@ -66,14 +66,13 @@ export function openDeed(node) {
     const data = node?.data ?? {};
     titleEl.textContent = data.title || "";
     const href = safeUrl(data.link);
+    const linkText = typeof data.link === "string" ? data.link : "";
+    linkEl.hidden = !linkText;
+    linkEl.textContent = linkText;
     if (href) {
-        linkEl.hidden = false;
         linkEl.href = href;
-        linkEl.textContent = data.link;
     } else {
-        linkEl.hidden = true;
         linkEl.removeAttribute("href");
-        linkEl.textContent = "";
     }
     const src = safeUrl(data.img);
     imageEl.hidden = !src;
