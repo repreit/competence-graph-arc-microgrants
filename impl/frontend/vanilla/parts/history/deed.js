@@ -43,7 +43,7 @@ export function bindDeed() {
     }
 }
 
-function safeHref(value) {
+function safeUrl(value) {
     if (typeof value !== "string") {
         return "";
     }
@@ -65,7 +65,7 @@ export function openDeed(node) {
     }
     const data = node?.data ?? {};
     titleEl.textContent = data.title || "";
-    const href = safeHref(data.link);
+    const href = safeUrl(data.link);
     if (href) {
         linkEl.hidden = false;
         linkEl.href = href;
@@ -75,9 +75,10 @@ export function openDeed(node) {
         linkEl.removeAttribute("href");
         linkEl.textContent = "";
     }
-    imageEl.hidden = !data.img;
-    if (data.img) {
-        imageEl.src = data.img;
+    const src = safeUrl(data.img);
+    imageEl.hidden = !src;
+    if (src) {
+        imageEl.src = src;
         imageEl.alt = data.alt || "";
     } else {
         imageEl.removeAttribute("src");
