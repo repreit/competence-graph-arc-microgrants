@@ -201,3 +201,8 @@
 .main-toolbar button:hover {
     border-color: var(--ink);
 }
+
+.pending-ops-status {
+    color: var(--muted);
+    font-size: 0.85rem;
+}
