@@ -206,6 +206,9 @@ function discardPendingOps() {
 }
 
 function createDeed() {
+    if (!isSessionAccount(selectedAccount)) {
+        return;
+    }
     const title = deedFormTitleEl.value.trim();
     const link = deedFormLinkEl.value.trim();
     if (!title || !link) {
