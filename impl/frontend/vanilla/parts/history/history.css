@@ -219,6 +219,14 @@
     display: none;
 }
 
+.deed-form input {
+    padding: 0.35rem 0.6rem;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: var(--card);
+    color: var(--ink);
+}
+
 .deed-form button {
     padding: 0.35rem 0.8rem;
     border: 1px solid var(--line);
