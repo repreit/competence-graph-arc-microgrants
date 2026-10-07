@@ -1,3 +1,6 @@
+import { isSessionAccount } from "../../common/js/session.js";
+import { deleteDeed, selectedAccount } from "./history.js";
+
 let windowEl;
 let imageEl;
 let titleEl;
