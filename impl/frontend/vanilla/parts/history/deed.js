@@ -5,7 +5,6 @@ let linkEl;
 let deleteEl;
 
 let openedNode = null;
-let deleteHandler = null;
 
 export function bindDeed() {
     windowEl = document.getElementById("deed-window");
@@ -30,15 +29,7 @@ export function bindDeed() {
     windowEl.addEventListener("close", function () {
         unlockScroll();
         openedNode = null;
-        deleteHandler = null;
     });
-    if (deleteEl) {
-        deleteEl.addEventListener("click", function () {
-            if (deleteHandler && openedNode) {
-                deleteHandler(openedNode);
-            }
-        });
-    }
 }
 
 export function openDeed(node) {
@@ -46,9 +37,6 @@ export function openDeed(node) {
         return;
     }
     openedNode = node;
-    if (deleteEl) {
-        deleteEl.hidden = !deleteHandler;
-    }
     const data = node?.data ?? {};
     titleEl.textContent = data.title || "";
     if (data.link) {
