@@ -181,3 +181,16 @@
 #deed-window .inner button:hover {
     border-color: var(--ink);
 }
+
+.main-toolbar button {
+    padding: 0.35rem 0.8rem;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: transparent;
+    color: var(--ink);
+    cursor: pointer;
+}
+
+.main-toolbar button:hover {
+    border-color: var(--ink);
+}
