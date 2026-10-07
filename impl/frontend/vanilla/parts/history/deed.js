@@ -43,7 +43,7 @@ export function bindDeed() {
     }
 }
 
-function safeLink(value) {
+function safeHref(value) {
     if (typeof value !== "string") {
         return "";
     }
@@ -65,7 +65,7 @@ export function openDeed(node) {
     }
     const data = node?.data ?? {};
     titleEl.textContent = data.title || "";
-    const href = safeLink(data.link);
+    const href = safeHref(data.link);
     if (href) {
         linkEl.hidden = false;
         linkEl.href = href;
