@@ -217,6 +217,15 @@ function createDeed() {
     renderHistoryGraph(nodesWithPendingOps(selectedAccount));
 }
 
+export function deleteDeed(node) {
+    if (!node || !isSessionAccount(selectedAccount)) {
+        return;
+    }
+    deleteNode(node.id);
+    renderMainToolbar();
+    renderHistoryGraph(nodesWithPendingOps(selectedAccount));
+}
+
 export function bindHistory() {
     bindDeed();
     bindHistoryGraph();
