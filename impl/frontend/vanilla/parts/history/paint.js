@@ -6,7 +6,7 @@ export function historyTheme() {
         bg: styles.getPropertyValue("--bg").trim(),
         ink: styles.getPropertyValue("--ink").trim(),
         line: styles.getPropertyValue("--line").trim(),
-        card: styles.getPropertyValue("--surface").trim(),
+        surface: styles.getPropertyValue("--surface").trim(),
     };
 }
 
@@ -47,7 +47,7 @@ function paintCardMesh(mesh, theme) {
     const mats = mesh.material;
     if (Array.isArray(mats) && mats.length >= 6) {
         mats[0].color.copy(cssColor(card.hovered ? theme.ink : theme.line));
-        mats[5].color.copy(cssColor(theme.card));
+        mats[5].color.copy(cssColor(theme.surface));
     }
 }
 
@@ -179,7 +179,7 @@ export function paintCardTexture(ctx, canvas, data, theme, image, hovered) {
     const w = canvas.width;
     const titleH = 96;
     const imgH = canvas.height - titleH;
-    ctx.fillStyle = theme.card;
+    ctx.fillStyle = theme.surface;
     ctx.fillRect(0, 0, w, canvas.height);
     if (image && image.width) {
         paintCover(ctx, image, 0, 0, w, imgH);

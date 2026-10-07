@@ -51,7 +51,7 @@ export function makeCardObject(node, hoveredNodeId) {
     );
     const back = new THREE.MeshBasicMaterial(
         Object.assign(
-            { color: cssColor(theme.card), transparent: false, opacity: 1 },
+            { color: cssColor(theme.surface), transparent: false, opacity: 1 },
             CARD_DEPTH,
         ),
     );
