@@ -159,6 +159,10 @@
     cursor: pointer;
 }
 
+#deed-window .close:hover {
+    border-color: var(--ink);
+}
+
 #deed-window .buttons {
     display: flex;
     justify-content: flex-end;
