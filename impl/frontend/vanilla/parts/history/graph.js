@@ -18,8 +18,6 @@ let graphRequest = 0;
 let hoveredNodeId = "";
 let hoveredNode = null;
 
-let fitTimer = 0;
-
 export function showHistoryStatus(message) {
     if (!statusEl) {
         return;
@@ -60,11 +58,6 @@ function fitHistoryGraph() {
         0,
     );
     historyGraph.zoomToFit(400, 40);
-}
-
-function scheduleFitHistoryGraph() {
-    window.clearTimeout(fitTimer);
-    fitTimer = window.setTimeout(fitHistoryGraph, 300);
 }
 
 function setNodeHovered(node) {
@@ -234,7 +227,7 @@ export function renderHistoryGraph(nodes) {
             disposeGraphGpu(graph);
             graph.graphData(graphDataFromNodes(nodes));
             sizeHistoryGraph();
-            scheduleFitHistoryGraph();
+            fitHistoryGraph();
         })
         .catch(function () {
             showHistoryStatus(lang.GRAPH_DRAW_FAILED);
