@@ -41,12 +41,11 @@ export function bindDeed() {
     }
 }
 
-export function openDeed(node, { onDelete } = {}) {
+export function openDeed(node) {
     if (!windowEl || windowEl.open) {
         return;
     }
     openedNode = node;
-    deleteHandler = onDelete || null;
     if (deleteEl) {
         deleteEl.hidden = !deleteHandler;
     }
