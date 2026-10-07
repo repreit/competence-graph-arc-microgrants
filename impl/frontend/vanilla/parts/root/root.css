@@ -4,7 +4,7 @@
     --ink: #1c1b18;
     --muted: #5c5850;
     --line: #d8d3c8;
-    --card: #fffdf8;
+    --surface: #fffdf8;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -13,7 +13,7 @@
         --ink: #f3efe6;
         --muted: #b0aaa0;
         --line: #3a372f;
-        --card: #1f1d1a;
+        --surface: #1f1d1a;
     }
 }
 
@@ -60,7 +60,7 @@ h2 {
 }
 
 section {
-    background: var(--card);
+    background: var(--surface);
     border: 1px solid var(--line);
     border-radius: 6px;
     padding: 1.1rem 1.15rem 1.2rem;

@@ -6,7 +6,7 @@ export function historyTheme() {
         bg: styles.getPropertyValue("--bg").trim(),
         ink: styles.getPropertyValue("--ink").trim(),
         line: styles.getPropertyValue("--line").trim(),
-        card: styles.getPropertyValue("--card").trim(),
+        card: styles.getPropertyValue("--surface").trim(),
     };
 }
 
