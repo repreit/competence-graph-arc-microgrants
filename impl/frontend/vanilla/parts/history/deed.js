@@ -65,10 +65,10 @@ export function openDeed(node) {
     }
     const data = node?.data ?? {};
     titleEl.textContent = data.title || "";
-    const href = safeUrl(data.link);
     const linkText = typeof data.link === "string" ? data.link : "";
     linkEl.hidden = !linkText;
     linkEl.textContent = linkText;
+    const href = safeUrl(data.link);
     if (href) {
         linkEl.href = href;
     } else {
