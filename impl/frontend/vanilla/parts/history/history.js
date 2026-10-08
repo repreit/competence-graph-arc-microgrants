@@ -297,6 +297,7 @@ export function bindHistory() {
     on("signedOut", function () {
         discard();
         renderMainToolbar();
+        renderHistoryGraph(nodesWithPendingOps(selectedAccount));
     });
     window.addEventListener("beforeunload", function (event) {
         if (pendingOpsCount() > 0) {
