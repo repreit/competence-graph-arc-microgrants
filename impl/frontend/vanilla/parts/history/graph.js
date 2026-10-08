@@ -133,6 +133,7 @@ function createHistoryGraph(ForceGraph3D) {
         .linkThreeObjectExtend(false)
         .linkThreeObject(makeLinkObject)
         .warmupTicks(80)
+        .d3AlphaMin(0.001)
         .linkPositionUpdate(clipLinkToCards)
         .nodeThreeObject(function (node) {
             return makeCardObject(node, hoveredNodeId);
