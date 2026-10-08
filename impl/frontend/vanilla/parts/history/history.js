@@ -274,18 +274,20 @@ export function deleteDeed(node) {
 }
 
 export function connectDeeds(nodeA, nodeB) {
-    if (
-        !isSessionAccount(selectedAccount) ||
-        !nodeA ||
-        !nodeB ||
-        nodeA.id === nodeB.id
-    ) {
+    if (!isSessionAccount(selectedAccount) || !nodeA || !nodeB) {
+        return;
+    }
+    if (nodeA.id === nodeB.id) {
+        showHistoryStatus(lang.HISTORY_CONNECT_SAME_DEED);
+        renderMainToolbar();
         return;
     }
     const linked =
         (nodeA.nodeIds ?? []).includes(nodeB.id) ||
         (nodeB.nodeIds ?? []).includes(nodeA.id);
     if (linked) {
+        showHistoryStatus(lang.HISTORY_CONNECT_ALREADY_LINKED);
+        renderMainToolbar();
         return;
     }
     addLink(nodeA.id, nodeB.id);
