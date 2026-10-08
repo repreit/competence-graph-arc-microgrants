@@ -103,10 +103,6 @@
     object-fit: cover;
 }
 
-#deed-window img[hidden] {
-    display: none;
-}
-
 #deed-window .inner {
     padding: 1rem 1.15rem 1.25rem;
 }
@@ -197,6 +193,7 @@
     margin-top: 0.75rem;
 }
 
+#deed-window img[hidden],
 .deed-form[hidden] {
     display: none;
 }
