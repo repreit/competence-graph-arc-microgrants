@@ -180,37 +180,37 @@ function parseOperation(value) {
     if (!isPlainObject(value)) {
         return null;
     }
-    if (value.op === "node.create") {
-        if (!hasOnlyFields(value, ["op", "node"])) {
+    if (value.type === "node.create") {
+        if (!hasOnlyFields(value, ["type", "node"])) {
             return null;
         }
         const node = parseNodePatch(value.node);
         if (node == null) {
             return null;
         }
-        return { op: "node.create", node };
+        return { type: "node.create", node };
     }
-    if (value.op === "node.set") {
-        if (!hasOnlyFields(value, ["op", "node"])) {
+    if (value.type === "node.set") {
+        if (!hasOnlyFields(value, ["type", "node"])) {
             return null;
         }
         const node = parseNodePatch(value.node);
         if (node == null) {
             return null;
         }
-        return { op: "node.set", node };
+        return { type: "node.set", node };
     }
-    if (value.op === "node.delete") {
+    if (value.type === "node.delete") {
         if (
-            !hasOnlyFields(value, ["op", "id"]) ||
+            !hasOnlyFields(value, ["type", "id"]) ||
             !isNonEmptyString(value.id)
         ) {
             return null;
         }
-        return { op: "node.delete", id: value.id };
+        return { type: "node.delete", id: value.id };
     }
-    if (value.op === "link.add" || value.op === "link.remove") {
-        if (!hasOnlyFields(value, ["op", "a", "b"])) {
+    if (value.type === "link.add" || value.type === "link.remove") {
+        if (!hasOnlyFields(value, ["type", "a", "b"])) {
             return null;
         }
         if (!isNonEmptyString(value.a) || !isNonEmptyString(value.b)) {
@@ -219,7 +219,7 @@ function parseOperation(value) {
         if (value.a === value.b) {
             return null;
         }
-        return { op: value.op, a: value.a, b: value.b };
+        return { type: value.type, a: value.a, b: value.b };
     }
     return null;
 }
@@ -293,21 +293,21 @@ function linkState(a, b) {
 }
 
 function applyOperation(state, operation) {
-    if (operation.op === "node.create") {
+    if (operation.type === "node.create") {
         if (state.has(operation.node.id)) {
             return { ok: false, error: "exists" };
         }
         state.set(operation.node.id, mergeNode(null, operation.node));
         return { ok: true };
     }
-    if (operation.op === "node.delete") {
+    if (operation.type === "node.delete") {
         if (!state.has(operation.id)) {
             return { ok: false, error: "missing" };
         }
         state.delete(operation.id);
         return { ok: true };
     }
-    if (operation.op === "node.set") {
+    if (operation.type === "node.set") {
         const id = operation.node.id;
         const node = state.get(id);
         if (node == null) {
@@ -316,7 +316,7 @@ function applyOperation(state, operation) {
         state.set(id, mergeNode(node, operation.node));
         return { ok: true };
     }
-    if (operation.op === "link.add") {
+    if (operation.type === "link.add") {
         const a = state.get(operation.a);
         const b = state.get(operation.b);
         if (a == null || b == null) {
@@ -345,7 +345,7 @@ function applyOperation(state, operation) {
         );
         return { ok: true };
     }
-    if (operation.op === "link.remove") {
+    if (operation.type === "link.remove") {
         const a = state.get(operation.a);
         const b = state.get(operation.b);
         if (a == null || b == null) {
@@ -382,13 +382,13 @@ function applyOperation(state, operation) {
 }
 
 function touchedIds(operation) {
-    if (operation.op === "node.create" || operation.op === "node.set") {
+    if (operation.type === "node.create" || operation.type === "node.set") {
         return [operation.node.id];
     }
-    if (operation.op === "node.delete") {
+    if (operation.type === "node.delete") {
         return [operation.id];
     }
-    if (operation.op === "link.add" || operation.op === "link.remove") {
+    if (operation.type === "link.add" || operation.type === "link.remove") {
         return [operation.a, operation.b];
     }
     return [];
