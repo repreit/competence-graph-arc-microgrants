@@ -11,3 +11,15 @@ export function shortAddress(address) {
 export function pageUri() {
     return location.origin + location.pathname.replace(/\/+$/, "");
 }
+
+export function safeUrl(value) {
+    if (typeof value !== "string") {
+        return "";
+    }
+    try {
+        const url = new URL(value);
+        return ["http:", "https:"].includes(url.protocol) ? url.href : "";
+    } catch {
+        return "";
+    }
+}
