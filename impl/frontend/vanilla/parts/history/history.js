@@ -155,6 +155,9 @@ function renderMainToolbar() {
         pendingOpsDiscardEl.hidden = true;
         pendingOpsStatusEl.hidden = true;
         closeDeedForm();
+        connectingMode = false;
+        selectedFirstNode = null;
+        showHistoryStatus("");
     }
 }
 
