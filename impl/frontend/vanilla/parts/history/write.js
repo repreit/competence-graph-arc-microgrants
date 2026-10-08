@@ -78,7 +78,7 @@ export function createNode({ data, position }) {
         node.position = position;
     }
     node.data = data;
-    pendingOps.push({ op: "node.create", node });
+    pendingOps.push({ type: "node.create", node });
     return node.id;
 }
 
@@ -90,17 +90,17 @@ export function setNode({ id, data, position }) {
     if (data !== undefined) {
         node.data = data;
     }
-    pendingOps.push({ op: "node.set", node });
+    pendingOps.push({ type: "node.set", node });
 }
 
 export function deleteNode(id) {
-    pendingOps.push({ op: "node.delete", id });
+    pendingOps.push({ type: "node.delete", id });
 }
 
 export function addLink(a, b) {
-    pendingOps.push({ op: "link.add", a, b });
+    pendingOps.push({ type: "link.add", a, b });
 }
 
 export function removeLink(a, b) {
-    pendingOps.push({ op: "link.remove", a, b });
+    pendingOps.push({ type: "link.remove", a, b });
 }
