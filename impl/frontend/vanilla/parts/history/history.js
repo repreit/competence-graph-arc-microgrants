@@ -278,6 +278,13 @@ export function deleteDeed(node) {
     renderHistoryGraph(nodesWithPendingOps(selectedAccount));
 }
 
+function areDeedsLinked(nodeA, nodeB) {
+    return (
+        (nodeA.nodeIds ?? []).includes(nodeB.id) ||
+        (nodeB.nodeIds ?? []).includes(nodeA.id)
+    );
+}
+
 export function connectDeeds(nodeA, nodeB) {
     if (!isSessionAccount(selectedAccount) || !nodeA || !nodeB) {
         return;
@@ -287,10 +294,7 @@ export function connectDeeds(nodeA, nodeB) {
         renderMainToolbar();
         return;
     }
-    const linked =
-        (nodeA.nodeIds ?? []).includes(nodeB.id) ||
-        (nodeB.nodeIds ?? []).includes(nodeA.id);
-    if (linked) {
+    if (areDeedsLinked(nodeA, nodeB)) {
         showHistoryStatus(lang.HISTORY_CONNECT_ALREADY_LINKED);
         renderMainToolbar();
         return;
@@ -313,6 +317,10 @@ export function handleDeedClick(node) {
     }
     if (selectedFirstNode.id === node.id) {
         showHistoryStatus(lang.HISTORY_CONNECT_SAME_DEED);
+        return;
+    }
+    if (areDeedsLinked(selectedFirstNode, node)) {
+        showHistoryStatus(lang.HISTORY_CONNECT_ALREADY_LINKED);
         return;
     }
     const firstNode = selectedFirstNode;
