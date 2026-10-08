@@ -292,6 +292,7 @@ export function handleDeedClick(node) {
     }
     if (!selectedFirstNode) {
         selectedFirstNode = node;
+        showHistoryStatus(lang.HISTORY_CONNECT_SECOND);
         return;
     }
     const firstNode = selectedFirstNode;
