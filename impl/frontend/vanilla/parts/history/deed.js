@@ -10,6 +10,18 @@ let deleteEl;
 
 let openedNode = null;
 
+function bindDeedAction(el, action) {
+    if (!el) {
+        return;
+    }
+    el.addEventListener("click", function () {
+        if (openedNode) {
+            action(openedNode);
+            windowEl.close();
+        }
+    });
+}
+
 export function bindDeed() {
     windowEl = document.getElementById("deed-window");
     imageEl = document.getElementById("deed-image");
@@ -35,22 +47,8 @@ export function bindDeed() {
         unlockScroll();
         openedNode = null;
     });
-    if (editEl) {
-        editEl.addEventListener("click", function () {
-            if (openedNode) {
-                editDeed(openedNode);
-                windowEl.close();
-            }
-        });
-    }
-    if (deleteEl) {
-        deleteEl.addEventListener("click", function () {
-            if (openedNode) {
-                deleteDeed(openedNode);
-                windowEl.close();
-            }
-        });
-    }
+    bindDeedAction(editEl, editDeed);
+    bindDeedAction(deleteEl, deleteDeed);
 }
 
 function safeUrl(value) {
