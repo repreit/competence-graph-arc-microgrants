@@ -162,6 +162,10 @@ function renderMainToolbar() {
         closeDeedForm();
         cancelConnectingMode();
     }
+    deedCreateEl.setAttribute(
+        "aria-expanded",
+        !deedFormEl.hidden && editingNode === null ? "true" : "false",
+    );
     deedsConnectEl.setAttribute(
         "aria-pressed",
         connectingMode ? "true" : "false",
@@ -179,8 +183,8 @@ function openDeedForm() {
 function openNewDeedForm() {
     closeDeedForm();
     cancelConnectingMode();
-    renderMainToolbar();
     openDeedForm();
+    renderMainToolbar();
 }
 
 function closeDeedForm() {
@@ -263,6 +267,7 @@ export function editDeed(node) {
     deedFormTitleEl.value = node?.data?.title || "";
     deedFormLinkEl.value = node?.data?.link || "";
     openDeedForm();
+    renderMainToolbar();
 }
 
 export function deleteDeed(node) {
@@ -381,11 +386,15 @@ export function bindHistory() {
         deedFormEl.addEventListener("keydown", function (event) {
             if (event.key === "Escape") {
                 closeDeedForm();
+                renderMainToolbar();
             }
         });
     }
     if (deedFormCancelEl) {
-        deedFormCancelEl.addEventListener("click", closeDeedForm);
+        deedFormCancelEl.addEventListener("click", function () {
+            closeDeedForm();
+            renderMainToolbar();
+        });
     }
     statusEl = document.getElementById("history-status");
     bindHistoryGraph();
