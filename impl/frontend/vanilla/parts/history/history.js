@@ -58,13 +58,13 @@ function showHistory(account) {
 }
 
 function nodesWithPendingOps(account) {
-    const committed = account?.history?.nodes || [];
+    const committedNodes = account?.history?.nodes || [];
     const ops = getPendingOps();
     if (!isSessionAccount(account) || ops.length === 0) {
-        return committed;
+        return committedNodes;
     }
-    const applied = applyOps(committed, ops);
-    return applied.ok ? applied.history.nodes : committed;
+    const applied = applyOps(committedNodes, ops);
+    return applied.ok ? applied.history.nodes : committedNodes;
 }
 
 function renderAccountSelection() {
