@@ -1,5 +1,5 @@
 import { isSessionAccount } from "../../common/js/session.js";
-import { deleteDeed, selectedAccount } from "./history.js";
+import { deleteDeed, editDeed, selectedAccount } from "./history.js";
 
 let windowEl;
 let imageEl;
@@ -35,6 +35,14 @@ export function bindDeed() {
         unlockScroll();
         openedNode = null;
     });
+    if (editEl) {
+        editEl.addEventListener("click", function () {
+            if (openedNode) {
+                editDeed(openedNode);
+                windowEl.close();
+            }
+        });
+    }
     if (deleteEl) {
         deleteEl.addEventListener("click", function () {
             if (openedNode) {
