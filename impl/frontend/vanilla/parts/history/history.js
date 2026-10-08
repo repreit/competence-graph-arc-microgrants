@@ -169,6 +169,7 @@ function openDeedForm() {
 
 function openNewDeedForm() {
     closeDeedForm();
+    cancelConnectingMode();
     openDeedForm();
 }
 
