@@ -4,11 +4,7 @@ import { lang } from "../../common/js/lang.js";
 import { isSessionAccount } from "../../common/js/session.js";
 import { on } from "../../common/js/store.js";
 import { bindDeed, openDeed } from "./deed.js";
-import {
-    bindHistoryGraph,
-    renderHistoryGraph,
-    showHistoryStatus,
-} from "./graph.js";
+import { bindHistoryGraph, renderHistoryGraph } from "./graph.js";
 import { loadAccounts, loadHistory } from "./load.js";
 import {
     addLink,
@@ -37,6 +33,15 @@ let selectedFirstNode = null;
 let pendingOpsSaveEl;
 let pendingOpsDiscardEl;
 let pendingOpsStatusEl;
+let statusEl;
+
+export function showHistoryStatus(message) {
+    if (!statusEl) {
+        return;
+    }
+    statusEl.hidden = !message;
+    statusEl.textContent = message ?? "";
+}
 
 function showHistory(account) {
     if (!account || !accountsEl) {
@@ -343,6 +348,7 @@ export function bindHistory() {
     deedFormLinkEl = document.getElementById("deed-form-link");
     deedFormSubmitEl = document.getElementById("deed-form-submit");
     deedFormCancelEl = document.getElementById("deed-form-cancel");
+    statusEl = document.getElementById("history-status");
     pendingOpsStatusEl = document.getElementById("pending-ops-status");
     pendingOpsSaveEl = document.getElementById("pending-ops-save");
     if (pendingOpsSaveEl) {
