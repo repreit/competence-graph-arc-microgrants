@@ -300,6 +300,18 @@ export function handleDeedClick(node) {
     connectDeeds(firstNode, node);
 }
 
+function toggleConnectingMode() {
+    if (connectingMode) {
+        connectingMode = false;
+        selectedFirstNode = null;
+        showHistoryStatus("");
+        return;
+    }
+    connectingMode = true;
+    selectedFirstNode = null;
+    showHistoryStatus(lang.HISTORY_CONNECT_FIRST);
+}
+
 export function bindHistory() {
     bindDeed();
     bindHistoryGraph();
@@ -322,6 +334,9 @@ export function bindHistory() {
     }
     if (deedCreateEl) {
         deedCreateEl.addEventListener("click", openNewDeedForm);
+    }
+    if (deedsConnectEl) {
+        deedsConnectEl.addEventListener("click", toggleConnectingMode);
     }
     if (deedFormEl) {
         deedFormEl.addEventListener("submit", function (event) {
