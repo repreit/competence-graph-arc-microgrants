@@ -22,18 +22,18 @@ export let selectedAccount;
 let accountsPending = null;
 let deedCreateEl;
 let deedsConnectEl;
+let pendingOpsSaveEl;
+let pendingOpsDiscardEl;
+let pendingOpsStatusEl;
 let deedFormEl;
 let deedFormTitleEl;
 let deedFormLinkEl;
 let deedFormSubmitEl;
 let deedFormCancelEl;
+let statusEl;
 let editingNode = null;
 let connectingMode = false;
 let selectedFirstNode = null;
-let pendingOpsSaveEl;
-let pendingOpsDiscardEl;
-let pendingOpsStatusEl;
-let statusEl;
 
 export function showHistoryStatus(message) {
     if (!statusEl) {
@@ -338,18 +338,15 @@ function toggleConnectingMode() {
 }
 
 export function bindHistory() {
-    bindDeed();
-    bindHistoryGraph();
     accountsEl = document.getElementById("accounts");
     deedCreateEl = document.getElementById("deed-create");
+    if (deedCreateEl) {
+        deedCreateEl.addEventListener("click", openNewDeedForm);
+    }
     deedsConnectEl = document.getElementById("deeds-connect");
-    deedFormEl = document.getElementById("deed-form");
-    deedFormTitleEl = document.getElementById("deed-form-title");
-    deedFormLinkEl = document.getElementById("deed-form-link");
-    deedFormSubmitEl = document.getElementById("deed-form-submit");
-    deedFormCancelEl = document.getElementById("deed-form-cancel");
-    statusEl = document.getElementById("history-status");
-    pendingOpsStatusEl = document.getElementById("pending-ops-status");
+    if (deedsConnectEl) {
+        deedsConnectEl.addEventListener("click", toggleConnectingMode);
+    }
     pendingOpsSaveEl = document.getElementById("pending-ops-save");
     if (pendingOpsSaveEl) {
         pendingOpsSaveEl.addEventListener("click", savePendingOps);
@@ -358,12 +355,12 @@ export function bindHistory() {
     if (pendingOpsDiscardEl) {
         pendingOpsDiscardEl.addEventListener("click", discardPendingOps);
     }
-    if (deedCreateEl) {
-        deedCreateEl.addEventListener("click", openNewDeedForm);
-    }
-    if (deedsConnectEl) {
-        deedsConnectEl.addEventListener("click", toggleConnectingMode);
-    }
+    pendingOpsStatusEl = document.getElementById("pending-ops-status");
+    deedFormEl = document.getElementById("deed-form");
+    deedFormTitleEl = document.getElementById("deed-form-title");
+    deedFormLinkEl = document.getElementById("deed-form-link");
+    deedFormSubmitEl = document.getElementById("deed-form-submit");
+    deedFormCancelEl = document.getElementById("deed-form-cancel");
     if (deedFormEl) {
         deedFormEl.addEventListener("submit", function (event) {
             event.preventDefault();
@@ -378,6 +375,9 @@ export function bindHistory() {
     if (deedFormCancelEl) {
         deedFormCancelEl.addEventListener("click", closeDeedForm);
     }
+    statusEl = document.getElementById("history-status");
+    bindHistoryGraph();
+    bindDeed();
     on("signedIn", f001);
     on("signedOut", function () {
         discard();
