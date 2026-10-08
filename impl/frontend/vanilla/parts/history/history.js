@@ -159,15 +159,9 @@ function openDeedForm() {
     deedFormTitleEl?.focus();
 }
 
-function toggleDeedForm() {
-    if (!deedFormEl) {
-        return;
-    }
-    if (deedFormEl.hidden) {
-        openDeedForm();
-    } else {
-        closeDeedForm();
-    }
+function startDeedForm() {
+    closeDeedForm();
+    openDeedForm();
 }
 
 function closeDeedForm() {
@@ -279,7 +273,7 @@ export function bindHistory() {
         pendingOpsDiscardEl.addEventListener("click", discardPendingOps);
     }
     if (deedCreateEl) {
-        deedCreateEl.addEventListener("click", toggleDeedForm);
+        deedCreateEl.addEventListener("click", startDeedForm);
     }
     if (deedFormEl) {
         deedFormEl.addEventListener("submit", function (event) {
