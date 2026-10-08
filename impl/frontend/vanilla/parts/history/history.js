@@ -249,6 +249,9 @@ export function deleteDeed(node) {
         return;
     }
     deleteNode(node.id);
+    if (editingNode?.id === node.id) {
+        closeDeedForm();
+    }
     showHistoryStatus("");
     renderMainToolbar();
     renderHistoryGraph(nodesWithPendingOps(selectedAccount));
