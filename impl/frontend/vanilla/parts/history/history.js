@@ -206,7 +206,7 @@ function discardPendingOps() {
     renderHistoryGraph(nodesWithPendingOps(selectedAccount));
 }
 
-function createDeed() {
+function submitDeedForm() {
     if (!isSessionAccount(selectedAccount)) {
         return;
     }
@@ -269,7 +269,7 @@ export function bindHistory() {
     if (deedFormEl) {
         deedFormEl.addEventListener("submit", function (event) {
             event.preventDefault();
-            createDeed();
+            submitDeedForm();
         });
     }
     on("signedIn", f001);
