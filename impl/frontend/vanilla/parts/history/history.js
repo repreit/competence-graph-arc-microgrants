@@ -24,6 +24,7 @@ let accountsEl;
 export let selectedAccount;
 let accountsPending = null;
 let deedCreateEl;
+let deedsConnectEl;
 let deedFormEl;
 let deedFormTitleEl;
 let deedFormLinkEl;
@@ -129,6 +130,7 @@ function f001() {
 function renderMainToolbar() {
     if (
         !deedCreateEl ||
+        !deedsConnectEl ||
         !pendingOpsStatusEl ||
         !pendingOpsSaveEl ||
         !pendingOpsDiscardEl
@@ -138,12 +140,14 @@ function renderMainToolbar() {
     if (isSessionAccount(selectedAccount)) {
         const count = pendingOpsCount();
         deedCreateEl.hidden = false;
+        deedsConnectEl.hidden = false;
         pendingOpsSaveEl.hidden = count === 0;
         pendingOpsDiscardEl.hidden = count === 0;
         pendingOpsStatusEl.hidden = count === 0;
         pendingOpsStatusEl.textContent = `${count} change(s) not saved`;
     } else {
         deedCreateEl.hidden = true;
+        deedsConnectEl.hidden = true;
         pendingOpsSaveEl.hidden = true;
         pendingOpsDiscardEl.hidden = true;
         pendingOpsStatusEl.hidden = true;
@@ -262,6 +266,7 @@ export function bindHistory() {
     bindHistoryGraph();
     accountsEl = document.getElementById("accounts");
     deedCreateEl = document.getElementById("deed-create");
+    deedsConnectEl = document.getElementById("deeds-connect");
     deedFormEl = document.getElementById("deed-form");
     deedFormTitleEl = document.getElementById("deed-form-title");
     deedFormLinkEl = document.getElementById("deed-form-link");
