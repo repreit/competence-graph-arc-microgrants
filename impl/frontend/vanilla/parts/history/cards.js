@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { safeUrl } from "../../common/js/a001.js";
 import {
     cssColor,
     historyTheme,
@@ -77,7 +78,8 @@ export function makeCardObject(node, hoveredNodeId) {
     mesh.userData.nodeId = node.id;
     mesh.renderOrder = 1;
     paintCardOpaque(mesh);
-    if (data.img) {
+    const imgSrc = safeUrl(data.img);
+    if (imgSrc) {
         const image = new Image();
         const epoch = cardPaintEpoch;
         image.onload = function () {
@@ -95,7 +97,7 @@ export function makeCardObject(node, hoveredNodeId) {
             );
             tex.needsUpdate = true;
         };
-        image.src = data.img;
+        image.src = imgSrc;
     }
     return mesh;
 }
