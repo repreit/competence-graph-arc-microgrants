@@ -16,6 +16,7 @@ export const en = Object.freeze({
 
     HISTORY_LOAD_FAILED: "Could not load this history.",
     HISTORY_SAVE_FAILED: "Could not save your change(s).",
+    HISTORY_CONNECT_FIRST: "Select the first deed to connect.",
     GRAPH_LOAD_FAILED: "Could not load the 3D graph. Reload to try again.",
     GRAPH_DRAW_FAILED:
         "Could not draw the graph for this address. Reload to try again.",
