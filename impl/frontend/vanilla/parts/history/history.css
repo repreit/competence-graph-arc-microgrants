@@ -170,6 +170,7 @@
 #deed-window .buttons {
     display: flex;
     justify-content: flex-end;
+    gap: 0.5rem;
 }
 
 #deed-window .inner button {
