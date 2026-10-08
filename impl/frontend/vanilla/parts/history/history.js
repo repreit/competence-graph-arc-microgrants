@@ -30,17 +30,17 @@ let deedFormTitleEl;
 let deedFormLinkEl;
 let deedFormSubmitEl;
 let deedFormCancelEl;
-let statusEl;
+let historyStatusEl;
 let editingNode = null;
 let connectingMode = false;
 let selectedFirstNode = null;
 
 export function showHistoryStatus(message) {
-    if (!statusEl) {
+    if (!historyStatusEl) {
         return;
     }
-    statusEl.hidden = !message;
-    statusEl.textContent = message ?? "";
+    historyStatusEl.hidden = !message;
+    historyStatusEl.textContent = message ?? "";
 }
 
 function showHistory(account) {
@@ -396,7 +396,7 @@ export function bindHistory() {
             renderMainToolbar();
         });
     }
-    statusEl = document.getElementById("history-status");
+    historyStatusEl = document.getElementById("history-status");
     bindHistoryGraph();
     bindDeed();
     on("signedIn", f001);
