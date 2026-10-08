@@ -146,16 +146,6 @@
     gap: 0.5rem;
 }
 
-#deed-window .inner button {
-    margin-top: 0.75rem;
-    padding: 0.35rem 0.8rem;
-    border: 1px solid var(--line);
-    border-radius: 4px;
-    background: transparent;
-    color: var(--ink);
-    cursor: pointer;
-}
-
 .main-toolbar {
     display: flex;
     align-items: center;
@@ -163,13 +153,19 @@
     margin-top: 0.75rem;
 }
 
-.main-toolbar button {
+.main-toolbar button,
+.deed-form button,
+#deed-window .inner button {
     padding: 0.35rem 0.8rem;
     border: 1px solid var(--line);
     border-radius: 4px;
     background: transparent;
     color: var(--ink);
     cursor: pointer;
+}
+
+#deed-window .inner button {
+    margin-top: 0.75rem;
 }
 
 .chips button:hover,
@@ -211,13 +207,4 @@
     border-radius: 4px;
     background: var(--surface);
     color: var(--ink);
-}
-
-.deed-form button {
-    padding: 0.35rem 0.8rem;
-    border: 1px solid var(--line);
-    border-radius: 4px;
-    background: transparent;
-    color: var(--ink);
-    cursor: pointer;
 }
