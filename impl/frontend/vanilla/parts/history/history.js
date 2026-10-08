@@ -53,7 +53,7 @@ function showHistory(account) {
 }
 
 function nodesWithPendingOps(account) {
-    const committed = account.history?.nodes || [];
+    const committed = account?.history?.nodes || [];
     const ops = getPendingOps();
     if (!isSessionAccount(account) || ops.length === 0) {
         return committed;
@@ -365,7 +365,9 @@ export function bindHistory() {
     on("signedOut", function () {
         discard();
         renderMainToolbar();
-        renderHistoryGraph(nodesWithPendingOps(selectedAccount));
+        if (selectedAccount) {
+            renderHistoryGraph(nodesWithPendingOps(selectedAccount));
+        }
     });
     window.addEventListener("beforeunload", function (event) {
         if (pendingOpsCount() > 0) {
