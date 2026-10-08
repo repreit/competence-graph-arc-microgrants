@@ -8,7 +8,9 @@
         aria-label="Which account"
     ></div>
     <div class="main-toolbar">
-        <button type="button" id="deed-create" hidden>Create deed</button>
+        <button type="button" id="deed-create" aria-controls="deed-form" hidden>
+            Create deed
+        </button>
         <button type="button" id="deeds-connect" hidden>Connect deeds</button>
         <button type="button" id="pending-ops-save" hidden>Save</button>
         <button type="button" id="pending-ops-discard" hidden>Discard</button>
@@ -25,6 +27,7 @@
             id="deed-form-title"
             name="title"
             placeholder="Deed title"
+            aria-label="Deed title"
             autocomplete="off"
             required
         />
@@ -33,6 +36,7 @@
             id="deed-form-link"
             name="link"
             placeholder="Deed link"
+            aria-label="Deed link"
             autocomplete="off"
             required
         />
