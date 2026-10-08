@@ -225,7 +225,7 @@ function submitDeedForm() {
     } else {
         createNode({ data: { title, link } });
     }
-    toggleDeedForm();
+    closeDeedForm();
     showHistoryStatus("");
     renderMainToolbar();
     renderHistoryGraph(nodesWithPendingOps(selectedAccount));
