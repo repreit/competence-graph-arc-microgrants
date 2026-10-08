@@ -262,5 +262,11 @@ export function bindHistory() {
         discard();
         renderMainToolbar();
     });
+    window.addEventListener("beforeunload", function (event) {
+        if (pendingOpsCount() > 0) {
+            event.preventDefault();
+            event.returnValue = "";
+        }
+    });
     f001();
 }
