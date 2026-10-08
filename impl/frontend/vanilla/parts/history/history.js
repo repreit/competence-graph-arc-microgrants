@@ -17,6 +17,7 @@ import {
     discard,
     getPendingOps,
     pendingOpsCount,
+    setNode,
 } from "./write.js";
 
 let accountsEl;
@@ -215,7 +216,11 @@ function submitDeedForm() {
     if (!title || !link) {
         return;
     }
-    createNode({ data: { title, link } });
+    if (editingNode) {
+        setNode({ id: editingNode.id, data: { title, link } });
+    } else {
+        createNode({ data: { title, link } });
+    }
     toggleDeedForm();
     showHistoryStatus("");
     renderMainToolbar();
