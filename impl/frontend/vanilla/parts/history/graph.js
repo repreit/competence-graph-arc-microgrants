@@ -7,7 +7,7 @@ import {
     makeCardObject,
 } from "./cards.js";
 import { clipLinkToCards, makeLinkObject } from "./links.js";
-import { handleDeedClick } from "./history.js";
+import { handleDeedClick, showHistoryStatus } from "./history.js";
 import {
     disposeGraphGpu,
     paintCardOpaque,
@@ -16,7 +16,6 @@ import {
 } from "./paint.js";
 
 let viewportEl;
-let statusEl;
 let historyGraph = null;
 let historyGraphPending = null;
 let graphRequest = 0;
@@ -25,14 +24,6 @@ let hoveredNode = null;
 
 let fitTimer = 0;
 const FIT_PULL = 1;
-
-export function showHistoryStatus(message) {
-    if (!statusEl) {
-        return;
-    }
-    statusEl.hidden = !message;
-    statusEl.textContent = message ?? "";
-}
 
 function sizeHistoryGraph() {
     if (!historyGraph || !viewportEl) {
@@ -298,7 +289,6 @@ export function bindHistoryGraph() {
             }, hoverWaitMs);
         });
     }
-    statusEl = document.getElementById("history-status");
     const resetViewEl = document.querySelector(".graph-reset");
     if (resetViewEl) {
         resetViewEl.addEventListener("click", function () {
