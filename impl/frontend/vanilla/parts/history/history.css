@@ -31,11 +31,6 @@
     cursor: pointer;
 }
 
-.chips button[aria-pressed="true"] {
-    border-color: var(--ink);
-    background: color-mix(in srgb, var(--ink) 12%, var(--surface));
-}
-
 .chips button:hover {
     border-color: var(--ink);
 }
@@ -207,7 +202,9 @@
     border-color: var(--ink);
 }
 
-.main-toolbar button[aria-pressed="true"] {
+.main-toolbar button[aria-expanded="true"],
+.main-toolbar button[aria-pressed="true"],
+.chips button[aria-pressed="true"] {
     border-color: var(--ink);
     background: color-mix(in srgb, var(--ink) 12%, var(--surface));
 }
