@@ -281,6 +281,11 @@ export function bindHistory() {
             event.preventDefault();
             submitDeedForm();
         });
+        deedFormEl.addEventListener("keydown", function (event) {
+            if (event.key === "Escape") {
+                closeDeedForm();
+            }
+        });
     }
     on("signedIn", f001);
     on("signedOut", function () {
