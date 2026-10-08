@@ -167,6 +167,7 @@ function closeDeedForm() {
     }
     deedFormEl.hidden = true;
     deedFormEl.reset();
+    editingNode = null;
 }
 
 function savePendingOps() {
