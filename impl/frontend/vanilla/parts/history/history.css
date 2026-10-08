@@ -207,6 +207,11 @@
     border-color: var(--ink);
 }
 
+.main-toolbar button[aria-pressed="true"] {
+    border-color: var(--ink);
+    background: color-mix(in srgb, var(--ink) 12%, var(--surface));
+}
+
 .pending-ops-status {
     color: var(--muted);
     font-size: 0.85rem;
