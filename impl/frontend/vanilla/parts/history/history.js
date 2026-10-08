@@ -32,6 +32,8 @@ let deedFormLinkEl;
 let deedFormSubmitEl;
 let deedFormCancelEl;
 let editingNode = null;
+let connectingMode = false;
+let selectedFirstNode = null;
 let pendingOpsSaveEl;
 let pendingOpsDiscardEl;
 let pendingOpsStatusEl;
@@ -284,7 +286,18 @@ export function connectDeeds(nodeA, nodeB) {
 }
 
 export function handleDeedClick(node) {
-    openDeed(node);
+    if (!connectingMode) {
+        openDeed(node);
+        return;
+    }
+    if (!selectedFirstNode) {
+        selectedFirstNode = node;
+        return;
+    }
+    const firstNode = selectedFirstNode;
+    connectingMode = false;
+    selectedFirstNode = null;
+    connectDeeds(firstNode, node);
 }
 
 export function bindHistory() {
