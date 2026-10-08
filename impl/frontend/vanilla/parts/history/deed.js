@@ -5,6 +5,7 @@ let windowEl;
 let imageEl;
 let titleEl;
 let linkEl;
+let editEl;
 let deleteEl;
 
 let openedNode = null;
@@ -14,6 +15,7 @@ export function bindDeed() {
     imageEl = document.getElementById("deed-image");
     titleEl = document.getElementById("deed-title");
     linkEl = document.getElementById("deed-link");
+    editEl = document.getElementById("deed-edit");
     deleteEl = document.getElementById("deed-delete");
     if (!windowEl) {
         return;
@@ -60,6 +62,9 @@ export function openDeed(node) {
         return;
     }
     openedNode = node;
+    if (editEl) {
+        editEl.hidden = !isSessionAccount(selectedAccount);
+    }
     if (deleteEl) {
         deleteEl.hidden = !isSessionAccount(selectedAccount);
     }
