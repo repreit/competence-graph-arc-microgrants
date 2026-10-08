@@ -27,6 +27,7 @@ let deedCreateEl;
 let deedFormEl;
 let deedFormTitleEl;
 let deedFormLinkEl;
+let deedFormSubmitEl;
 let editingNode = null;
 let pendingOpsSaveEl;
 let pendingOpsDiscardEl;
@@ -168,6 +169,7 @@ function closeDeedForm() {
     deedFormEl.hidden = true;
     deedFormEl.reset();
     editingNode = null;
+    deedFormSubmitEl.textContent = "Create";
 }
 
 function savePendingOps() {
@@ -233,6 +235,7 @@ export function editDeed(node) {
         return;
     }
     editingNode = node;
+    deedFormSubmitEl.textContent = "Update";
     deedFormTitleEl.value = node?.data?.title || "";
     deedFormLinkEl.value = node?.data?.link || "";
     if (deedFormEl.hidden) {
@@ -260,6 +263,7 @@ export function bindHistory() {
     deedFormEl = document.getElementById("deed-form");
     deedFormTitleEl = document.getElementById("deed-form-title");
     deedFormLinkEl = document.getElementById("deed-form-link");
+    deedFormSubmitEl = document.getElementById("deed-form-submit");
     pendingOpsStatusEl = document.getElementById("pending-ops-status");
     pendingOpsSaveEl = document.getElementById("pending-ops-save");
     if (pendingOpsSaveEl) {
