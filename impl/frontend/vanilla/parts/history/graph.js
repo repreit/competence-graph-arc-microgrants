@@ -213,6 +213,7 @@ function graphDataFromNodes(sourceNodes) {
             id: node.id,
             name: data.title || node.id,
             data,
+            nodeIds: node.nodeIds,
         };
         const pos = node.position;
         if (
