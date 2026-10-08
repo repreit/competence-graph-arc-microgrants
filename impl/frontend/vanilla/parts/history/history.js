@@ -168,8 +168,8 @@ function closeDeedForm() {
     }
     deedFormEl.hidden = true;
     deedFormEl.reset();
-    editingNode = null;
     deedFormSubmitEl.textContent = "Create";
+    editingNode = null;
 }
 
 function savePendingOps() {
