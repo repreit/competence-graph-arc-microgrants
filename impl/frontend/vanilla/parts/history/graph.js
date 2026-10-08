@@ -7,7 +7,7 @@ import {
     makeCardObject,
 } from "./cards.js";
 import { clipLinkToCards, makeLinkObject } from "./links.js";
-import { openDeed } from "./deed.js";
+import { handleDeedClick } from "./history.js";
 import {
     disposeGraphGpu,
     paintCardOpaque,
@@ -293,7 +293,7 @@ export function bindHistoryGraph() {
             }
             window.setTimeout(function () {
                 if (hoveredNode) {
-                    openDeed(hoveredNode);
+                    handleDeedClick(hoveredNode);
                 }
             }, hoverWaitMs);
         });
