@@ -159,7 +159,7 @@ function openDeedForm() {
     deedFormTitleEl?.focus();
 }
 
-function startDeedForm() {
+function openNewDeedForm() {
     closeDeedForm();
     openDeedForm();
 }
@@ -273,7 +273,7 @@ export function bindHistory() {
         pendingOpsDiscardEl.addEventListener("click", discardPendingOps);
     }
     if (deedCreateEl) {
-        deedCreateEl.addEventListener("click", startDeedForm);
+        deedCreateEl.addEventListener("click", openNewDeedForm);
     }
     if (deedFormEl) {
         deedFormEl.addEventListener("submit", function (event) {
