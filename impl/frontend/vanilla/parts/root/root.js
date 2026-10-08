@@ -4,15 +4,15 @@ import { bindHistory } from "../history/history.js";
 import { bindFooter } from "../footer/footer.js";
 import { loadRemoteConfig } from "../../common/js/remote-config.js";
 
+const PARTS = ["header", "auth", "difference", "history", "footer"];
+
 function addPartStyles() {
-    ["header", "auth", "difference", "history", "footer"].forEach(
-        function (name) {
-            const link = document.createElement("link");
-            link.rel = "stylesheet";
-            link.href = "parts/" + name + "/" + name + ".css";
-            document.head.appendChild(link);
-        },
-    );
+    PARTS.forEach(function (name) {
+        const link = document.createElement("link");
+        link.rel = "stylesheet";
+        link.href = "parts/" + name + "/" + name + ".css";
+        document.head.appendChild(link);
+    });
 }
 
 function loadPart(name) {
@@ -40,9 +40,8 @@ function assemblePage() {
     addPartStyles();
     return loadPart("root").then(function (html) {
         document.body.insertAdjacentHTML("afterbegin", html.trim());
-        const names = ["header", "auth", "difference", "history", "footer"];
-        return Promise.all(names.map(loadPart)).then(function (htmls) {
-            names.forEach(function (name, i) {
+        return Promise.all(PARTS.map(loadPart)).then(function (htmls) {
+            PARTS.forEach(function (name, i) {
                 putPart(name, htmls[i]);
             });
         });
