@@ -1,3 +1,4 @@
+import { safeUrl } from "../../common/js/a001.js";
 import { isSessionAccount } from "../../common/js/session.js";
 import { deleteDeed, editDeed, selectedAccount } from "./history.js";
 
@@ -49,18 +50,6 @@ export function bindDeed() {
     });
     bindDeedAction(editEl, editDeed);
     bindDeedAction(deleteEl, deleteDeed);
-}
-
-function safeUrl(value) {
-    if (typeof value !== "string") {
-        return "";
-    }
-    try {
-        const url = new URL(value);
-        return ["http:", "https:"].includes(url.protocol) ? url.href : "";
-    } catch {
-        return "";
-    }
 }
 
 export function openDeed(node) {
