@@ -321,13 +321,12 @@ function cancelConnectingMode() {
 function toggleConnectingMode() {
     if (connectingMode) {
         cancelConnectingMode();
-        renderMainToolbar();
-        return;
+    } else {
+        closeDeedForm();
+        connectingMode = true;
+        selectedFirstNode = null;
+        showHistoryStatus(lang.HISTORY_CONNECT_FIRST);
     }
-    closeDeedForm();
-    connectingMode = true;
-    selectedFirstNode = null;
-    showHistoryStatus(lang.HISTORY_CONNECT_FIRST);
     renderMainToolbar();
 }
 
