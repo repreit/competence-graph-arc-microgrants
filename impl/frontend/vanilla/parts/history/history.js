@@ -3,7 +3,7 @@ import { shortAddress } from "../../common/js/a001.js";
 import { lang } from "../../common/js/lang.js";
 import { isSessionAccount } from "../../common/js/session.js";
 import { on } from "../../common/js/store.js";
-import { bindDeed } from "./deed.js";
+import { bindDeed, openDeed } from "./deed.js";
 import {
     bindHistoryGraph,
     renderHistoryGraph,
@@ -281,6 +281,10 @@ export function connectDeeds(nodeA, nodeB) {
     showHistoryStatus("");
     renderMainToolbar();
     renderHistoryGraph(nodesWithPendingOps(selectedAccount));
+}
+
+export function handleDeedClick(node) {
+    openDeed(node);
 }
 
 export function bindHistory() {
