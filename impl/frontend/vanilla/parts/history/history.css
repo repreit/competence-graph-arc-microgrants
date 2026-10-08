@@ -31,10 +31,6 @@
     cursor: pointer;
 }
 
-.chips button:hover {
-    border-color: var(--ink);
-}
-
 .graph-wrapper {
     position: relative;
     margin-top: 1rem;
@@ -70,10 +66,6 @@
     background: var(--surface);
     color: var(--ink);
     cursor: pointer;
-}
-
-.graph-reset:hover {
-    border-color: var(--ink);
 }
 
 .graph-reset svg {
@@ -148,10 +140,6 @@
     cursor: pointer;
 }
 
-#deed-window .close:hover {
-    border-color: var(--ink);
-}
-
 #deed-window .buttons {
     display: flex;
     justify-content: flex-end;
@@ -166,10 +154,6 @@
     background: transparent;
     color: var(--ink);
     cursor: pointer;
-}
-
-#deed-window .inner button:hover {
-    border-color: var(--ink);
 }
 
 .main-toolbar {
@@ -188,7 +172,12 @@
     cursor: pointer;
 }
 
-.main-toolbar button:hover {
+.chips button:hover,
+.graph-reset:hover,
+.main-toolbar button:hover,
+.deed-form button:hover,
+#deed-window .inner button:hover,
+#deed-window .close:hover {
     border-color: var(--ink);
 }
 
@@ -231,8 +220,4 @@
     background: transparent;
     color: var(--ink);
     cursor: pointer;
-}
-
-.deed-form button:hover {
-    border-color: var(--ink);
 }
