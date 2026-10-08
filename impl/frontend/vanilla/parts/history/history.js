@@ -28,6 +28,7 @@ let deedFormEl;
 let deedFormTitleEl;
 let deedFormLinkEl;
 let deedFormSubmitEl;
+let deedFormCancelEl;
 let editingNode = null;
 let pendingOpsSaveEl;
 let pendingOpsDiscardEl;
@@ -264,6 +265,7 @@ export function bindHistory() {
     deedFormTitleEl = document.getElementById("deed-form-title");
     deedFormLinkEl = document.getElementById("deed-form-link");
     deedFormSubmitEl = document.getElementById("deed-form-submit");
+    deedFormCancelEl = document.getElementById("deed-form-cancel");
     pendingOpsStatusEl = document.getElementById("pending-ops-status");
     pendingOpsSaveEl = document.getElementById("pending-ops-save");
     if (pendingOpsSaveEl) {
@@ -286,6 +288,9 @@ export function bindHistory() {
                 closeDeedForm();
             }
         });
+    }
+    if (deedFormCancelEl) {
+        deedFormCancelEl.addEventListener("click", closeDeedForm);
     }
     on("signedIn", f001);
     on("signedOut", function () {
