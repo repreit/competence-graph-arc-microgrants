@@ -11,6 +11,7 @@ import {
 } from "./graph.js";
 import { loadAccounts, loadHistory } from "./load.js";
 import {
+    addLink,
     commit,
     createNode,
     deleteNode,
@@ -256,6 +257,27 @@ export function deleteDeed(node) {
     if (editingNode?.id === node.id) {
         closeDeedForm();
     }
+    showHistoryStatus("");
+    renderMainToolbar();
+    renderHistoryGraph(nodesWithPendingOps(selectedAccount));
+}
+
+export function connectDeeds(nodeA, nodeB) {
+    if (
+        !isSessionAccount(selectedAccount) ||
+        !nodeA ||
+        !nodeB ||
+        nodeA.id === nodeB.id
+    ) {
+        return;
+    }
+    const linked =
+        (nodeA.nodeIds ?? []).includes(nodeB.id) ||
+        (nodeB.nodeIds ?? []).includes(nodeA.id);
+    if (linked) {
+        return;
+    }
+    addLink(nodeA.id, nodeB.id);
     showHistoryStatus("");
     renderMainToolbar();
     renderHistoryGraph(nodesWithPendingOps(selectedAccount));
