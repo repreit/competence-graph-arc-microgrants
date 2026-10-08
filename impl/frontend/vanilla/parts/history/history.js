@@ -155,9 +155,7 @@ function renderMainToolbar() {
         pendingOpsDiscardEl.hidden = true;
         pendingOpsStatusEl.hidden = true;
         closeDeedForm();
-        connectingMode = false;
-        selectedFirstNode = null;
-        showHistoryStatus("");
+        cancelConnectingMode();
     }
 }
 
@@ -304,13 +302,21 @@ export function handleDeedClick(node) {
     connectDeeds(firstNode, node);
 }
 
-function toggleConnectingMode() {
-    if (connectingMode) {
-        connectingMode = false;
-        selectedFirstNode = null;
-        showHistoryStatus("");
+function cancelConnectingMode() {
+    if (!connectingMode) {
         return;
     }
+    connectingMode = false;
+    selectedFirstNode = null;
+    showHistoryStatus("");
+}
+
+function toggleConnectingMode() {
+    if (connectingMode) {
+        cancelConnectingMode();
+        return;
+    }
+    closeDeedForm();
     connectingMode = true;
     selectedFirstNode = null;
     showHistoryStatus(lang.HISTORY_CONNECT_FIRST);
