@@ -1,4 +1,6 @@
 export const en = Object.freeze({
+    PAGE_LOAD_FAILED:
+        "Could not load this page. Serve this folder with a local server, or open the hosted version.",
     API_UNREACHABLE: "Could not reach the API.",
     NO_API_BASE: "No API base. Check the frontend config.",
     NO_PROJECT_ID: "No Reown project id. Check the common config.",

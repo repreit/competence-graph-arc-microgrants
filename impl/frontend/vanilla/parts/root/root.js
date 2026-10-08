@@ -3,6 +3,7 @@ import { bindDifference } from "../difference/difference.js";
 import { bindHistory } from "../history/history.js";
 import { bindFooter } from "../footer/footer.js";
 import { loadRemoteConfig } from "../../common/js/remote-config.js";
+import { lang } from "../../common/js/lang.js";
 
 const PARTS = ["header", "auth", "difference", "history", "footer"];
 
@@ -62,6 +63,6 @@ assemblePage()
     .catch(function () {
         document.body.insertAdjacentHTML(
             "afterbegin",
-            '<p class="muted">Could not load this page. Serve this folder with a local server, or open the hosted version.</p>',
+            '<p class="muted">' + lang.PAGE_LOAD_FAILED + "</p>",
         );
     });
