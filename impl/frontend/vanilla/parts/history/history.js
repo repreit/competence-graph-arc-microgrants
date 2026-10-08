@@ -184,6 +184,7 @@ function closeDeedForm() {
 }
 
 function savePendingOps() {
+    cancelConnectingMode();
     commit()
         .then(function (appended) {
             if (!appended) {
@@ -218,6 +219,7 @@ function refreshHistory(account) {
 function discardPendingOps() {
     discard();
     closeDeedForm();
+    cancelConnectingMode();
     renderMainToolbar();
     renderHistoryGraph(nodesWithPendingOps(selectedAccount));
 }
