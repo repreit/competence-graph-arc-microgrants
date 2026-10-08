@@ -151,13 +151,20 @@ function renderMainToolbar() {
     }
 }
 
+function openDeedForm() {
+    if (!deedFormEl) {
+        return;
+    }
+    deedFormEl.hidden = false;
+    deedFormTitleEl?.focus();
+}
+
 function toggleDeedForm() {
     if (!deedFormEl) {
         return;
     }
     if (deedFormEl.hidden) {
-        deedFormEl.hidden = false;
-        deedFormTitleEl?.focus();
+        openDeedForm();
     } else {
         closeDeedForm();
     }
@@ -239,11 +246,7 @@ export function editDeed(node) {
     deedFormSubmitEl.textContent = "Update";
     deedFormTitleEl.value = node?.data?.title || "";
     deedFormLinkEl.value = node?.data?.link || "";
-    if (deedFormEl.hidden) {
-        toggleDeedForm();
-    } else {
-        deedFormTitleEl?.focus();
-    }
+    openDeedForm();
 }
 
 export function deleteDeed(node) {
