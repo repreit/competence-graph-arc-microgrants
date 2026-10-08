@@ -176,7 +176,7 @@ function parseNodePatch(value) {
     return patch;
 }
 
-function parseOperation(value) {
+function parseOp(value) {
     if (!isPlainObject(value)) {
         return null;
     }
@@ -245,8 +245,8 @@ export function parseHistoryContent(content) {
         return null;
     }
     const ops = [];
-    for (const operation of parsed.ops) {
-        const parsedOp = parseOperation(operation);
+    for (const op of parsed.ops) {
+        const parsedOp = parseOp(op);
         if (parsedOp == null) {
             return null;
         }
@@ -292,33 +292,33 @@ function linkState(a, b) {
     return forward ? "linked" : "unlinked";
 }
 
-function applyOperation(state, operation) {
-    if (operation.type === "node.create") {
-        if (state.has(operation.node.id)) {
+function applyOp(state, op) {
+    if (op.type === "node.create") {
+        if (state.has(op.node.id)) {
             return { ok: false, error: "exists" };
         }
-        state.set(operation.node.id, mergeNode(null, operation.node));
+        state.set(op.node.id, mergeNode(null, op.node));
         return { ok: true };
     }
-    if (operation.type === "node.delete") {
-        if (!state.has(operation.id)) {
+    if (op.type === "node.delete") {
+        if (!state.has(op.id)) {
             return { ok: false, error: "missing" };
         }
-        state.delete(operation.id);
+        state.delete(op.id);
         return { ok: true };
     }
-    if (operation.type === "node.set") {
-        const id = operation.node.id;
+    if (op.type === "node.set") {
+        const id = op.node.id;
         const node = state.get(id);
         if (node == null) {
             return { ok: false, error: "missing" };
         }
-        state.set(id, mergeNode(node, operation.node));
+        state.set(id, mergeNode(node, op.node));
         return { ok: true };
     }
-    if (operation.type === "link.add") {
-        const a = state.get(operation.a);
-        const b = state.get(operation.b);
+    if (op.type === "link.add") {
+        const a = state.get(op.a);
+        const b = state.get(op.b);
         if (a == null || b == null) {
             return { ok: false, error: "missing" };
         }
@@ -330,24 +330,24 @@ function applyOperation(state, operation) {
             return { ok: false, error: "unpaired" };
         }
         state.set(
-            operation.a,
+            op.a,
             mergeNode(a, {
-                id: operation.a,
-                nodeIds: (a.nodeIds ?? []).concat(operation.b),
+                id: op.a,
+                nodeIds: (a.nodeIds ?? []).concat(op.b),
             }),
         );
         state.set(
-            operation.b,
+            op.b,
             mergeNode(b, {
-                id: operation.b,
-                nodeIds: (b.nodeIds ?? []).concat(operation.a),
+                id: op.b,
+                nodeIds: (b.nodeIds ?? []).concat(op.a),
             }),
         );
         return { ok: true };
     }
-    if (operation.type === "link.remove") {
-        const a = state.get(operation.a);
-        const b = state.get(operation.b);
+    if (op.type === "link.remove") {
+        const a = state.get(op.a);
+        const b = state.get(op.b);
         if (a == null || b == null) {
             return { ok: false, error: "missing" };
         }
@@ -359,20 +359,20 @@ function applyOperation(state, operation) {
             return { ok: false, error: "unpaired" };
         }
         state.set(
-            operation.a,
+            op.a,
             mergeNode(a, {
-                id: operation.a,
+                id: op.a,
                 nodeIds: (a.nodeIds ?? []).filter(function (id) {
-                    return id !== operation.b;
+                    return id !== op.b;
                 }),
             }),
         );
         state.set(
-            operation.b,
+            op.b,
             mergeNode(b, {
-                id: operation.b,
+                id: op.b,
                 nodeIds: (b.nodeIds ?? []).filter(function (id) {
-                    return id !== operation.a;
+                    return id !== op.a;
                 }),
             }),
         );
@@ -381,15 +381,15 @@ function applyOperation(state, operation) {
     return { ok: false, error: "invalid" };
 }
 
-function touchedIds(operation) {
-    if (operation.type === "node.create" || operation.type === "node.set") {
-        return [operation.node.id];
+function touchedIds(op) {
+    if (op.type === "node.create" || op.type === "node.set") {
+        return [op.node.id];
     }
-    if (operation.type === "node.delete") {
-        return [operation.id];
+    if (op.type === "node.delete") {
+        return [op.id];
     }
-    if (operation.type === "link.add" || operation.type === "link.remove") {
-        return [operation.a, operation.b];
+    if (op.type === "link.add" || op.type === "link.remove") {
+        return [op.a, op.b];
     }
     return [];
 }
@@ -411,12 +411,12 @@ function findBrokenLink(state) {
 
 function applyOpsToState(state, ops) {
     const touched = new Set();
-    for (const operation of ops) {
-        const applied = applyOperation(state, operation);
+    for (const op of ops) {
+        const applied = applyOp(state, op);
         if (!applied.ok) {
             return applied;
         }
-        for (const id of touchedIds(operation)) {
+        for (const id of touchedIds(op)) {
             touched.add(id);
         }
     }
