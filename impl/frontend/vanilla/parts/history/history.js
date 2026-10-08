@@ -208,6 +208,7 @@ function refreshHistory(account) {
 
 function discardPendingOps() {
     discard();
+    closeDeedForm();
     renderMainToolbar();
     renderHistoryGraph(nodesWithPendingOps(selectedAccount));
 }
