@@ -297,8 +297,7 @@ export function handleDeedClick(node) {
         return;
     }
     const firstNode = selectedFirstNode;
-    connectingMode = false;
-    selectedFirstNode = null;
+    cancelConnectingMode();
     connectDeeds(firstNode, node);
 }
 
