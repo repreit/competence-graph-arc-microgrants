@@ -311,6 +311,10 @@ export function handleDeedClick(node) {
         showHistoryStatus(lang.HISTORY_CONNECT_SECOND);
         return;
     }
+    if (selectedFirstNode.id === node.id) {
+        showHistoryStatus(lang.HISTORY_CONNECT_SAME_DEED);
+        return;
+    }
     const firstNode = selectedFirstNode;
     cancelConnectingMode();
     connectDeeds(firstNode, node);
