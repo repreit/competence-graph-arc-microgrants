@@ -425,11 +425,11 @@ function applyOpsToState(state, ops) {
         if (node == null) {
             continue;
         }
-        const valid = parseNode(node);
-        if (valid == null) {
+        const parsed = parseNode(node);
+        if (parsed == null) {
             return { ok: false, error: "invalid" };
         }
-        state.set(id, valid);
+        state.set(id, parsed);
     }
     return { ok: true };
 }
@@ -448,11 +448,11 @@ export function applyOps(nodes, ops) {
     }
     const state = new Map();
     for (const node of nodes) {
-        const valid = parseNode(node);
-        if (valid == null) {
+        const parsed = parseNode(node);
+        if (parsed == null) {
             return { ok: false, error: "invalid" };
         }
-        state.set(valid.id, valid);
+        state.set(parsed.id, parsed);
     }
     const applied = applyOpsToState(state, ops);
     if (!applied.ok) {
