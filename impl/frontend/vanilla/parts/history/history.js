@@ -157,6 +157,10 @@ function renderMainToolbar() {
         closeDeedForm();
         cancelConnectingMode();
     }
+    deedsConnectEl.setAttribute(
+        "aria-pressed",
+        connectingMode ? "true" : "false",
+    );
 }
 
 function openDeedForm() {
@@ -170,6 +174,7 @@ function openDeedForm() {
 function openNewDeedForm() {
     closeDeedForm();
     cancelConnectingMode();
+    renderMainToolbar();
     openDeedForm();
 }
 
@@ -316,12 +321,14 @@ function cancelConnectingMode() {
 function toggleConnectingMode() {
     if (connectingMode) {
         cancelConnectingMode();
+        renderMainToolbar();
         return;
     }
     closeDeedForm();
     connectingMode = true;
     selectedFirstNode = null;
     showHistoryStatus(lang.HISTORY_CONNECT_FIRST);
+    renderMainToolbar();
 }
 
 export function bindHistory() {
