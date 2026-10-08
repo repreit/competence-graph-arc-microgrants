@@ -26,6 +26,7 @@ let deedCreateEl;
 let deedFormEl;
 let deedFormTitleEl;
 let deedFormLinkEl;
+let editingNode = null;
 let pendingOpsSaveEl;
 let pendingOpsDiscardEl;
 let pendingOpsStatusEl;
@@ -219,6 +220,20 @@ function createDeed() {
     showHistoryStatus("");
     renderMainToolbar();
     renderHistoryGraph(nodesWithPendingOps(selectedAccount));
+}
+
+export function editDeed(node) {
+    if (!isSessionAccount(selectedAccount) || !deedFormEl) {
+        return;
+    }
+    editingNode = node;
+    deedFormTitleEl.value = node?.data?.title || "";
+    deedFormLinkEl.value = node?.data?.link || "";
+    if (deedFormEl.hidden) {
+        toggleDeedForm();
+    } else {
+        deedFormTitleEl?.focus();
+    }
 }
 
 export function deleteDeed(node) {
