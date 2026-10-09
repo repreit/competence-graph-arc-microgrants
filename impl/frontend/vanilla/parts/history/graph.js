@@ -88,7 +88,7 @@ function setNodeHovered(node) {
         return;
     }
     hoveredNodeId = nextId;
-    hoveredNode = node || null;
+    hoveredNode = node ?? null;
     if (viewportEl) {
         viewportEl.style.cursor = nextId ? "pointer" : "";
     }

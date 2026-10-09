@@ -84,7 +84,7 @@ export async function save({ address, publicKey, privateKey }) {
 export async function load(address) {
     const box = (await open()).transaction(STORE_NAME, "readonly");
     const record = await result(box.objectStore(STORE_NAME).get(address));
-    return record || null;
+    return record ?? null;
 }
 
 export async function remove(address) {
