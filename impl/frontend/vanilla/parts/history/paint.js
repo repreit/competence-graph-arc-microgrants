@@ -81,6 +81,20 @@ export function paintGraphHover(graph, hoveredNodeId) {
     });
 }
 
+export function paintGraphLinkHover(graph, hoveredLinkKey) {
+    if (!graph) {
+        return;
+    }
+    const theme = historyTheme();
+    eachPaintedObject(graph.scene(), function (obj, data) {
+        if (!data.historyLink || !obj.material) {
+            return;
+        }
+        const dim = hoveredLinkKey !== "" && data.linkKey !== hoveredLinkKey;
+        obj.material.color.copy(cssColor(dim ? theme.line : theme.ink));
+    });
+}
+
 export function paintHistoryGraph(graph) {
     if (!graph) {
         return;
