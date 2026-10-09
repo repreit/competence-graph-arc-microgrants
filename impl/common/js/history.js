@@ -420,14 +420,15 @@ function applyOpsToState(state, ops) {
             touched.add(id);
         }
         if (op.type === "node.delete") {
-            for (const node of state.values()) {
+            for (const [id, node] of state) {
                 if (!(node.nodeIds ?? []).includes(op.id)) {
                     continue;
                 }
-                node.nodeIds = node.nodeIds.filter(function (id) {
-                    return id !== op.id;
+                const nodeIds = node.nodeIds.filter(function (nodeId) {
+                    return nodeId !== op.id;
                 });
-                touched.add(node.id);
+                state.set(id, mergeNode(node, { id, nodeIds }));
+                touched.add(id);
             }
         }
     }
