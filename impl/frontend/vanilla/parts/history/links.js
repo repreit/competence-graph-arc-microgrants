@@ -70,7 +70,7 @@ function along(from, toward, t) {
     };
 }
 
-export function makeLinkObject() {
+export function makeLinkObject(link) {
     const pos = new THREE.BufferAttribute(new Float32Array(6), 3);
     pos.setUsage(THREE.DynamicDrawUsage);
     const geom = new THREE.BufferGeometry();
@@ -84,6 +84,7 @@ export function makeLinkObject() {
         }),
     );
     line.userData.historyLink = true;
+    line.userData.linkKey = linkKey(link);
     line.frustumCulled = false;
     return line;
 }
