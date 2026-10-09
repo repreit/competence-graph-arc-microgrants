@@ -26,7 +26,7 @@ export function pairsFromNodes(nodes) {
     return pairs;
 }
 
-function idFrom(value) {
+export function idFrom(value) {
     if (typeof value === "string") {
         return value;
     }
