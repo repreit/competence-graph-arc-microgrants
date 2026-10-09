@@ -317,12 +317,12 @@ function applyOp(state, op) {
         return { ok: true };
     }
     if (op.type === "link.add") {
-        const a = state.get(op.a);
-        const b = state.get(op.b);
-        if (a == null || b == null) {
+        const nodeA = state.get(op.a);
+        const nodeB = state.get(op.b);
+        if (nodeA == null || nodeB == null) {
             return { ok: false, error: "missing" };
         }
-        const link = linkState(a, b);
+        const link = linkState(nodeA, nodeB);
         if (link === "linked") {
             return { ok: false, error: "exists" };
         }
@@ -331,27 +331,27 @@ function applyOp(state, op) {
         }
         state.set(
             op.a,
-            mergeNode(a, {
+            mergeNode(nodeA, {
                 id: op.a,
-                nodeIds: (a.nodeIds ?? []).concat(op.b),
+                nodeIds: (nodeA.nodeIds ?? []).concat(op.b),
             }),
         );
         state.set(
             op.b,
-            mergeNode(b, {
+            mergeNode(nodeB, {
                 id: op.b,
-                nodeIds: (b.nodeIds ?? []).concat(op.a),
+                nodeIds: (nodeB.nodeIds ?? []).concat(op.a),
             }),
         );
         return { ok: true };
     }
     if (op.type === "link.remove") {
-        const a = state.get(op.a);
-        const b = state.get(op.b);
-        if (a == null || b == null) {
+        const nodeA = state.get(op.a);
+        const nodeB = state.get(op.b);
+        if (nodeA == null || nodeB == null) {
             return { ok: false, error: "missing" };
         }
-        const link = linkState(a, b);
+        const link = linkState(nodeA, nodeB);
         if (link === "unlinked") {
             return { ok: false, error: "missing" };
         }
@@ -360,18 +360,18 @@ function applyOp(state, op) {
         }
         state.set(
             op.a,
-            mergeNode(a, {
+            mergeNode(nodeA, {
                 id: op.a,
-                nodeIds: (a.nodeIds ?? []).filter(function (id) {
+                nodeIds: (nodeA.nodeIds ?? []).filter(function (id) {
                     return id !== op.b;
                 }),
             }),
         );
         state.set(
             op.b,
-            mergeNode(b, {
+            mergeNode(nodeB, {
                 id: op.b,
-                nodeIds: (b.nodeIds ?? []).filter(function (id) {
+                nodeIds: (nodeB.nodeIds ?? []).filter(function (id) {
                     return id !== op.a;
                 }),
             }),
