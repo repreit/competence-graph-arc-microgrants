@@ -1,4 +1,4 @@
-import { applyOps } from "impl/common/js/history.js";
+import { applyOps, linkState } from "impl/common/js/history.js";
 import { shortAddress } from "../../common/js/a001.js";
 import { lang } from "../../common/js/lang.js";
 import { isSessionAccount } from "../../common/js/session.js";
@@ -284,10 +284,7 @@ export function deleteDeed(node) {
 }
 
 function areDeedsLinked(nodeA, nodeB) {
-    return (
-        (nodeA.nodeIds ?? []).includes(nodeB.id) ||
-        (nodeB.nodeIds ?? []).includes(nodeA.id)
-    );
+    return linkState(nodeA, nodeB) === "linked";
 }
 
 export function connectDeeds(nodeA, nodeB) {
