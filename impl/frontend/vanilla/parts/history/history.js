@@ -336,10 +336,7 @@ export function handleGraphLinkClick(idA, idB) {
     if (!isSessionAccount(selectedAccount) || connectingMode || !idA || !idB) {
         return;
     }
-    if (
-        typeof window.confirm === "function" &&
-        !window.confirm(lang.HISTORY_DISCONNECT_CONFIRM)
-    ) {
+    if (!window.confirm(lang.HISTORY_DISCONNECT_CONFIRM)) {
         return;
     }
     removeLink(idA, idB);
