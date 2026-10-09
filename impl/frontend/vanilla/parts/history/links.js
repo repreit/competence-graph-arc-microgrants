@@ -2,6 +2,10 @@ import * as THREE from "three";
 import { cssColor, historyTheme } from "./paint.js";
 import { CARD_HX, CARD_HY, CARD_HZ } from "./cards.js";
 
+function pairKey(a, b) {
+    return a < b ? a + "|" + b : b + "|" + a;
+}
+
 export function pairsFromNodes(nodes) {
     const seen = {};
     const pairs = [];
@@ -12,7 +16,7 @@ export function pairsFromNodes(nodes) {
             }
             const a = node.id;
             const b = otherId;
-            const key = a < b ? a + "|" + b : b + "|" + a;
+            const key = pairKey(a, b);
             if (!seen[key]) {
                 seen[key] = true;
                 pairs.push([a, b]);
