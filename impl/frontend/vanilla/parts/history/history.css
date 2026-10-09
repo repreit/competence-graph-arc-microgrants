@@ -49,10 +49,6 @@
     cursor: pointer;
 }
 
-#deed-window .inner button {
-    margin-top: 0.75rem;
-}
-
 .chips button:hover,
 .graph-reset:hover,
 .main-toolbar button:hover,
@@ -169,6 +165,10 @@
 
 #deed-window .inner {
     padding: 1rem 1.15rem 1.25rem;
+}
+
+#deed-window .inner button {
+    margin-top: 0.75rem;
 }
 
 #deed-window h2 {
