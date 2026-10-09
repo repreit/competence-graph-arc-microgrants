@@ -15,7 +15,5 @@ export function setToken(value) {
 }
 
 export function isSessionAccount(account) {
-    return Boolean(
-        state.account && account && state.account.address === account.address,
-    );
+    return Boolean(account && state.account?.address === account.address);
 }
