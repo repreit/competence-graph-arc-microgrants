@@ -2,8 +2,8 @@ import * as THREE from "three";
 import { cssColor, historyTheme } from "./paint.js";
 import { CARD_HX, CARD_HY, CARD_HZ } from "./cards.js";
 
-function pairKey(a, b) {
-    return a < b ? a + "|" + b : b + "|" + a;
+function pairKey(idA, idB) {
+    return idA < idB ? idA + "|" + idB : idB + "|" + idA;
 }
 
 export function pairsFromNodes(nodes) {
@@ -14,12 +14,12 @@ export function pairsFromNodes(nodes) {
             if (!otherId || otherId === node.id) {
                 return;
             }
-            const a = node.id;
-            const b = otherId;
-            const key = pairKey(a, b);
+            const idA = node.id;
+            const idB = otherId;
+            const key = pairKey(idA, idB);
             if (!seen[key]) {
                 seen[key] = true;
-                pairs.push([a, b]);
+                pairs.push([idA, idB]);
             }
         });
     });
@@ -34,12 +34,12 @@ function idFrom(value) {
 }
 
 export function linkKey(link) {
-    const a = idFrom(link?.source);
-    const b = idFrom(link?.target);
-    if (!a || !b) {
+    const idA = idFrom(link?.source);
+    const idB = idFrom(link?.target);
+    if (!idA || !idB) {
         return "";
     }
-    return pairKey(a, b);
+    return pairKey(idA, idB);
 }
 
 function boxExitT(from, toward, hx, hy, hz) {
