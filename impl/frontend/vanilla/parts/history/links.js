@@ -2,6 +2,26 @@ import * as THREE from "three";
 import { cssColor, historyTheme } from "./paint.js";
 import { CARD_HX, CARD_HY, CARD_HZ } from "./cards.js";
 
+export function pairsFromNodes(nodes) {
+    const seen = {};
+    const pairs = [];
+    (nodes || []).forEach(function (node) {
+        (node.nodeIds || []).forEach(function (otherId) {
+            if (!otherId || otherId === node.id) {
+                return;
+            }
+            const a = node.id;
+            const b = otherId;
+            const key = a < b ? a + "|" + b : b + "|" + a;
+            if (!seen[key]) {
+                seen[key] = true;
+                pairs.push([a, b]);
+            }
+        });
+    });
+    return pairs;
+}
+
 function boxExitT(from, toward, hx, hy, hz) {
     const dx = toward.x - from.x;
     const dy = toward.y - from.y;

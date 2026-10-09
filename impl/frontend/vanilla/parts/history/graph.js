@@ -6,7 +6,7 @@ import {
     invalidateCardPaint,
     makeCardObject,
 } from "./cards.js";
-import { clipLinkToCards, makeLinkObject } from "./links.js";
+import { clipLinkToCards, makeLinkObject, pairsFromNodes } from "./links.js";
 import { handleDeedClick, showHistoryStatus } from "./history.js";
 import {
     disposeGraphGpu,
@@ -175,26 +175,6 @@ function ensureHistoryGraph() {
             return null;
         });
     return historyGraphPending;
-}
-
-function pairsFromNodes(nodes) {
-    const seen = {};
-    const pairs = [];
-    (nodes || []).forEach(function (node) {
-        (node.nodeIds || []).forEach(function (otherId) {
-            if (!otherId || otherId === node.id) {
-                return;
-            }
-            const a = node.id;
-            const b = otherId;
-            const key = a < b ? a + "|" + b : b + "|" + a;
-            if (!seen[key]) {
-                seen[key] = true;
-                pairs.push([a, b]);
-            }
-        });
-    });
-    return pairs;
 }
 
 function graphDataFromNodes(sourceNodes) {
