@@ -76,7 +76,7 @@ const RECUT_MS = 900;
 let playback = null;
 
 function playbackLocksClip(clip) {
-    return playback && playback.edit === clip.closest(".time-edit");
+    return playback?.edit === clip.closest(".time-edit");
 }
 
 function dwellForClip(clip) {
