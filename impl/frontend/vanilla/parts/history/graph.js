@@ -88,7 +88,7 @@ function scheduleFitHistoryGraph() {
     fitTimer = window.setTimeout(fitHistoryGraph, 300);
 }
 
-function setNodeHovered(node) {
+function setHoveredNode(node) {
     const nextId = node?.id ?? "";
     if (nextId === hoveredNodeId) {
         return;
@@ -101,7 +101,7 @@ function setNodeHovered(node) {
     paintGraphHover(historyGraph, hoveredNodeId);
 }
 
-function setLinkHovered(link) {
+function setHoveredLink(link) {
     const nextKey = linkKey(link);
     if (nextKey === hoveredLinkKey) {
         return;
@@ -150,10 +150,10 @@ function createHistoryGraph(ForceGraph3D) {
             return "";
         })
         .onNodeHover(function (node) {
-            setNodeHovered(node);
+            setHoveredNode(node);
         })
         .onLinkHover(function (link) {
-            setLinkHovered(link);
+            setHoveredLink(link);
         });
     const charge = historyGraph.d3Force("charge");
     if (charge) {
