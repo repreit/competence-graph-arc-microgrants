@@ -17,6 +17,7 @@ import {
     disposeGraphGpu,
     paintCardOpaque,
     paintGraphHover,
+    paintGraphLinkHover,
     paintHistoryGraph,
 } from "./paint.js";
 
@@ -107,6 +108,7 @@ function setHoveredLink(link) {
         return;
     }
     hoveredLinkKey = nextKey;
+    paintGraphLinkHover(historyGraph, hoveredLinkKey);
 }
 
 function bindHistoryControls(graph) {
