@@ -51,11 +51,6 @@
     margin-top: 0.75rem;
 }
 
-#deed-window img[hidden],
-.deed-form[hidden] {
-    display: none;
-}
-
 .deed-form input {
     padding: 0.35rem 0.6rem;
     border: 1px solid var(--line);
@@ -204,4 +199,9 @@
 .chips button[aria-pressed="true"] {
     border-color: var(--ink);
     background: color-mix(in srgb, var(--ink) 12%, var(--surface));
+}
+
+#deed-window img[hidden],
+.deed-form[hidden] {
+    display: none;
 }
