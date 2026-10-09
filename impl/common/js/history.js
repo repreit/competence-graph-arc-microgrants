@@ -284,12 +284,12 @@ function mergeNode(node, patch) {
 }
 
 export function linkState(nodeA, nodeB) {
-    const forward = (nodeA.nodeIds ?? []).includes(nodeB.id);
-    const backward = (nodeB.nodeIds ?? []).includes(nodeA.id);
-    if (forward !== backward) {
+    const aHasB = (nodeA.nodeIds ?? []).includes(nodeB.id);
+    const bHasA = (nodeB.nodeIds ?? []).includes(nodeA.id);
+    if (aHasB !== bHasA) {
         return "unpaired";
     }
-    return forward ? "linked" : "unlinked";
+    return aHasB ? "linked" : "unlinked";
 }
 
 function applyOp(state, op) {
