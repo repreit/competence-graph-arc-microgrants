@@ -22,6 +22,7 @@ export const en = Object.freeze({
     HISTORY_CONNECT_SECOND: "Now select the second deed.",
     HISTORY_CONNECT_SAME_DEED: "Pick a different deed to connect.",
     HISTORY_CONNECT_ALREADY_LINKED: "These deeds are already connected.",
+    HISTORY_DISCONNECT_CONFIRM: "Disconnect these deeds?",
     GRAPH_LOAD_FAILED: "Could not load the 3D graph. Reload to try again.",
     GRAPH_DRAW_FAILED:
         "Could not draw the graph for this address. Reload to try again.",
