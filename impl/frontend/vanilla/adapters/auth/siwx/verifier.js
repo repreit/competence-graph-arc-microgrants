@@ -12,7 +12,7 @@ const ERRORS = {
 };
 
 function errorFor(data) {
-    return ERRORS[data && data.error] || lang.SIGN_IN_FAILED;
+    return ERRORS[data?.error] || lang.SIGN_IN_FAILED;
 }
 
 class Verifier extends EIP155Verifier {
