@@ -6,7 +6,12 @@ import {
     invalidateCardPaint,
     makeCardObject,
 } from "./cards.js";
-import { clipLinkToCards, makeLinkObject, pairsFromNodes } from "./links.js";
+import {
+    clipLinkToCards,
+    linkKey,
+    makeLinkObject,
+    pairsFromNodes,
+} from "./links.js";
 import { handleDeedClick, showHistoryStatus } from "./history.js";
 import {
     disposeGraphGpu,
@@ -21,6 +26,7 @@ let historyGraphPending = null;
 let graphRequest = 0;
 let hoveredNodeId = "";
 let hoveredNode = null;
+let hoveredLinkKey = "";
 
 let fitTimer = 0;
 const FIT_PULL = 1;
@@ -95,6 +101,14 @@ function setNodeHovered(node) {
     paintGraphHover(historyGraph, hoveredNodeId);
 }
 
+function setLinkHovered(link) {
+    const nextKey = linkKey(link);
+    if (nextKey === hoveredLinkKey) {
+        return;
+    }
+    hoveredLinkKey = nextKey;
+}
+
 function bindHistoryControls(graph) {
     const controls = graph.controls();
     if (!controls || !controls.mouseButtons) {
@@ -137,6 +151,9 @@ function createHistoryGraph(ForceGraph3D) {
         })
         .onNodeHover(function (node) {
             setNodeHovered(node);
+        })
+        .onLinkHover(function (link) {
+            setLinkHovered(link);
         });
     const charge = historyGraph.d3Force("charge");
     if (charge) {
@@ -224,6 +241,7 @@ export function renderHistoryGraph(nodes) {
             invalidateCardPaint();
             hoveredNodeId = "";
             hoveredNode = null;
+            hoveredLinkKey = "";
             viewportEl.style.cursor = "";
             disposeGraphGpu(graph);
             graph.graphData(graphDataFromNodes(nodes));
