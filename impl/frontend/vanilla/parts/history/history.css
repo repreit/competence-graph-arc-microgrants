@@ -74,6 +74,27 @@
     font-size: 0.85rem;
 }
 
+.deed-form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+}
+
+#deed-window img[hidden],
+.deed-form[hidden] {
+    display: none;
+}
+
+.deed-form input {
+    padding: 0.35rem 0.6rem;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: var(--surface);
+    color: var(--ink);
+}
+
 .graph-wrapper {
     position: relative;
     margin-top: 1rem;
@@ -183,25 +204,4 @@
     display: flex;
     justify-content: flex-end;
     gap: 0.5rem;
-}
-
-.deed-form {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.5rem;
-    margin-top: 0.75rem;
-}
-
-#deed-window img[hidden],
-.deed-form[hidden] {
-    display: none;
-}
-
-.deed-form input {
-    padding: 0.35rem 0.6rem;
-    border: 1px solid var(--line);
-    border-radius: 4px;
-    background: var(--surface);
-    color: var(--ink);
 }
