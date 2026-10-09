@@ -235,6 +235,7 @@ function discardPendingOps() {
     discard();
     closeDeedForm();
     cancelConnectingMode();
+    showHistoryStatus("");
     renderMainToolbar();
     renderHistoryGraph(nodesWithPendingOps(selectedAccount));
 }
