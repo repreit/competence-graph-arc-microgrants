@@ -90,7 +90,7 @@ export function makeLinkObject(link) {
 }
 
 function setLineEnds(line, start, end) {
-    const geom = line && line.geometry;
+    const geom = line?.geometry;
     if (!geom) {
         return;
     }
