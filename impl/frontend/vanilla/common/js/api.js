@@ -35,7 +35,7 @@ export async function api(path, options) {
         return {};
     });
     if (!response.ok) {
-        const error = new Error(data.error || "http");
+        const error = new Error(data.error ?? "http");
         error.status = response.status;
         error.data = data;
         throw error;

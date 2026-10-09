@@ -53,13 +53,13 @@ function showClipBubble(clip) {
         scene.classList.add("is-active");
     }
     bubbleTitle.textContent = clip.dataset.title;
-    bubbleKind.textContent = clip.dataset.kind || "";
+    bubbleKind.textContent = clip.dataset.kind ?? "";
     bubbleKind.hidden = !clip.dataset.kind;
     bubbleStory.textContent = clip.dataset.story;
     if (clip.dataset.img) {
         bubbleImg.hidden = false;
         bubbleImg.src = clip.dataset.img;
-        bubbleImg.alt = clip.dataset.alt || "";
+        bubbleImg.alt = clip.dataset.alt ?? "";
     } else {
         bubbleImg.hidden = true;
         bubbleImg.removeAttribute("src");

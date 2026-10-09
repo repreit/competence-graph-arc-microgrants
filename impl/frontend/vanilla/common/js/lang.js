@@ -7,7 +7,7 @@ export const lang = Object.freeze(
         {},
         en,
         DICTS[
-            (globalThis.navigator?.language?.toLowerCase() || "en").slice(0, 2)
+            (globalThis.navigator?.language?.toLowerCase() ?? "en").slice(0, 2)
         ],
     ),
 );

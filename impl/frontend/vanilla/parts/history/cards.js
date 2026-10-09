@@ -30,7 +30,7 @@ export function invalidateCardPaint() {
 }
 
 export function makeCardObject(node, hoveredNodeId) {
-    const data = node.data || {};
+    const data = node.data ?? {};
     const theme = historyTheme();
     const canvas = document.createElement("canvas");
     canvas.width = 512;

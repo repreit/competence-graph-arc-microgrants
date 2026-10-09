@@ -64,7 +64,7 @@ export function openDeed(node) {
         deleteEl.hidden = !isSessionAccount(selectedAccount);
     }
     const data = node?.data ?? {};
-    titleEl.textContent = data.title || "";
+    titleEl.textContent = data.title ?? "";
     const linkText = typeof data.link === "string" ? data.link : "";
     linkEl.hidden = !linkText;
     linkEl.textContent = linkText;
@@ -78,7 +78,7 @@ export function openDeed(node) {
     imageEl.hidden = !src;
     if (src) {
         imageEl.src = src;
-        imageEl.alt = data.alt || "";
+        imageEl.alt = data.alt ?? "";
     } else {
         imageEl.removeAttribute("src");
         imageEl.alt = "";

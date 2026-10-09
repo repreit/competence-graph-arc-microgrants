@@ -118,7 +118,7 @@ export function bindAuth() {
             addressEl.removeAttribute("title");
         }
         statusEl.hidden = !nextState.authError;
-        statusEl.textContent = nextState.authError || "";
+        statusEl.textContent = nextState.authError ?? "";
     }
 
     [

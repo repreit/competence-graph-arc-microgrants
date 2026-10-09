@@ -49,7 +49,7 @@ function networkFromHostChain(hostChain) {
 }
 
 async function createModal() {
-    const projectId = reown?.projectId || "";
+    const projectId = reown?.projectId ?? "";
     if (!projectId) {
         throw new Error("reown");
     }

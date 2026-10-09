@@ -9,8 +9,8 @@ function pairKey(idA, idB) {
 export function pairsFromNodes(nodes) {
     const seen = {};
     const pairs = [];
-    (nodes || []).forEach(function (node) {
-        (node.nodeIds || []).forEach(function (otherId) {
+    (nodes ?? []).forEach(function (node) {
+        (node.nodeIds ?? []).forEach(function (otherId) {
             if (!otherId || otherId === node.id) {
                 return;
             }
@@ -100,8 +100,8 @@ function setLineEnds(line, start, end) {
         pos.setUsage(THREE.DynamicDrawUsage);
         geom.setAttribute("position", pos);
     }
-    pos.setXYZ(0, start.x, start.y || 0, start.z || 0);
-    pos.setXYZ(1, end.x, end.y || 0, end.z || 0);
+    pos.setXYZ(0, start.x, start.y ?? 0, start.z ?? 0);
+    pos.setXYZ(1, end.x, end.y ?? 0, end.z ?? 0);
     pos.needsUpdate = true;
     if (typeof geom.computeBoundingSphere === "function") {
         geom.computeBoundingSphere();

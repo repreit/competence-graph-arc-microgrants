@@ -138,7 +138,7 @@ function disposeObject3D(obj) {
 }
 
 function wrapTitle(ctx, text, maxWidth) {
-    const words = String(text || "")
+    const words = String(text ?? "")
         .split(/\s+/)
         .filter(Boolean);
     const lines = [];
@@ -194,7 +194,7 @@ export function paintCardTexture(ctx, canvas, data, theme, image, hovered) {
     ctx.font = '600 28px Georgia, "Times New Roman", serif';
     ctx.textBaseline = "top";
     const pad = 22;
-    const lines = wrapTitle(ctx, data.title || "", w - pad * 2);
+    const lines = wrapTitle(ctx, data.title ?? "", w - pad * 2);
     let ty = imgH + 22;
     lines.forEach(function (line) {
         ctx.fillText(line, pad, ty);

@@ -58,7 +58,7 @@ function showHistory(account) {
 }
 
 function nodesWithPendingOps(account) {
-    const committedNodes = account?.history?.nodes || [];
+    const committedNodes = account?.history?.nodes ?? [];
     const ops = getPendingOps();
     if (!isSessionAccount(account) || ops.length === 0) {
         return committedNodes;
@@ -87,7 +87,7 @@ function renderAccounts(list) {
     }
     accountsEl.replaceChildren();
     list.forEach(function (account) {
-        const address = account.address || "";
+        const address = account.address ?? "";
         const button = document.createElement("button");
         button.type = "button";
         button.className = address ? "address" : "";
@@ -127,7 +127,7 @@ function f001() {
             showHistory(
                 list.find(function (account) {
                     return account.address === selectedAccount?.address;
-                }) || list[0],
+                }) ?? list[0],
             );
         })
         .catch(function () {
@@ -264,8 +264,8 @@ export function editDeed(node) {
     }
     editingNode = node;
     deedFormSubmitEl.textContent = "Update";
-    deedFormTitleEl.value = node?.data?.title || "";
-    deedFormLinkEl.value = node?.data?.link || "";
+    deedFormTitleEl.value = node?.data?.title ?? "";
+    deedFormLinkEl.value = node?.data?.link ?? "";
     openDeedForm();
     renderMainToolbar();
 }

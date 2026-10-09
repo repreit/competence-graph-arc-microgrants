@@ -45,14 +45,14 @@ function fitHistoryGraph() {
     if (camera?.up) {
         camera.up.set(0, 1, 0);
     }
-    const nodes = historyGraph.graphData().nodes || [];
+    const nodes = historyGraph.graphData().nodes ?? [];
     let x0 = Infinity;
     let x1 = -Infinity;
     let y0 = Infinity;
     let y1 = -Infinity;
     nodes.forEach(function (node) {
-        const x = isFinite(node.fx) ? node.fx : node.x || 0;
-        const y = isFinite(node.fy) ? node.fy : node.y || 0;
+        const x = isFinite(node.fx) ? node.fx : (node.x ?? 0);
+        const y = isFinite(node.fy) ? node.fy : (node.y ?? 0);
         x0 = Math.min(x0, x - CARD_HX);
         x1 = Math.max(x1, x + CARD_HX);
         y0 = Math.min(y0, y - CARD_HY);
@@ -61,7 +61,7 @@ function fitHistoryGraph() {
     if (!camera || !isFinite(x0) || !isFinite(y0)) {
         return;
     }
-    const height = Math.max(historyGraph.height() || 1, 1);
+    const height = Math.max(historyGraph.height() ?? 1, 1);
     const paddedFov = (1 - 32 / height) * camera.fov;
     const maxBoxSide = Math.max(x1 - x0, y1 - y0);
     const distance =
@@ -160,7 +160,7 @@ function ensureHistoryGraph() {
     }
     historyGraphPending = import("3d-force-graph")
         .then(function (mod) {
-            const ForceGraph3D = mod.default || mod;
+            const ForceGraph3D = mod.default ?? mod;
             if (typeof ForceGraph3D !== "function") {
                 throw new Error("ForceGraph3D");
             }
@@ -178,11 +178,11 @@ function ensureHistoryGraph() {
 }
 
 function graphDataFromNodes(sourceNodes) {
-    const nodes = (sourceNodes || []).map(function (node) {
-        const data = node.data || {};
+    const nodes = (sourceNodes ?? []).map(function (node) {
+        const data = node.data ?? {};
         const item = {
             id: node.id,
-            name: data.title || node.id,
+            name: data.title ?? node.id,
             data,
             nodeIds: node.nodeIds,
         };
