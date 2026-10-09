@@ -22,6 +22,22 @@ export function pairsFromNodes(nodes) {
     return pairs;
 }
 
+function idFrom(value) {
+    if (typeof value === "string") {
+        return value;
+    }
+    return value?.id ?? "";
+}
+
+export function linkKey(link) {
+    const a = idFrom(link?.source);
+    const b = idFrom(link?.target);
+    if (!a || !b) {
+        return "";
+    }
+    return a < b ? a + "|" + b : b + "|" + a;
+}
+
 function boxExitT(from, toward, hx, hy, hz) {
     const dx = toward.x - from.x;
     const dy = toward.y - from.y;
