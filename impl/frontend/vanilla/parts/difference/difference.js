@@ -121,13 +121,13 @@ function isPlaybackUi(node) {
         return false;
     }
     const scene = playback.edit.closest(".time-scene");
-    return Boolean(scene && scene.contains(node));
+    return Boolean(scene?.contains(node));
 }
 
 function setTransportPlaying(playing) {
     const label = playing ? "Pause" : "Play this timeline";
     const buttons = [];
-    if (playback && playback.button) {
+    if (playback?.button) {
         buttons.push(playback.button);
     }
     if (bubbleTransportEl) {
@@ -324,7 +324,7 @@ function startPlayback(edit, fromClip) {
 }
 
 function togglePlayback(edit) {
-    if (playback && playback.edit === edit) {
+    if (playback?.edit === edit) {
         if (playback.paused) {
             resumePlayback();
         } else {
