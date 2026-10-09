@@ -39,7 +39,7 @@ export function linkKey(link) {
     if (!a || !b) {
         return "";
     }
-    return a < b ? a + "|" + b : b + "|" + a;
+    return pairKey(a, b);
 }
 
 function boxExitT(from, toward, hx, hy, hz) {
