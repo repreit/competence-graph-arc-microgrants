@@ -283,7 +283,7 @@ function mergeNode(node, patch) {
     return next;
 }
 
-function linkState(a, b) {
+export function linkState(a, b) {
     const forward = (a.nodeIds ?? []).includes(b.id);
     const backward = (b.nodeIds ?? []).includes(a.id);
     if (forward !== backward) {
