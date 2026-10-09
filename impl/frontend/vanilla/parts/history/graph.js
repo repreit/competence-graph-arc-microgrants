@@ -42,7 +42,7 @@ function fitHistoryGraph() {
         return;
     }
     const camera = historyGraph.camera();
-    if (camera && camera.up) {
+    if (camera?.up) {
         camera.up.set(0, 1, 0);
     }
     const nodes = historyGraph.graphData().nodes || [];
@@ -83,7 +83,7 @@ function scheduleFitHistoryGraph() {
 }
 
 function setNodeHovered(node) {
-    const nextId = (node && node.id) || "";
+    const nextId = node?.id ?? "";
     if (nextId === hoveredNodeId) {
         return;
     }
