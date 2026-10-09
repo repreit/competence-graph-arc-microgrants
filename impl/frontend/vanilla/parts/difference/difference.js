@@ -412,7 +412,7 @@ export function bindDifference() {
                 return;
             }
             const clip = bubbleClip;
-            const edit = clip && clip.closest(".time-edit");
+            const edit = clip?.closest(".time-edit");
             if (edit) {
                 startPlayback(edit, clip);
             }
