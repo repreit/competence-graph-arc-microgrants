@@ -13,7 +13,7 @@ const CARD_D = 0.55;
 export const CARD_HX = CARD_W / 2;
 export const CARD_HY = CARD_H / 2;
 export const CARD_HZ = CARD_D / 2;
-const CARD_DEPTH = {
+const CARD_MATERIAL_PARAMS = {
     depthTest: true,
     depthWrite: true,
     transparent: false,
@@ -48,12 +48,15 @@ export function makeCardObject(node, hoveredNodeId) {
     };
     paintCardTexture(ctx, canvas, data, theme, null, card.hovered);
     const front = new THREE.MeshBasicMaterial(
-        Object.assign({ map: tex, transparent: false, opacity: 1 }, CARD_DEPTH),
+        Object.assign(
+            { map: tex, transparent: false, opacity: 1 },
+            CARD_MATERIAL_PARAMS,
+        ),
     );
     const back = new THREE.MeshBasicMaterial(
         Object.assign(
             { color: cssColor(theme.surface), transparent: false, opacity: 1 },
-            CARD_DEPTH,
+            CARD_MATERIAL_PARAMS,
         ),
     );
     const edge = new THREE.MeshBasicMaterial(
@@ -63,7 +66,7 @@ export function makeCardObject(node, hoveredNodeId) {
                 transparent: false,
                 opacity: 1,
             },
-            CARD_DEPTH,
+            CARD_MATERIAL_PARAMS,
         ),
     );
     const mesh = new THREE.Mesh(new THREE.BoxGeometry(CARD_W, CARD_H, CARD_D), [
