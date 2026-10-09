@@ -14,6 +14,7 @@ import {
     discard,
     getPendingOps,
     pendingOpsCount,
+    removeLink,
     setNode,
 } from "./write.js";
 
@@ -328,6 +329,22 @@ export function handleDeedClick(node) {
     const firstNode = selectedFirstNode;
     cancelConnectingMode();
     connectDeeds(firstNode, node);
+}
+
+export function handleGraphLinkClick(idA, idB) {
+    if (!isSessionAccount(selectedAccount) || connectingMode || !idA || !idB) {
+        return;
+    }
+    if (
+        typeof window.confirm === "function" &&
+        !window.confirm(lang.HISTORY_DISCONNECT_CONFIRM)
+    ) {
+        return;
+    }
+    removeLink(idA, idB);
+    showHistoryStatus("");
+    renderMainToolbar();
+    renderHistoryGraph(nodesWithPendingOps(selectedAccount));
 }
 
 function cancelConnectingMode() {
