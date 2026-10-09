@@ -96,9 +96,6 @@ function setHoveredNode(node) {
     }
     hoveredNodeId = nextId;
     hoveredNode = node ?? null;
-    if (viewportEl) {
-        viewportEl.style.cursor = nextId ? "pointer" : "";
-    }
     paintGraphHover(historyGraph, hoveredNodeId);
 }
 
@@ -156,7 +153,10 @@ function createHistoryGraph(ForceGraph3D) {
         })
         .onLinkHover(function (link) {
             setHoveredLink(link);
-        });
+        })
+        // Intentional: only to enable the pointer cursor
+        .onNodeClick(function () {})
+        .onLinkClick(function () {});
     const charge = historyGraph.d3Force("charge");
     if (charge) {
         charge.strength(-3);
@@ -244,7 +244,6 @@ export function renderHistoryGraph(nodes) {
             hoveredNodeId = "";
             hoveredNode = null;
             hoveredLinkKey = "";
-            viewportEl.style.cursor = "";
             disposeGraphGpu(graph);
             graph.graphData(graphDataFromNodes(nodes));
             sizeHistoryGraph();
