@@ -97,10 +97,10 @@ export function deleteNode(id) {
     pendingOps.push({ type: "node.delete", id });
 }
 
-export function addLink(a, b) {
-    pendingOps.push({ type: "link.add", a, b });
+export function addLink(idA, idB) {
+    pendingOps.push({ type: "link.add", idA, idB });
 }
 
-export function removeLink(a, b) {
-    pendingOps.push({ type: "link.remove", a, b });
+export function removeLink(idA, idB) {
+    pendingOps.push({ type: "link.remove", idA, idB });
 }

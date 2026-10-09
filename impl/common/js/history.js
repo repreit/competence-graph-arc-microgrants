@@ -210,16 +210,16 @@ function parseOp(value) {
         return { type: "node.delete", id: value.id };
     }
     if (value.type === "link.add" || value.type === "link.remove") {
-        if (!hasOnlyFields(value, ["type", "a", "b"])) {
+        if (!hasOnlyFields(value, ["type", "idA", "idB"])) {
             return null;
         }
-        if (!isNonEmptyString(value.a) || !isNonEmptyString(value.b)) {
+        if (!isNonEmptyString(value.idA) || !isNonEmptyString(value.idB)) {
             return null;
         }
-        if (value.a === value.b) {
+        if (value.idA === value.idB) {
             return null;
         }
-        return { type: value.type, a: value.a, b: value.b };
+        return { type: value.type, idA: value.idA, idB: value.idB };
     }
     return null;
 }
@@ -317,8 +317,8 @@ function applyOp(state, op) {
         return { ok: true };
     }
     if (op.type === "link.add") {
-        const nodeA = state.get(op.a);
-        const nodeB = state.get(op.b);
+        const nodeA = state.get(op.idA);
+        const nodeB = state.get(op.idB);
         if (nodeA == null || nodeB == null) {
             return { ok: false, error: "missing" };
         }
@@ -330,24 +330,24 @@ function applyOp(state, op) {
             return { ok: false, error: "unpaired" };
         }
         state.set(
-            op.a,
+            op.idA,
             mergeNode(nodeA, {
-                id: op.a,
-                nodeIds: (nodeA.nodeIds ?? []).concat(op.b),
+                id: op.idA,
+                nodeIds: (nodeA.nodeIds ?? []).concat(op.idB),
             }),
         );
         state.set(
-            op.b,
+            op.idB,
             mergeNode(nodeB, {
-                id: op.b,
-                nodeIds: (nodeB.nodeIds ?? []).concat(op.a),
+                id: op.idB,
+                nodeIds: (nodeB.nodeIds ?? []).concat(op.idA),
             }),
         );
         return { ok: true };
     }
     if (op.type === "link.remove") {
-        const nodeA = state.get(op.a);
-        const nodeB = state.get(op.b);
+        const nodeA = state.get(op.idA);
+        const nodeB = state.get(op.idB);
         if (nodeA == null || nodeB == null) {
             return { ok: false, error: "missing" };
         }
@@ -359,20 +359,20 @@ function applyOp(state, op) {
             return { ok: false, error: "unpaired" };
         }
         state.set(
-            op.a,
+            op.idA,
             mergeNode(nodeA, {
-                id: op.a,
+                id: op.idA,
                 nodeIds: (nodeA.nodeIds ?? []).filter(function (id) {
-                    return id !== op.b;
+                    return id !== op.idB;
                 }),
             }),
         );
         state.set(
-            op.b,
+            op.idB,
             mergeNode(nodeB, {
-                id: op.b,
+                id: op.idB,
                 nodeIds: (nodeB.nodeIds ?? []).filter(function (id) {
-                    return id !== op.a;
+                    return id !== op.idA;
                 }),
             }),
         );
@@ -389,7 +389,7 @@ function touchedIds(op) {
         return [op.id];
     }
     if (op.type === "link.add" || op.type === "link.remove") {
-        return [op.a, op.b];
+        return [op.idA, op.idB];
     }
     return [];
 }
