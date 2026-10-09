@@ -31,6 +31,49 @@
     cursor: pointer;
 }
 
+.main-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+}
+
+.main-toolbar button,
+.deed-form button,
+#deed-window .inner button {
+    padding: 0.35rem 0.8rem;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: transparent;
+    color: var(--ink);
+    cursor: pointer;
+}
+
+#deed-window .inner button {
+    margin-top: 0.75rem;
+}
+
+.chips button:hover,
+.graph-reset:hover,
+.main-toolbar button:hover,
+.deed-form button:hover,
+#deed-window .inner button:hover,
+#deed-window .close:hover {
+    border-color: var(--ink);
+}
+
+.main-toolbar button[aria-expanded="true"],
+.main-toolbar button[aria-pressed="true"],
+.chips button[aria-pressed="true"] {
+    border-color: var(--ink);
+    background: color-mix(in srgb, var(--ink) 12%, var(--surface));
+}
+
+.pending-ops-status {
+    color: var(--muted);
+    font-size: 0.85rem;
+}
+
 .graph-wrapper {
     position: relative;
     margin-top: 1rem;
@@ -140,49 +183,6 @@
     display: flex;
     justify-content: flex-end;
     gap: 0.5rem;
-}
-
-.main-toolbar {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-top: 0.75rem;
-}
-
-.main-toolbar button,
-.deed-form button,
-#deed-window .inner button {
-    padding: 0.35rem 0.8rem;
-    border: 1px solid var(--line);
-    border-radius: 4px;
-    background: transparent;
-    color: var(--ink);
-    cursor: pointer;
-}
-
-#deed-window .inner button {
-    margin-top: 0.75rem;
-}
-
-.chips button:hover,
-.graph-reset:hover,
-.main-toolbar button:hover,
-.deed-form button:hover,
-#deed-window .inner button:hover,
-#deed-window .close:hover {
-    border-color: var(--ink);
-}
-
-.main-toolbar button[aria-expanded="true"],
-.main-toolbar button[aria-pressed="true"],
-.chips button[aria-pressed="true"] {
-    border-color: var(--ink);
-    background: color-mix(in srgb, var(--ink) 12%, var(--surface));
-}
-
-.pending-ops-status {
-    color: var(--muted);
-    font-size: 0.85rem;
 }
 
 .deed-form {
