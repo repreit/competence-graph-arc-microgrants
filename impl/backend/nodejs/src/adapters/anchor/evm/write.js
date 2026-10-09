@@ -1,9 +1,14 @@
-export async function anchorRoot({ client, address, abi, root }) {
+import { isPositiveSafeInt } from "../../../../../../common/js/a001.js";
+
+export async function anchorRoot({ client, address, abi, root, maxDeltaId }) {
     if (!client || !address || !Array.isArray(abi)) {
         return { ok: false, error: "invalid_request" };
     }
     if (typeof root !== "string" || !root.startsWith("0x")) {
         return { ok: false, error: "invalid_root" };
+    }
+    if (!isPositiveSafeInt(maxDeltaId)) {
+        return { ok: false, error: "invalid_max_delta_id" };
     }
 
     let txHash;
@@ -12,7 +17,7 @@ export async function anchorRoot({ client, address, abi, root }) {
             address,
             abi,
             functionName: "anchor",
-            args: [root],
+            args: [root, maxDeltaId],
         });
     } catch {
         return { ok: false, error: "send" };
