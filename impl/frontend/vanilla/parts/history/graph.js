@@ -8,11 +8,16 @@ import {
 } from "./cards.js";
 import {
     clipLinkToCards,
+    idFrom,
     linkKey,
     makeLinkObject,
     pairsFromNodes,
 } from "./links.js";
-import { handleDeedClick, showHistoryStatus } from "./history.js";
+import {
+    handleDeedClick,
+    handleGraphLinkClick,
+    showHistoryStatus,
+} from "./history.js";
 import {
     disposeGraphGpu,
     paintCardOpaque,
@@ -28,6 +33,7 @@ let graphRequest = 0;
 let hoveredNodeId = "";
 let hoveredNode = null;
 let hoveredLinkKey = "";
+let hoveredLink = null;
 
 let fitTimer = 0;
 const FIT_PULL = 1;
@@ -105,6 +111,7 @@ function setHoveredLink(link) {
         return;
     }
     hoveredLinkKey = nextKey;
+    hoveredLink = link ?? null;
     paintGraphLinkHover(historyGraph, hoveredLinkKey);
 }
 
@@ -187,9 +194,7 @@ function ensureHistoryGraph() {
         })
         .catch(function (err) {
             historyGraphPending = null;
-            if (typeof console !== "undefined" && console.error) {
-                console.error(err);
-            }
+            console.error(err);
             showHistoryStatus(lang.GRAPH_LOAD_FAILED);
             return null;
         });
@@ -244,6 +249,7 @@ export function renderHistoryGraph(nodes) {
             hoveredNodeId = "";
             hoveredNode = null;
             hoveredLinkKey = "";
+            hoveredLink = null;
             disposeGraphGpu(graph);
             graph.graphData(graphDataFromNodes(nodes));
             sizeHistoryGraph();
@@ -284,6 +290,13 @@ export function bindHistoryGraph() {
             window.setTimeout(function () {
                 if (hoveredNode) {
                     handleDeedClick(hoveredNode);
+                    return;
+                }
+                if (hoveredLink) {
+                    handleGraphLinkClick(
+                        idFrom(hoveredLink.source),
+                        idFrom(hoveredLink.target),
+                    );
                 }
             }, hoverWaitMs);
         });
