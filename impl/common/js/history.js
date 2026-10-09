@@ -419,6 +419,17 @@ function applyOpsToState(state, ops) {
         for (const id of touchedIds(op)) {
             touched.add(id);
         }
+        if (op.type === "node.delete") {
+            for (const node of state.values()) {
+                if (!(node.nodeIds ?? []).includes(op.id)) {
+                    continue;
+                }
+                node.nodeIds = node.nodeIds.filter(function (id) {
+                    return id !== op.id;
+                });
+                touched.add(node.id);
+            }
+        }
     }
     for (const id of touched) {
         const node = state.get(id);
