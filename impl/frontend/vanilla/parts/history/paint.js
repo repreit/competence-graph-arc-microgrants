@@ -31,7 +31,7 @@ function eachPaintedObject(scene, visit) {
 }
 
 function paintCardMesh(mesh, theme) {
-    const card = mesh && mesh.userData && mesh.userData.historyCard;
+    const card = mesh?.userData?.historyCard;
     if (!card) {
         return;
     }
@@ -52,7 +52,7 @@ function paintCardMesh(mesh, theme) {
 }
 
 export function paintCardOpaque(obj) {
-    const mats = obj && obj.material;
+    const mats = obj?.material;
     const list = Array.isArray(mats) ? mats : mats ? [mats] : [];
     list.forEach(function (mat) {
         mat.transparent = false;
@@ -100,7 +100,7 @@ export function paintHistoryGraph(graph) {
 
 export function disposeGraphGpu(graph) {
     const objects = [];
-    eachPaintedObject(graph && graph.scene && graph.scene(), function (obj) {
+    eachPaintedObject(graph?.scene?.(), function (obj) {
         objects.push(obj);
     });
     objects.forEach(disposeObject3D);
@@ -181,7 +181,7 @@ export function paintCardTexture(ctx, canvas, data, theme, image, hovered) {
     const imgH = canvas.height - titleH;
     ctx.fillStyle = theme.surface;
     ctx.fillRect(0, 0, w, canvas.height);
-    if (image && image.width) {
+    if (image?.width) {
         paintCover(ctx, image, 0, 0, w, imgH);
     } else {
         ctx.fillStyle = theme.line;
