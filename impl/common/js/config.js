@@ -10,6 +10,10 @@ export const chain = Object.freeze({
     }),
 });
 
+export const anchor = Object.freeze({
+    address: "0x2064BD16169B4eA78Dced8759216526B8F15939C",
+});
+
 export const app = Object.freeze({
     name: "competence-graph",
     description: "A shared language for inspectable competence.",
