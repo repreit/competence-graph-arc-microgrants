@@ -5,7 +5,7 @@ if (!url) {
     throw new Error("ARC_RPC_URL is missing");
 }
 
-export function createRpcClient({ account, chain }) {
+export function createClient({ account, chain }) {
     return createWalletClient({
         account,
         chain,
