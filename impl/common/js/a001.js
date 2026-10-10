@@ -53,7 +53,7 @@ export function hexFromBytes(value) {
     return out;
 }
 
-export async function hashBytes(bytes) {
-    const digest = await crypto.subtle.digest(HASH_ALGORITHM, bytes);
+export async function hashBytes(value) {
+    const digest = await crypto.subtle.digest(HASH_ALGORITHM, value);
     return hexFromBytes(digest);
 }
