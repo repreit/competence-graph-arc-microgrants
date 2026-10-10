@@ -17,7 +17,7 @@ async function listHashedTips(maxId) {
     );
 }
 
-export async function anchorBatch() {
+export async function batchAnchor() {
     const maxId = await maxDeltaId();
     if (maxId == null) {
         return null;
