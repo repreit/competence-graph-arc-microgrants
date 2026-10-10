@@ -22,7 +22,8 @@ export function bytesFromBase64Url(value) {
     return bytes;
 }
 
-export function base64UrlFromBytes(bytes) {
+export function base64UrlFromBytes(value) {
+    const bytes = new Uint8Array(value);
     let binary = "";
     for (let i = 0; i < bytes.length; i++) {
         binary += String.fromCharCode(bytes[i]);
