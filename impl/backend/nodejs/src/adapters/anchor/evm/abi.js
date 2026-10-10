@@ -12,6 +12,7 @@ export const anchorAbi = [
     {
         type: "event",
         name: "Anchored",
+        anonymous: false,
         inputs: [
             { name: "root", type: "bytes32", indexed: true },
             { name: "maxDeltaId", type: "uint256", indexed: true },
