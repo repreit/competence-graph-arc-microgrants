@@ -1,11 +1,10 @@
-import { HASH_ALGORITHM, bytesFromHex, hexFromBytes } from "./a001.js";
+import { bytesFromHex, hashBytes } from "./a001.js";
 
 const encoder = new TextEncoder();
 
 export async function hashLeaf(address, tipHash) {
     const bytes = encoder.encode(`${address.toLowerCase()}\n${tipHash}`);
-    const digest = await crypto.subtle.digest(HASH_ALGORITHM, bytes);
-    return hexFromBytes(digest);
+    return hashBytes(bytes);
 }
 
 export async function hashInternalNode(left, right) {
@@ -14,6 +13,5 @@ export async function hashInternalNode(left, right) {
     const bytes = new Uint8Array(leftBytes.length + rightBytes.length);
     bytes.set(leftBytes, 0);
     bytes.set(rightBytes, leftBytes.length);
-    const digest = await crypto.subtle.digest(HASH_ALGORITHM, bytes);
-    return hexFromBytes(digest);
+    return hashBytes(bytes);
 }
