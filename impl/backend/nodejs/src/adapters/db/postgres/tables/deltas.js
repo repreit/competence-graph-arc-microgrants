@@ -38,6 +38,12 @@ export async function listDeltas(accountId, client = pool) {
     return rows.map((row) => ({ ...row, seq: Number(row.seq) }));
 }
 
+export async function maxDeltaId(client = pool) {
+    const { rows } = await client.query("SELECT MAX(id) AS id FROM deltas");
+    const value = rows[0]?.id;
+    return value == null ? null : Number(value);
+}
+
 export async function nextDeltaHeader(accountId) {
     const tip = await findTip(accountId, pool);
     if (!tip) {
