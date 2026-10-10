@@ -3,6 +3,7 @@ import { bodyLimit } from "hono/body-limit";
 import { cors } from "hono/cors";
 import { maxBodyBytes } from "./config.js";
 import accounts from "./routes/accounts.js";
+import anchor from "./routes/anchor.js";
 import auth from "./routes/auth.js";
 import bindings from "./routes/bindings.js";
 import deltas from "./routes/deltas.js";
@@ -32,6 +33,7 @@ app.route("/auth", auth);
 app.route("/accounts", accounts);
 app.route("/bindings", bindings);
 app.route("/deltas", deltas);
+app.route("/anchor", anchor);
 
 app.notFound((c) => c.json({ error: "not_found" }, 404));
 
