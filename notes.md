@@ -33,7 +33,7 @@ Clean up expired sessions (cron)
 ```
 
 ```
-Each host needs its own key to write its slot.
+Each host needs its own key to write its slot
 ```
 
 ```
