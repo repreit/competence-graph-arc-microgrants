@@ -32,7 +32,7 @@ try {
         });
         console.log(anchored);
         if (anchored.ok) {
-            console.log(`${chain.explorerUrl}/tx/${anchored.txHash}`);
+            console.log(`\n${chain.explorerUrl}/tx/${anchored.txHash}`);
         } else {
             process.exitCode = 1;
         }
