@@ -44,6 +44,19 @@ export async function maxDeltaId(client = pool) {
     return value == null ? null : Number(value);
 }
 
+export async function listTips(maxDeltaId, client = pool) {
+    const { rows } = await client.query(
+        `SELECT DISTINCT ON (d.account_id)
+     a.address, d.seq, d.prev_hash, d.content, d.signature
+     FROM deltas d
+     JOIN accounts a ON a.id = d.account_id
+     WHERE d.id <= $1
+     ORDER BY d.account_id, d.id DESC`,
+        [maxDeltaId],
+    );
+    return rows.map((row) => ({ ...row, seq: Number(row.seq) }));
+}
+
 export async function nextDeltaHeader(accountId) {
     const tip = await findTip(accountId, pool);
     if (!tip) {
