@@ -11,11 +11,12 @@ export function isSeq(seq) {
     return isPositiveSafeInt(seq);
 }
 
+export function isHash(value) {
+    return typeof value === "string" && /^[0-9a-f]{64}$/.test(value);
+}
+
 export function isPrevHash(prevHash) {
-    if (prevHash == null) {
-        return true;
-    }
-    return typeof prevHash === "string" && /^[0-9a-f]{64}$/.test(prevHash);
+    return prevHash == null || isHash(prevHash);
 }
 
 function isDelta(row) {
