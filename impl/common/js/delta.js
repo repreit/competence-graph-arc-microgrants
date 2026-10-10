@@ -1,4 +1,5 @@
 import {
+    HASH_ALGORITHM,
     hexFromBytes,
     isNonEmptyString,
     isPlainObject,
@@ -36,7 +37,7 @@ export async function hashRow({ seq, prev_hash, content, signature }) {
     const bytes = new Uint8Array(signing.length + tail.length);
     bytes.set(signing, 0);
     bytes.set(tail, signing.length);
-    const digest = await crypto.subtle.digest("SHA-256", bytes);
+    const digest = await crypto.subtle.digest(HASH_ALGORITHM, bytes);
     return hexFromBytes(digest);
 }
 

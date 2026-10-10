@@ -1,3 +1,5 @@
+export const HASH_ALGORITHM = "SHA-256";
+
 export function isPlainObject(value) {
     return value != null && typeof value === "object" && !Array.isArray(value);
 }
