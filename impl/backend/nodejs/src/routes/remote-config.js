@@ -2,6 +2,6 @@ import { Hono } from "hono";
 
 const remoteConfig = new Hono();
 
-remoteConfig.get("/", (c) => c.json({ config: null }));
+remoteConfig.get("/load", (c) => c.json({ config: null }));
 
 export default remoteConfig;

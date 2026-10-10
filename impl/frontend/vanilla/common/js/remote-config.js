@@ -6,7 +6,7 @@ let pending = null;
 async function load() {
     let data;
     try {
-        data = await api("/remote-config", { auth: false });
+        data = await api("/remote-config/load", { auth: false });
     } catch (err) {
         throw new Error("http", { cause: err });
     }
