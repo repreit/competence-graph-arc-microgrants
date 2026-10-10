@@ -10,7 +10,7 @@
         "migrate": "node --env-file-if-exists=../../../.env ./src/adapters/db/postgres/migrate.js",
         "start": "node --env-file-if-exists=../../../.env ./src/server.js",
         "dev": "node --watch --env-file-if-exists=../../../.env ./src/server.js",
-        "deploy": "neon functions deploy api --src ./src/app.js"
+        "neon:deploy": "neon functions deploy api --src ./src/app.js"
     },
     "dependencies": {
         "@hono/node-server": "^2.1.1",
