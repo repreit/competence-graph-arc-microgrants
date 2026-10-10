@@ -4,7 +4,7 @@ export async function anchorRoot({ client, address, abi, root, maxDeltaId }) {
     if (!client || !address || !Array.isArray(abi)) {
         return { ok: false, error: "invalid_request" };
     }
-    if (typeof root !== "string" || !root.startsWith("0x")) {
+    if (typeof root !== "string" || !/^0x[0-9a-fA-F]{64}$/.test(root)) {
         return { ok: false, error: "invalid_root" };
     }
     if (!isPositiveSafeInt(maxDeltaId)) {
