@@ -1,13 +1,16 @@
-import { createHash, randomBytes } from "node:crypto";
+import { randomBytes } from "node:crypto";
+import { hashBytes } from "../../../../../../common/js/a001.js";
 
 const maxAge = 60 * 60 * 24 * 7;
+
+const encoder = new TextEncoder();
 
 export function createSessionToken() {
     return randomBytes(32).toString("base64url");
 }
 
-export function hashSessionToken(sessionToken) {
-    return createHash("sha256").update(sessionToken, "utf8").digest("hex");
+export async function hashSessionToken(sessionToken) {
+    return hashBytes(encoder.encode(sessionToken));
 }
 
 export function sessionExpiresAt() {
