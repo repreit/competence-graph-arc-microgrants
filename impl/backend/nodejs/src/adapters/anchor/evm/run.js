@@ -1,9 +1,9 @@
 import { chain } from "../../../../../../common/js/config.js";
 import { pool } from "../../db/postgres/pool.js";
-import { anchorBatch } from "./batch.js";
+import { batchAnchor } from "./batch.js";
 
 try {
-    const anchored = await anchorBatch();
+    const anchored = await batchAnchor();
     if (!anchored) {
         console.log("nothing to anchor");
     } else {
