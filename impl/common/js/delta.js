@@ -1,6 +1,6 @@
 import {
     hashBytes,
-    isHash,
+    isCanonicalHash,
     isNonEmptyString,
     isPlainObject,
     isPositiveSafeInt,
@@ -13,7 +13,7 @@ export function isSeq(seq) {
 }
 
 export function isPrevHash(prevHash) {
-    return prevHash == null || isHash(prevHash);
+    return prevHash == null || isCanonicalHash(prevHash);
 }
 
 function isDelta(row) {

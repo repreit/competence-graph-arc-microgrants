@@ -12,7 +12,7 @@ export function isPositiveSafeInt(value) {
     return Number.isSafeInteger(value) && value >= 1;
 }
 
-export function isHash(value) {
+export function isCanonicalHash(value) {
     return typeof value === "string" && /^[0-9a-f]{64}$/.test(value);
 }
 
