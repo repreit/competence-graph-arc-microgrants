@@ -3,7 +3,7 @@ import { pool } from "../pool.js";
 import { withTransaction } from "../transaction.js";
 
 export async function setSession(address, sessionToken, expiresAt) {
-    const tokenHash = hashSessionToken(sessionToken);
+    const tokenHash = await hashSessionToken(sessionToken);
     return await withTransaction(async (client) => {
         const { rows } = await client.query(
             `WITH ins AS (
@@ -35,7 +35,7 @@ export async function findBySessionToken(sessionToken) {
     if (!sessionToken) {
         return null;
     }
-    const tokenHash = hashSessionToken(sessionToken);
+    const tokenHash = await hashSessionToken(sessionToken);
     const { rows } = await pool.query(
         `SELECT a.id, a.address
      FROM sessions s
@@ -50,6 +50,6 @@ export async function clearSessionToken(sessionToken) {
     if (!sessionToken) {
         return;
     }
-    const tokenHash = hashSessionToken(sessionToken);
+    const tokenHash = await hashSessionToken(sessionToken);
     await pool.query(`DELETE FROM sessions WHERE token_hash = $1`, [tokenHash]);
 }
