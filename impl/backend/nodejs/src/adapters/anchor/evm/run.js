@@ -8,8 +8,6 @@ import { anchorAbi } from "./abi.js";
 import { merkleRoot } from "./merkle.js";
 import { anchorRoot } from "./write.js";
 
-const address = anchor.address;
-
 async function toTips(maxId) {
     const rows = await listTips(maxId);
     return Promise.all(
@@ -25,15 +23,15 @@ try {
     if (maxId == null) {
         console.log("nothing to anchor");
     } else {
-        const result = await anchorRoot({
+        const anchored = await anchorRoot({
             client: createClient({ account, chain }),
-            address,
+            address: anchor.address,
             abi: anchorAbi,
             root: merkleRoot(await toTips(maxId)),
             maxDeltaId: maxId,
         });
-        console.log(result);
-        if (!result.ok) {
+        console.log(anchored);
+        if (!anchored.ok) {
             process.exitCode = 1;
         }
     }
