@@ -7,7 +7,7 @@
     },
     "scripts": {
         "anchor:run": "node --env-file-if-exists=../../../.env ./src/adapters/anchor/evm/run.js",
-        "migrate": "node --env-file-if-exists=../../../.env ./src/adapters/db/postgres/migrate.js",
+        "db:migrate": "node --env-file-if-exists=../../../.env ./src/adapters/db/postgres/migrate.js",
         "start": "node --env-file-if-exists=../../../.env ./src/server.js",
         "dev": "node --watch --env-file-if-exists=../../../.env ./src/server.js",
         "neon:deploy": "neon functions deploy api --src ./src/app.js"
