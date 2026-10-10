@@ -33,6 +33,14 @@ export function base64UrlFromBytes(bytes) {
         .replace(/=+$/, "");
 }
 
+export function bytesFromHex(value) {
+    const bytes = new Uint8Array(value.length / 2);
+    for (let i = 0; i < bytes.length; i++) {
+        bytes[i] = parseInt(value.slice(i * 2, i * 2 + 2), 16);
+    }
+    return bytes;
+}
+
 export function hexFromBytes(buffer) {
     const bytes = new Uint8Array(buffer);
     let out = "";
