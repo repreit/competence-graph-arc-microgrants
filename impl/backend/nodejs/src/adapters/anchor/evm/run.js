@@ -8,7 +8,7 @@ import { anchorAbi } from "./abi.js";
 import { merkleRoot } from "./merkle.js";
 import { anchorRoot } from "./write.js";
 
-async function toTips(maxId) {
+async function listHashedTips(maxId) {
     const rows = await listTips(maxId);
     return Promise.all(
         rows.map(async (row) => ({
@@ -27,7 +27,7 @@ try {
             client: createClient({ account, chain }),
             address: anchor.address,
             abi: anchorAbi,
-            root: merkleRoot(await toTips(maxId)),
+            root: merkleRoot(await listHashedTips(maxId)),
             maxDeltaId: maxId,
         });
         console.log(anchored);
