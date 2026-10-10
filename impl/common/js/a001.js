@@ -64,6 +64,10 @@ export function hexFromBytes(value) {
     return out;
 }
 
+export function withHexPrefix(value) {
+    return "0x" + value;
+}
+
 export async function hashBytes(value) {
     const digest = await crypto.subtle.digest(HASH_ALGORITHM, value);
     return hexFromBytes(digest);
