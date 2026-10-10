@@ -37,6 +37,13 @@ export function base64UrlFromBytes(value) {
 }
 
 export function bytesFromHex(value) {
+    if (
+        typeof value !== "string" ||
+        value.length % 2 !== 0 ||
+        !/^[0-9a-fA-F]*$/.test(value)
+    ) {
+        throw new TypeError("hex");
+    }
     const bytes = new Uint8Array(value.length / 2);
     for (let i = 0; i < bytes.length; i++) {
         bytes[i] = parseInt(value.slice(i * 2, i * 2 + 2), 16);
