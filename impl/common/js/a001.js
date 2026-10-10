@@ -12,6 +12,10 @@ export function isPositiveSafeInt(value) {
     return Number.isSafeInteger(value) && value >= 1;
 }
 
+export function isHash(value) {
+    return typeof value === "string" && /^[0-9a-f]{64}$/.test(value);
+}
+
 export function bytesFromBase64Url(value) {
     const padded =
         value.replace(/-/g, "+").replace(/_/g, "/") +

@@ -1,5 +1,6 @@
 import {
     hashBytes,
+    isHash,
     isNonEmptyString,
     isPlainObject,
     isPositiveSafeInt,
@@ -9,10 +10,6 @@ const encoder = new TextEncoder();
 
 export function isSeq(seq) {
     return isPositiveSafeInt(seq);
-}
-
-export function isHash(value) {
-    return typeof value === "string" && /^[0-9a-f]{64}$/.test(value);
 }
 
 export function isPrevHash(prevHash) {
