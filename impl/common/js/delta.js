@@ -1,15 +1,11 @@
-import { isNonEmptyString, isPlainObject, isPositiveSafeInt } from "./a001.js";
+import {
+    hexFromBytes,
+    isNonEmptyString,
+    isPlainObject,
+    isPositiveSafeInt,
+} from "./a001.js";
 
 const encoder = new TextEncoder();
-
-function hex(buffer) {
-    const bytes = new Uint8Array(buffer);
-    let out = "";
-    for (const byte of bytes) {
-        out += byte.toString(16).padStart(2, "0");
-    }
-    return out;
-}
 
 export function isSeq(seq) {
     return isPositiveSafeInt(seq);
@@ -41,7 +37,7 @@ export async function hashRow({ seq, prev_hash, content, signature }) {
     bytes.set(signing, 0);
     bytes.set(tail, signing.length);
     const digest = await crypto.subtle.digest("SHA-256", bytes);
-    return hex(digest);
+    return hexFromBytes(digest);
 }
 
 export function signingBytes({ seq, prev_hash, content }) {
