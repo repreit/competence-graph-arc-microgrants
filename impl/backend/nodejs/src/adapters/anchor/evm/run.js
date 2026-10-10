@@ -31,7 +31,9 @@ try {
             maxDeltaId: maxId,
         });
         console.log(anchored);
-        if (!anchored.ok) {
+        if (anchored.ok) {
+            console.log(`${chain.explorerUrl}/tx/${anchored.txHash}`);
+        } else {
             process.exitCode = 1;
         }
     }
