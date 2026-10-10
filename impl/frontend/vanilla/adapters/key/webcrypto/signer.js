@@ -29,5 +29,5 @@ export async function generate() {
 export async function sign(privateKey, bytes) {
     const subtle = subtleOrThrow();
     const signature = await subtle.sign(SIGN_PARAMS, privateKey, bytes);
-    return base64UrlFromBytes(new Uint8Array(signature));
+    return base64UrlFromBytes(signature);
 }
