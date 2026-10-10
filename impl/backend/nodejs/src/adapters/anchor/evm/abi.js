@@ -15,7 +15,6 @@ export const anchorAbi = [
         inputs: [
             { name: "root", type: "bytes32", indexed: true },
             { name: "maxDeltaId", type: "uint256", indexed: true },
-            { name: "time", type: "uint256", indexed: false },
         ],
     },
 ];
