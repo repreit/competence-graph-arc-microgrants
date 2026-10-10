@@ -41,8 +41,8 @@ export function bytesFromHex(value) {
     return bytes;
 }
 
-export function hexFromBytes(buffer) {
-    const bytes = new Uint8Array(buffer);
+export function hexFromBytes(value) {
+    const bytes = new Uint8Array(value);
     let out = "";
     for (const byte of bytes) {
         out += byte.toString(16).padStart(2, "0");
